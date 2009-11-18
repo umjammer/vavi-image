@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <!-- ////////////////////////////////////////////////////////////////////// -->
 <!-- Copyright (c) 2002 by Naohide Sano, All rights reserved.               -->
@@ -20,17 +20,17 @@
   <property name="dir.native" value="src/main/jni" />
   <property name="dir.build" value="target/classes" />
 
-    <!-- ƒNƒ‰ƒXƒpƒX‚Ì’è‹` -->
+    <!-- ã‚¯ãƒ©ã‚¹ãƒ‘ã‚¹ã®å®šç¾© -->
   <path id="project.class.path">
     <fileset dir="lib">
       <include name="*.jar" />
     </fileset>
   </path>
 
-  <!-- ƒ^[ƒQƒbƒg‚Ì’è‹` -->
+  <!-- ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®å®šç¾© -->
 
   <!-- clean -->
-  <target name="clean" description="ƒrƒ‹ƒhŠÂ‹«‚ÌƒNƒŠƒA">
+  <target name="clean" description="ãƒ“ãƒ«ãƒ‰ç’°å¢ƒã®ã‚¯ãƒªã‚¢">
     <delete>
       <fileset dir="${dir.build}">
         <include name="**/*" />
@@ -41,6 +41,7 @@
     </delete>
     <delete file="lib/FfmpegResampleOpWrapper.dll"/>
     <delete file="lib/libFfmpegResampleOpWrapper.dylib"/>
+    <delete file="lib/libFfmpegResampleOpWrapper.so"/>
     <delete>
       <fileset dir="${dir.native}">
         <include name="*.o" />
@@ -57,7 +58,7 @@
   </target>
 
   <!-- javac 1.4 -->
-  <target name="compile.1.4" description="ƒRƒ“ƒpƒCƒ‹ 1.4">
+  <target name="compile.1.4" description="ã‚³ãƒ³ãƒ‘ã‚¤ãƒ« 1.4">
     <javac debug="on" source="1.4" target="1.4" destdir="${dir.build}" encoding="MS932">
       <classpath refid="project.class.path" />
       <include name="vavi/imageio/ImageConverter.java" />
@@ -66,7 +67,7 @@
   </target>
 
   <!-- javac 1.5 -->
-  <target name="compile.1.5" description="ƒRƒ“ƒpƒCƒ‹ 1.5">
+  <target name="compile.1.5" description="ã‚³ãƒ³ãƒ‘ã‚¤ãƒ« 1.5">
     <javac debug="on" source="1.5" target="1.5" destdir="${dir.build}" encoding="MS932">
       <classpath refid="project.class.path" />
       <include name="**/*.java" />
@@ -77,7 +78,7 @@
   </target>
 
   <!-- javac -->
-  <target name="compile" depends="prepare,compile.1.4,compile.1.5" description="ƒRƒ“ƒpƒCƒ‹">
+  <target name="compile" depends="prepare,compile.1.4,compile.1.5" description="ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«">
     <copy todir="${dir.build}">
       <fileset dir="src/main/resources">
         <include name="**/*" />
@@ -97,7 +98,7 @@
   </target>
 
   <!-- gcc cygwin -->
-  <target name="compile.native.cygwin" depends="javah" description="ƒRƒ“ƒpƒCƒ‹ C">
+  <target name="compile.native.cygwin" depends="javah" description="ã‚³ãƒ³ãƒ‘ã‚¤ãƒ« C">
     <apply executable="gcc" dest="${dir.native}" parallel="false">
       <arg value="-c" />
       <arg line="-g -Wall -O2" />
@@ -142,7 +143,7 @@
   </target>
 
   <!-- gcc mac -->
-  <target name="compile.native" depends="javah" description="ƒRƒ“ƒpƒCƒ‹ C">
+  <target name="compile.native.mac" depends="javah" description="ã‚³ãƒ³ãƒ‘ã‚¤ãƒ« C">
     <apply executable="gcc" dest="${dir.native}" parallel="false">
       <arg value="-c" />
       <arg line="-g -Wall -O2 -fomit-frame-pointer -fPIC" />
@@ -162,7 +163,7 @@
   </target>
 
   <!-- link mac -->
-  <target name="link" depends="compile.native" description="Makeing DLL">
+  <target name="link.mac" depends="compile.native.mac" description="Makeing DLL">
     <apply executable="gcc" dest="lib">
       <arg line="-dynamiclib" />
       <arg line="--add-stdcall-alias" />
@@ -186,8 +187,46 @@
     </exec>
   </target>
 
+  <!-- gcc linux -->
+  <target name="compile.native" depends="javah" description="ã‚³ãƒ³ãƒ‘ã‚¤ãƒ« C">
+    <apply executable="gcc" dest="${dir.native}" parallel="false">
+      <arg value="-c" />
+      <arg line="-g -Wall -O2 -fomit-frame-pointer -fPIC" />
+      <arg value="-I." />
+      <arg value="-I${ffmpeg.include}/libavformat" />
+      <arg value="-I${ffmpeg.include}/libavcodec" />
+      <arg value="-I${ffmpeg.include}/libavutil" />
+      <arg value="-I${ffmpeg.include}/libswscale" />
+      <arg value="-I${my.java.home}/include" />
+      <arg value="-I${my.java.home}/include/linux" />
+      <arg value="-o"/>
+      <targetfile/>
+      <srcfile/>
+      <fileset dir="${dir.native}" includes="*.c"/>
+      <mapper type="glob" from="*.c" to="*.o"/>
+    </apply>
+  </target>
+
+  <!-- link linux -->
+  <target name="link" depends="compile.native" description="Makeing DLL">
+    <apply executable="gcc" dest="lib">
+      <arg line="-shared" />
+      <arg line="--add-stdcall-alias" />
+      <arg value="-L${ffmpeg.lib}" />
+      <arg value="-lavformat" />
+      <arg value="-lavcodec" />
+      <arg value="-lswscale" />
+      <arg value="-lavutil" />
+      <arg value="-o" />
+      <targetfile />
+      <srcfile />
+      <fileset dir="${dir.native}" includes="*.o"/>
+      <mapper type="glob" from="*.o" to="lib*.so"/>
+    </apply>
+  </target>
+
   <!-- jar -->
-  <target name="packaging" depends="compile" description="ƒpƒbƒP[ƒWƒ“ƒO">
+  <target name="packaging" depends="compile" description="ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ãƒ³ã‚°">
     <jar jarfile="target/vavi-image.jar">
       <fileset dir="${dir.build}">
         <include name="**/*" />
@@ -196,7 +235,7 @@
   </target>
 
   <!-- javac -->
-  <target name="compile.tester" depends="compile" description="ƒRƒ“ƒpƒCƒ‹">
+  <target name="compile.tester" depends="compile" description="ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«">
     <javac debug="on" deprecation="on" target="1.5" encoding="MS932"
            destdir="target/test-classes">
       <classpath>
@@ -336,7 +375,7 @@
 
   <!-- jar -->
   <target name="packaging.nq" depends="compile,compile.tester"
-  	      description="NeuralQuantizer ƒpƒbƒP[ƒWƒ“ƒO">
+  	      description="NeuralQuantizer ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ãƒ³ã‚°">
     <jar jarfile="tmp/nq.jar" manifest="etc/manifest.mf">
       <fileset dir="${dir.build}">
         <include name="vavi/awt/image/quantize/NeuralNet*.class" />
