@@ -462,10 +462,10 @@ public class ImageMagikQuantizer {
 
                     // walk the tree to find the cube containing that color
                     Node node = root;
-                    for ( ; ; ) {
+                    while (true) {
                         int id = (((red   > node.midRed   ? 1 : 0) << 0) |
                                   ((green > node.midGreen ? 1 : 0) << 1) |
-                                  ((blue  > node.midBlue  ? 1 : 0) << 2)  );
+                                  ((blue  > node.midBlue  ? 1 : 0) << 2));
                         if (node.child[id] == null) {
                             break;
                         }
@@ -497,7 +497,7 @@ public class ImageMagikQuantizer {
             Node parent;
 
             // child nodes
-            Node child[];
+            Node[] child;
             int nChild;
 
             // our index within our parent

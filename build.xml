@@ -84,6 +84,21 @@
         <include name="**/*" />
       </fileset>
     </copy>
+
+    <javac debug="on" deprecation="on" target="1.5" encoding="MS932"
+           destdir="target/test-classes">
+      <classpath>
+        <path refid="project.class.path" />
+        <pathelement location="${dir.build}" />
+      </classpath>
+      <include name="**/*.java" />
+      <src path="src/test/java" />
+    </javac>
+    <copy todir="target/test-classes">
+      <fileset dir="src/test/resources">
+        <include name="**/*" />
+      </fileset>
+    </copy>
   </target>
 
   <!-- javah -->
@@ -98,7 +113,7 @@
   </target>
 
   <!-- gcc cygwin -->
-  <target name="compile.native.cygwin" depends="javah" description="コンパイル C">
+  <target name="compile.native.cygwin" depends="javah" description="コンパイル C (cygming)">
     <apply executable="gcc" dest="${dir.native}" parallel="false">
       <arg value="-c" />
       <arg line="-g -Wall -O2" />
@@ -120,8 +135,8 @@
     </apply>
   </target>
 
-  <!-- link cygwin -->
-  <target name="link.cygwin" depends="compile.native.cygwin" description="Makeing DLL">
+  <!-- link mingw32 -->
+  <target name="link.cygwin" depends="compile.native.cygwin" description="Makeing DLL (cygming)">
     <apply executable="dllwrap" dest="lib">
       <arg value="--add-stdcall-alias" />
       <arg line="--driver-name gcc"/>
@@ -143,7 +158,7 @@
   </target>
 
   <!-- gcc mac -->
-  <target name="compile.native.mac" depends="javah" description="コンパイル C">
+  <target name="compile.native.macosx" depends="javah" description="コンパイル C (macosx)">
     <apply executable="gcc" dest="${dir.native}" parallel="false">
       <arg value="-c" />
       <arg line="-g -Wall -O2 -fomit-frame-pointer -fPIC" />
@@ -163,7 +178,7 @@
   </target>
 
   <!-- link mac -->
-  <target name="link.mac" depends="compile.native.mac" description="Makeing DLL">
+  <target name="link.macosx" depends="compile.native.macosx" description="Makeing DLL (macosx)">
     <apply executable="gcc" dest="lib">
       <arg line="-dynamiclib" />
       <arg line="--add-stdcall-alias" />
@@ -188,7 +203,7 @@
   </target>
 
   <!-- gcc linux -->
-  <target name="compile.native" depends="javah" description="コンパイル C">
+  <target name="compile.native.linux" depends="javah" description="コンパイル C (linux)">
     <apply executable="gcc" dest="${dir.native}" parallel="false">
       <arg value="-c" />
       <arg line="-g -Wall -O2 -fomit-frame-pointer -fPIC" />
@@ -208,7 +223,7 @@
   </target>
 
   <!-- link linux -->
-  <target name="link" depends="compile.native" description="Makeing DLL">
+  <target name="link.linux" depends="compile.native.linux" description="Makeing DLL (linux)">
     <apply executable="gcc" dest="lib">
       <arg line="-shared" />
       <arg line="--add-stdcall-alias" />
@@ -234,27 +249,12 @@
     </jar>
   </target>
 
-  <!-- javac -->
-  <target name="compile.tester" depends="compile" description="コンパイル">
-    <javac debug="on" deprecation="on" target="1.5" encoding="MS932"
-           destdir="target/test-classes">
-      <classpath>
-        <path refid="project.class.path" />
-        <pathelement location="${dir.build}" />
-      </classpath>
-      <include name="**/*.java" />
-      <src path="src/test/java" />
-    </javac>
-    <copy todir="target/test-classes">
-      <fileset dir="src/test/resources">
-        <include name="**/*" />
-      </fileset>
-    </copy>
+  <!-- link -->
+  <target name="link" description="link">
   </target>
 
   <!-- run -->
-  <target name="run" depends="packaging,compile.tester"
-          description="show imageio spec">
+  <target name="run" depends="packaging" description="show imageio spec">
     <java classname="t146_1" fork="yes">
       <classpath>
         <path refid="project.class.path" />
@@ -265,8 +265,7 @@
   </target>
 
   <!-- t2 -->
-  <target name="convert" depends="packaging,compile.tester"
-          description="convert format">
+  <target name="convert" depends="packaging" description="convert format">
     <java classname="t146_2" fork="yes">
       <classpath>
         <path refid="project.class.path" />
@@ -279,8 +278,7 @@
   </target>
 
   <!-- t3 -->
-  <target name="t3" depends="compile.tester"
-          description="QR">
+  <target name="t3" depends="compile" description="QR">
     <java classname="t146_3" fork="yes">
       <env key="PATH" path="lib" />
       <classpath>
@@ -293,8 +291,7 @@
   </target>
 
   <!-- t4 -->
-  <target name="t4" depends="compile,compile.tester"
-          description="save QR">
+  <target name="t4" depends="compile" description="save QR">
     <java classname="t146_4" fork="yes">
       <env key="PATH" path="lib" />
       <classpath>
@@ -308,8 +305,7 @@
   </target>
 
   <!-- t5 -->
-  <target name="t5" depends="compile,compile.tester"
-          description="1D Barcode">
+  <target name="t5" depends="compile" description="1D Barcode">
     <java classname="t146_5" fork="yes">
       <classpath>
         <path refid="project.class.path" />
@@ -323,8 +319,7 @@
   </target>
 
   <!-- t6 -->
-  <target name="t6" depends="compile,compile.tester"
-          description="Image Magik quantize">
+  <target name="t6" depends="compile" description="Image Magik quantize">
     <java classname="vavi.awt.image.quantize.ImageMagikQuantizeOp" fork="yes">
       <classpath>
         <path refid="project.class.path" />
@@ -335,8 +330,7 @@
   </target>
 
   <!-- t14 -->
-  <target name="t14" depends="compile,compile.tester"
-          description="Jpeg quality">
+  <target name="t14" depends="compile" description="Jpeg quality">
     <java classname="t146_14" fork="yes">
       <jvmarg value="-Djava.library.path=lib" />
       <classpath>
@@ -348,14 +342,13 @@
   </target>
 
   <!-- t12 -->
-  <target name="t12" depends="compile,compile.tester"
-          description="Scaling. (awt, ffmpeg)">
+  <target name="t12" depends="compile" description="Scaling. (awt, ffmpeg)">
 <!--
-    <echo message="you must export JAVA_HOME=${java6_32.home}" />
+    <echo message="you must export JAVA_HOME=${my.java.home}" />
     <exec executable="open">
       <arg value="/Applications/Utilities/X11.app" />
     </exec>
-    <java classname="t146_12" jvm="${java6_32.home}/bin/java" fork="yes">
+    <java classname="t146_12" jvm="${my.java.home}/bin/java" fork="yes">
 -->
     <java classname="t146_12" fork="yes">
       <jvmarg value="-Djava.library.path=lib:${user.home}/lib/java/Quaqua/dist" />
@@ -374,8 +367,7 @@
   <!-- -->
 
   <!-- jar -->
-  <target name="packaging.nq" depends="compile,compile.tester"
-  	      description="NeuralQuantizer パッケージング">
+  <target name="packaging.nq" depends="compile" description="NeuralQuantizer パッケージング">
     <jar jarfile="tmp/nq.jar" manifest="etc/manifest.mf">
       <fileset dir="${dir.build}">
         <include name="vavi/awt/image/quantize/NeuralNet*.class" />

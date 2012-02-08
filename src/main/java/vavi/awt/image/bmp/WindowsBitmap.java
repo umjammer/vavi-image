@@ -243,10 +243,12 @@ Debug.println(Level.SEVERE, e);
             return header;
         }
 
+        @SuppressWarnings("unused")
         final static int size() {
             return 14;
         }
 
+        @SuppressWarnings("unused")
         final void print() {
             Debug.println("size: " + bitmapSize);
             Debug.println("offset: " + bitmapOffset);
@@ -306,6 +308,7 @@ Debug.println(Level.SEVERE, e);
         ColorModel palette;
 
         /** for debug */
+        @SuppressWarnings("unused")
         final void print() {
             System.err.println(" header size: " + headerSize);
             System.err.println(" width: " + width);

@@ -60,7 +60,6 @@ public class NonLzwGifImageSource implements ImageProducer {
 
     /** ビットマップを作成します． */
     public NonLzwGifImageSource(InputStream in) throws IOException {
-
         gifImage = GifImage.readFrom(in);
     }
 

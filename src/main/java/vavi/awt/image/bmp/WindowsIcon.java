@@ -149,6 +149,7 @@ public class WindowsIcon {
         }
 
         /** for debug */
+        @SuppressWarnings("unused")
         final void print() {
             System.err.println("type: " + type);
             System.err.println("has: " + number);

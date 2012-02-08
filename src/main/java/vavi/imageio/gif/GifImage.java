@@ -85,10 +85,12 @@ public class GifImage {
         /**
          * この GIF 全体を表示するのに必要な横 pixel 数
          */
+        @SuppressWarnings("unused")
         int logicalScreenWidth;
         /**
          * この GIF 全体を表示するのに必要な縦 pixel 数
          */
+        @SuppressWarnings("unused")
         int logicalScreenHeight;
         /**
          * Packed Fields
@@ -103,8 +105,10 @@ public class GifImage {
          */
         int packedFields;
         /** Background Color Index */
+        @SuppressWarnings("unused")
         int backgroundColorIndex;
         /** Pixel Aspect Ratio */
+        @SuppressWarnings("unused")
         int pixelAspectRatio;
         /** */
         static GifHeader readFrom(InputStream is) throws IOException {
@@ -126,8 +130,10 @@ public class GifImage {
      */
     private static class ImageDescriptor {
         /** 画面左上からの表示位置 (横 pixel 数) */
+        @SuppressWarnings("unused")
         int left;
         /** 画面左上からの表示位置 (縦 pixel 数) */
+        @SuppressWarnings("unused")
         int top;
         /** この画像の横 pixel 数 */
         int width;
