@@ -36,8 +36,8 @@ public class G2dResampleOp implements BufferedImageOp {
     private RenderingHints hints;
 
     /**
-     * @param sx ”ä—¦‚¾‚æI
-     * @param sy ”ä—¦‚¾‚æI
+     * @param sx æ¯”ç‡ã ã‚ˆï¼
+     * @param sy æ¯”ç‡ã ã‚ˆï¼
      */
     public G2dResampleOp(double sx, double sy) {
         this.sx = sx;
@@ -56,8 +56,8 @@ public class G2dResampleOp implements BufferedImageOp {
     }
 
     /**
-     * @param sx ”ä—¦‚¾‚æI
-     * @param sy ”ä—¦‚¾‚æI
+     * @param sx æ¯”ç‡ã ã‚ˆï¼
+     * @param sy æ¯”ç‡ã ã‚ˆï¼
      * @param hints
      */
     public G2dResampleOp(double sx, double sy, RenderingHints hints) {

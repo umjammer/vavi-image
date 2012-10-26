@@ -37,7 +37,7 @@ public class t146_13 {
     public static void main(String[] args) throws Exception {
         String imageFilename = args[0];
 System.err.println("image: " + args[0]);
-        String text = "�ض��(;�L�D�M)ʧʧ\nKLab Inc.";
+        String text = "エリカタソ(;´Д｀)ハァハァ\nKLab Inc.";
         int point = 60;
         int ratio = 12;
 

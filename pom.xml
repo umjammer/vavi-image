@@ -21,7 +21,7 @@
         <configuration>
           <source>6</source>
           <target>6</target>
-          <encoding>Windows-31J</encoding>
+          <encoding>UTF-8</encoding>
           <compilerVersion>6</compilerVersion>
         </configuration>
       </plugin>

@@ -15,7 +15,7 @@ import java.util.Hashtable;
 
 
 /**
- * NonLzwGifImageSourceD
+ * NonLzwGifImageSourceï¼
  * 
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 040913 nsano initail version <br>
@@ -58,7 +58,7 @@ public class NonLzwGifImageSource implements ImageProducer {
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 
-    /** ƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public NonLzwGifImageSource(InputStream in) throws IOException {
         gifImage = GifImage.readFrom(in);
     }
@@ -68,7 +68,7 @@ public class NonLzwGifImageSource implements ImageProducer {
         return gifImage;
     }
 
-    /** ƒ‚ƒmƒJƒ‰[ƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** ãƒ¢ãƒã‚«ãƒ©ãƒ¼ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     private byte[] loadMonoColor() {
 
         int width = gifImage.getWidth();
@@ -105,7 +105,7 @@ public class NonLzwGifImageSource implements ImageProducer {
         return vram;
     }
 
-    /** 16 Fƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** 16 è‰²ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     private byte[] load16Color() {
 
         int width = gifImage.getWidth();
@@ -135,7 +135,7 @@ public class NonLzwGifImageSource implements ImageProducer {
         return vram;
     }
 
-    /** 256 Fƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** 256 è‰²ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     private byte[] load256Color() {
 
         int width = gifImage.getWidth();
@@ -159,7 +159,7 @@ public class NonLzwGifImageSource implements ImageProducer {
         return vram;
     }
 
-    /** ƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     private void loadPixel() {
 
         ColorModel cm = gifImage.getColorModel();

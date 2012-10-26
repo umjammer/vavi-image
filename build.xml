@@ -59,7 +59,7 @@
 
   <!-- javac 1.4 -->
   <target name="compile.1.4" description="コンパイル 1.4">
-    <javac debug="on" source="1.4" target="1.4" destdir="${dir.build}" encoding="MS932">
+    <javac debug="on" source="1.4" target="1.4" destdir="${dir.build}" encoding="${encoding}">
       <classpath refid="project.class.path" />
       <include name="vavi/imageio/ImageConverter.java" />
       <src path="src/main/java" />
@@ -85,7 +85,7 @@
       </fileset>
     </copy>
 
-    <javac debug="on" deprecation="on" target="1.5" encoding="MS932"
+    <javac debug="on" deprecation="on" target="1.5" encoding="${encoding}"
            destdir="target/test-classes">
       <classpath>
         <path refid="project.class.path" />

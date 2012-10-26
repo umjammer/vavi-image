@@ -13,7 +13,7 @@ import vavi.io.LittleEndianDataInputStream;
 
 
 /**
- * Windows ‚Ì Icon Œ`®‚Å‚·D
+ * Windows ã® Icon å½¢å¼ã§ã™ï¼
  * 
  * <pre><code>
  * 
@@ -39,39 +39,39 @@ import vavi.io.LittleEndianDataInputStream;
  */
 public class WindowsIcon {
 
-    /** ƒAƒCƒRƒ“ƒfƒoƒCƒX */
+    /** ã‚¢ã‚¤ã‚³ãƒ³ãƒ‡ãƒã‚¤ã‚¹ */
     private WindowsIconDevice device;
 
-    /** ƒAƒCƒRƒ“‚Ìƒrƒbƒgƒ}ƒbƒv */
+    /** ã‚¢ã‚¤ã‚³ãƒ³ã®ãƒ“ãƒƒãƒˆãƒãƒƒãƒ— */
     private WindowsBitmap bitmap;
 
-    /** ƒ}ƒXƒN */
+    /** ãƒã‚¹ã‚¯ */
     private byte mask[];
 
-    /** ƒAƒCƒRƒ“‚ğì¬‚µ‚Ü‚·D */
+    /** ã‚¢ã‚¤ã‚³ãƒ³ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public WindowsIcon(WindowsIconDevice device, WindowsBitmap bitmap) {
         this.device = device;
         this.bitmap = bitmap;
         createMask();
     }
 
-    /** ƒAƒCƒRƒ“ƒfƒoƒCƒX‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚¢ã‚¤ã‚³ãƒ³ãƒ‡ãƒã‚¤ã‚¹ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public WindowsIconDevice getDevice() {
         return device;
     }
 
-    /** ƒAƒCƒRƒ“‚Ìƒrƒbƒgƒ}ƒbƒv‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚¢ã‚¤ã‚³ãƒ³ã®ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public WindowsBitmap getBitmap() {
         return bitmap;
     }
 
-    /** ƒAƒCƒRƒ“‚Ìƒ}ƒXƒN‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚¢ã‚¤ã‚³ãƒ³ã®ãƒã‚¹ã‚¯ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public byte[] getMask() {
         return mask;
     }
 
     /**
-     * ƒ}ƒXƒN‚ğì¬‚µ‚Ü‚·D ƒ}ƒXƒN‚Ìƒf[ƒ^‚Ì•‚Í 4 ‚Ì”{”‚É‚È‚é‚æ‚¤‚ÉƒpƒfƒBƒ“ƒO‚³‚ê‚Ä‚¢‚éD Y ²‚Í‹t“]‚µ‚Ä“ü‚Á‚Ä‚éD
+     * ãƒã‚¹ã‚¯ã‚’ä½œæˆã—ã¾ã™ï¼ ãƒã‚¹ã‚¯ã®ãƒ‡ãƒ¼ã‚¿ã®å¹…ã¯ 4 ã®å€æ•°ã«ãªã‚‹ã‚ˆã†ã«ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°ã•ã‚Œã¦ã„ã‚‹ï¼ Y è»¸ã¯é€†è»¢ã—ã¦å…¥ã£ã¦ã‚‹ï¼
      */
     private void createMask() {
         int off = bitmap.getImageSize() + bitmap.getOffset();
@@ -79,21 +79,21 @@ public class WindowsIcon {
 // Debug.println("mask: " + size);
 // Debug.println(bitmap.getWidth() + ", " + bitmap.getHeight());
 
-        byte[] buf = new byte[size]; // ƒf[ƒ^‚Ì‚Ìƒ}ƒXƒNƒTƒCƒY
+        byte[] buf = new byte[size]; // ãƒ‡ãƒ¼ã‚¿ã®ã®ãƒã‚¹ã‚¯ã‚µã‚¤ã‚º
         for (int i = 0; i < size; i++) {
             buf[i] = bitmap.getBitmap()[bitmap.getImageSize() + i];
         }
 
 // Debug.dump(buf);
 
-        // ƒpƒfƒBƒ“ƒO‚ğæ‚èœ‚¢‚½ƒ}ƒXƒN
+        // ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°ã‚’å–ã‚Šé™¤ã„ãŸãƒã‚¹ã‚¯
         mask = new byte[(bitmap.getWidth() / 8) * bitmap.getHeight()];
 // Debug.println("real: " + (bitmap.getWidth() / 8) * bitmap.getHeight());
 
-        int m = (((bitmap.getWidth() / 8) + 3) / 4) * 4; // ƒpƒfƒBƒ“ƒO“ü‚è‚Ì•
+        int m = (((bitmap.getWidth() / 8) + 3) / 4) * 4; // ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°å…¥ã‚Šã®å¹…
 // Debug.println("x: " + m);
         int i = 0;
-        top: for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y ²‚ğ‹t“]
+        top: for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y è»¸ã‚’é€†è»¢
             for (int x = 0; x < m; x++) {
                 if (x < bitmap.getWidth() / 8) {
 // Debug.println(y * m + x);
@@ -110,7 +110,7 @@ public class WindowsIcon {
     }
 
     /**
-     * ƒAƒCƒRƒ“ƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_‚ğ•\‚·ƒNƒ‰ƒX‚Å‚·D
+     * ã‚¢ã‚¤ã‚³ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€ã‚’è¡¨ã™ã‚¯ãƒ©ã‚¹ã§ã™ï¼
      * 
      * <pre>
      * 
@@ -121,14 +121,14 @@ public class WindowsIcon {
      * </pre>
      */
     private static final class Header {
-        /** ƒ^ƒCƒv */
+        /** ã‚¿ã‚¤ãƒ— */
         int type;
 
-        /** ƒAƒCƒRƒ“ƒfƒoƒCƒX‚Ì” */
+        /** ã‚¢ã‚¤ã‚³ãƒ³ãƒ‡ãƒã‚¤ã‚¹ã®æ•° */
         int number;
 
         /**
-         * ƒXƒgƒŠ[ƒ€‚©‚çƒtƒ@ƒCƒ‹ƒwƒbƒ_‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬‚µ‚Ü‚·D
+         * ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ãƒ˜ãƒƒãƒ€ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆã—ã¾ã™ï¼
          */
         static final Header readFrom(InputStream in) throws IOException {
 
@@ -157,7 +157,7 @@ public class WindowsIcon {
     }
 
     /**
-     * w’è‚µ‚½ƒfƒoƒCƒX‚ÌƒAƒCƒRƒ“‚ğƒXƒgƒŠ[ƒ€‚©‚ç“Ç‚İ‚İ‚Ü‚·D
+     * æŒ‡å®šã—ãŸãƒ‡ãƒã‚¤ã‚¹ã®ã‚¢ã‚¤ã‚³ãƒ³ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰èª­ã¿è¾¼ã¿ã¾ã™ï¼
      */
     private static WindowsIcon readIcon(InputStream in, WindowsIconDevice iconDevice) throws IOException {
 
@@ -168,7 +168,7 @@ public class WindowsIcon {
     }
 
     /**
-     * ƒXƒgƒŠ[ƒ€‚©‚çƒAƒCƒRƒ“‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬‚µ‚Ü‚·D
+     * ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰ã‚¢ã‚¤ã‚³ãƒ³ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆã—ã¾ã™ï¼
      */
     public static WindowsIcon[] readFrom(InputStream in) throws IOException {
 

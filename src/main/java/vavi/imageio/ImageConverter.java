@@ -13,7 +13,7 @@ import java.awt.image.ImageObserver;
 
 
 /**
- * Image ‚ğ BufferedImage ‚É•ÏŠ·‚·‚éƒ†[ƒeƒBƒŠƒeƒB‚Å‚·B
+ * Image ã‚’ BufferedImage ã«å¤‰æ›ã™ã‚‹ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ã§ã™ã€‚
  * 
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 021124 nsano initial version <br>
@@ -37,12 +37,12 @@ public class ImageConverter {
     /** */
     private int cmType = BufferedImage.TYPE_4BYTE_ABGR;
 
-    /** TODO ©“®‰» */
+    /** TODO è‡ªå‹•åŒ– */
     public void setColorModelType(int cmType) {
         this.cmType = cmType;
     }
     
-    /** TODO BufferedImage ‚ÌƒJƒ‰[ƒ‚ƒfƒ‹‚ğ©“®İ’è‚·‚é */
+    /** TODO BufferedImage ã®ã‚«ãƒ©ãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’è‡ªå‹•è¨­å®šã™ã‚‹ */
     public BufferedImage toBufferedImage(Image image) {
         int w = image.getWidth(imageObserver);
         int h = image.getHeight(imageObserver);

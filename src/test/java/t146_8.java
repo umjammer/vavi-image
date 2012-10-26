@@ -103,7 +103,7 @@ e.printStackTrace(System.err);
                 Iterator<ImageWriter> iws = ImageIO.getImageWritersByFormatName("JPEG");
                 while (iws.hasNext()) {
                     ImageWriter tmpIw = iws.next();
-                    // BUG? JPEG ‚Ì ImageWriter ‚ª Thread Safe ‚¶‚á‚È‚¢‹C‚ª‚·‚é
+                    // BUG? JPEG ã® ImageWriter ãŒ Thread Safe ã˜ã‚ƒãªã„æ°—ãŒã™ã‚‹
                     if (clazz.isInstance(tmpIw)) {
                         iw = tmpIw;
 System.err.println("ImageWriter: " + iw.getClass());

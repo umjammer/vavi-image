@@ -68,7 +68,7 @@ System.err.println(w + ", " + h);
         slider.setMinimum(1);
         slider.setValue(10);
         slider.addChangeListener(new ChangeListener() {
-            ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ‚¿‚å‚Á‚Æ“K“–‚©H
+            ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ã¡ã‚‡ã£ã¨é©å½“ã‹ï¼Ÿ
             {
                 Properties props = new Properties();
                 try {
@@ -87,7 +87,7 @@ e.printStackTrace(System.err);
                 Iterator<ImageWriter> iws = ImageIO.getImageWritersByFormatName("JPEG");
                 while (iws.hasNext()) {
                     ImageWriter tmpIw = iws.next();
-                    // BUG? JPEG ‚Ì ImageWriter ‚ª Thread Safe ‚¶‚á‚È‚¢‹C‚ª‚·‚é
+                    // BUG? JPEG ã® ImageWriter ãŒ Thread Safe ã˜ã‚ƒãªã„æ°—ãŒã™ã‚‹
                     if (clazz.isInstance(tmpIw)) {
                         iw = tmpIw;
 System.err.println("ImageWriter: " + iw.getClass());

@@ -17,7 +17,7 @@ import java.util.Hashtable;
 
 
 /**
- * ƒA[ƒgƒ}ƒXƒ^[Œ`®‚ÌƒCƒ[ƒW‚ğì¬‚µ‚Ü‚·D
+ * ã‚¢ãƒ¼ãƒˆãƒã‚¹ã‚¿ãƒ¼å½¢å¼ã®ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’ä½œæˆã—ã¾ã™ï¼
  * 
  * TODO palette control
  * 
@@ -29,10 +29,10 @@ import java.util.Hashtable;
  */
 public class ArtMasterImageSource implements ImageProducer {
 
-    /** ƒCƒ[ƒW‚Ìƒoƒbƒtƒ@ */
+    /** ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ãƒãƒƒãƒ•ã‚¡ */
     private byte vram[];
 
-    /** PC9801 ‚Ì Digital Color Model */
+    /** PC9801 ã® Digital Color Model */
     private static final ColorModel defaultCm = new IndexColorModel(8, 8, new byte[] {
         (byte) 0x00, (byte) 0x00, (byte) 0xff, (byte) 0xff, (byte) 0x00, (byte) 0x00, (byte) 0xff, (byte) 0xff
     }, new byte[] {
@@ -44,19 +44,19 @@ public class ArtMasterImageSource implements ImageProducer {
     /** */
     private ColorModel cm = defaultCm;
 
-    /** • */
+    /** å¹… */
     private static final int W = 640;
 
-    /** ‚‚³ */
+    /** é«˜ã• */
     private static final int H = 200;
 
-    /** Red ƒoƒbƒtƒ@ */
+    /** Red ãƒãƒƒãƒ•ã‚¡ */
     private byte R[] = new byte[(W / 8) * H + 256];
 
-    /** Blue ƒoƒbƒtƒ@ */
+    /** Blue ãƒãƒƒãƒ•ã‚¡ */
     private byte G[] = new byte[(W / 8) * H + 256];
 
-    /** Green ƒoƒbƒtƒ@ */
+    /** Green ãƒãƒƒãƒ•ã‚¡ */
     private byte B[] = new byte[(W / 8) * H + 256];
 
     /** */
@@ -91,7 +91,7 @@ public class ArtMasterImageSource implements ImageProducer {
     }
 
     /**
-     * ArtMaster88 Œ`®‚ÌƒCƒ[ƒW‚ğì¬‚µ‚Ü‚·D
+     * ArtMaster88 å½¢å¼ã®ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’ä½œæˆã—ã¾ã™ï¼
      * @throws IllegalArgumentException when header is wrong
      */
     public ArtMasterImageSource(InputStream in) throws IOException {
@@ -175,7 +175,7 @@ public class ArtMasterImageSource implements ImageProducer {
     }
 
     /**
-     * ƒsƒNƒZƒ‹‚ğƒ[ƒh‚µ‚Ü‚·D
+     * ãƒ”ã‚¯ã‚»ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ï¼
      */
     private void loadPixel() {
 

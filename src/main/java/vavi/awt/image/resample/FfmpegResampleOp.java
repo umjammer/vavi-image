@@ -172,7 +172,7 @@ public class FfmpegResampleOp implements BufferedImageOp {
             System.loadLibrary("FfmpegResampleOpWrapper");
         } catch (UnsatisfiedLinkError e) {
             e.printStackTrace(System.err);
-            System.exit(-1);
+            throw new IllegalStateException(e);
         }
     }
 }

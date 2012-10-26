@@ -93,7 +93,7 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
 Debug.printStackTrace(e);
                 return false;
             }
-            return bytes[0] == 'G' && // éØï éq = "GIF8" + ("7a" or "9a")
+            return bytes[0] == 'G' && // Ë≠òÂà•Â≠ê = "GIF8" + ("7a" or "9a")
     	           bytes[1] == 'I' &&
     	           bytes[2] == 'F' &&
     	           bytes[3] == '8';

@@ -14,7 +14,7 @@ import vavi.io.LittleEndianDataInputStream;
 
 
 /**
- * ƒAƒCƒRƒ“‚Ì‘å‚«‚³“™‚Ìî•ñ‚ğ•\‚·ƒNƒ‰ƒX‚Å‚·D
+ * ã‚¢ã‚¤ã‚³ãƒ³ã®å¤§ãã•ç­‰ã®æƒ…å ±ã‚’è¡¨ã™ã‚¯ãƒ©ã‚¹ã§ã™ï¼
  * 
  * <pre>
  * 
@@ -25,7 +25,7 @@ import vavi.io.LittleEndianDataInputStream;
  *  WORD  hotspot x
  *  WORD  hotspot y
  *  DWORD size
- *  DWORD offset - ƒwƒbƒ_(6) + ƒfƒoƒCƒX(16) x ŒÂ” + size x #
+ *  DWORD offset - ãƒ˜ãƒƒãƒ€(6) + ãƒ‡ãƒã‚¤ã‚¹(16) x å€‹æ•° + size x #
  *  
  * </pre>
  * 
@@ -35,69 +35,69 @@ import vavi.io.LittleEndianDataInputStream;
  */
 public class WindowsIconDevice {
 
-    /** • */
+    /** å¹… */
     private int width;
 
-    /** ‚‚³ */
+    /** é«˜ã• */
     private int height;
 
-    /** F” */
+    /** è‰²æ•° */
     private int colors;
 
-    /** X ƒzƒbƒgƒXƒ|ƒbƒg */
+    /** X ãƒ›ãƒƒãƒˆã‚¹ãƒãƒƒãƒˆ */
     private int hotspotX;
 
-    /** Y ƒzƒbƒgƒXƒ|ƒbƒg */
+    /** Y ãƒ›ãƒƒãƒˆã‚¹ãƒãƒƒãƒˆ */
     private int hotspotY;
 
-    /** ƒTƒCƒY */
+    /** ã‚µã‚¤ã‚º */
     private int size;
 
-    /** ƒIƒtƒZƒbƒg */
+    /** ã‚ªãƒ•ã‚»ãƒƒãƒˆ */
     private int offset;
 
-    /** #readFrom —p */
+    /** #readFrom ç”¨ */
     private WindowsIconDevice() {
     }
 
-    /** ƒAƒCƒRƒ“‚ğì¬‚µ‚Ü‚·D */
+    /** ã‚¢ã‚¤ã‚³ãƒ³ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public WindowsIconDevice(int width, int height, int colors) {
         this.width = width;
         this.height = height;
         this.colors = colors;
     }
 
-    /** •‚ğæ“¾‚µ‚Ü‚·D */
+    /** å¹…ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getWidth() {
         return width;
     }
 
-    /** ‚‚³‚ğæ“¾‚µ‚Ü‚·D */
+    /** é«˜ã•ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getHeight() {
         return height;
     }
 
-    /** F”‚ğæ“¾‚µ‚Ü‚·D */
+    /** è‰²æ•°ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getColors() {
         return colors;
     }
 
-    /** F”‚ğİ’è‚µ‚Ü‚·D */
+    /** è‰²æ•°ã‚’è¨­å®šã—ã¾ã™ï¼ */
     public void setColors(int colors) {
         this.colors = colors;
     }
 
-    /** ƒTƒCƒY‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚µã‚¤ã‚ºã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getSize() {
         return size;
     }
 
-    /** ƒIƒtƒZƒbƒg‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getOffset() {
         return offset;
     }
 
-    /** ƒzƒbƒgƒXƒ|ƒbƒg‚ğæ“¾‚µ‚Ü‚·D */
+    /** ãƒ›ãƒƒãƒˆã‚¹ãƒãƒƒãƒˆã‚’å–å¾—ã—ã¾ã™ï¼ */
     public Point getHotspot() {
         return new Point(hotspotX, hotspotY);
     }
@@ -114,7 +114,7 @@ public class WindowsIconDevice {
     }
 
     /**
-     * ƒAƒCƒRƒ“‚ÌƒfƒoƒCƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğƒXƒgƒŠ[ƒ€‚©‚çw’è‚µ‚½ŒÂ”ì¬‚µ‚Ü‚·D
+     * ã‚¢ã‚¤ã‚³ãƒ³ã®ãƒ‡ãƒã‚¤ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰æŒ‡å®šã—ãŸå€‹æ•°ä½œæˆã—ã¾ã™ï¼
      */
     public static WindowsIconDevice[] readFrom(InputStream in, int number) throws IOException {
 
@@ -138,7 +138,7 @@ public class WindowsIconDevice {
             iconDevices[i].size = iin.readInt();
             iconDevices[i].offset = iin.readInt();
 
-            // ‘‚«o‚µ‚Ì‚Æ‚«‚Í 0 ‚É–ß‚·I
+            // æ›¸ãå‡ºã—ã®ã¨ãã¯ 0 ã«æˆ»ã™ï¼
 //          if (iconDevices[i].colors == 0) {
 // Debug.println("set color 0 -> 256");
 //              iconDevices[i].colors = 256;

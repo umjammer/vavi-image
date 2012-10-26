@@ -29,7 +29,7 @@ public class TestQuantize2 {
     /** */
     public static void main(String args[]) throws Exception {
 
-        ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ÇøÇÂÇ¡Ç∆ìKìñÇ©ÅH
+        ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // „Å°„Çá„Å£„Å®ÈÅ©ÂΩì„ÅãÔºü
         float quality = 0.75f;
 
         ImageFrame originalFrame = new ImageFrame();

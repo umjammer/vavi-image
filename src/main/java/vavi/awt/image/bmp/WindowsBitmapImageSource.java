@@ -15,7 +15,7 @@ import java.util.Hashtable;
 
 
 /**
- * ƒEƒCƒ“ƒhƒEƒYƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D
+ * ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚ºãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼
  * 
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
@@ -31,9 +31,9 @@ public class WindowsBitmapImageSource implements ImageProducer {
     /** */
     private enum Type {
         RGB,
-        /** ˆ³k */
+        /** åœ§ç¸® */
         RLE8,
-        /** ˆ³k */
+        /** åœ§ç¸® */
         RLE4,
         /** */
         BITFIELDS
@@ -72,12 +72,12 @@ public class WindowsBitmapImageSource implements ImageProducer {
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 
-    /** WindowsIconSource —p */
+    /** WindowsIconSource ç”¨ */
     WindowsBitmapImageSource(WindowsBitmap bitmap) {
         this.bitmap = bitmap;
     }
 
-    /** ƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public WindowsBitmapImageSource(InputStream in) throws IOException {
         bitmap = WindowsBitmap.readFrom(in);
     }
@@ -87,7 +87,7 @@ public class WindowsBitmapImageSource implements ImageProducer {
         return bitmap;
     }
 
-    /** ƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     private void loadPixel() {
 
         ColorModel cm = bitmap.getColorModel();
@@ -103,9 +103,9 @@ public class WindowsBitmapImageSource implements ImageProducer {
 
         ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT | ImageConsumer.COMPLETESCANLINES | ImageConsumer.SINGLEPASS | ImageConsumer.SINGLEFRAME);
 
-        // ƒCƒ“ƒfƒbƒNƒXƒJƒ‰[—pƒCƒ[ƒWƒoƒbƒtƒ@
+        // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚«ãƒ©ãƒ¼ç”¨ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒãƒƒãƒ•ã‚¡
         byte vram[] = null;
-        // ƒtƒ‹ƒJƒ‰[—pƒCƒ[ƒW—pƒoƒbƒtƒ@
+        // ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼ç”¨ã‚¤ãƒ¡ãƒ¼ã‚¸ç”¨ãƒãƒƒãƒ•ã‚¡
         int ivram[] = null;
 
         switch (bits) {

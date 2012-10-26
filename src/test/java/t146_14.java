@@ -111,7 +111,7 @@ e.printStackTrace(System.err);
                 while (iws.hasNext()) {
                     ImageWriter tmpIw = iws.next();
 System.err.println("ImageWriter: " + tmpIw.getClass());
-                    // BUG? JPEG ‚Ì ImageWriter ‚ª Thread Safe ‚¶‚á‚È‚¢‹C‚ª‚·‚é
+                    // BUG? JPEG ã® ImageWriter ãŒ Thread Safe ã˜ã‚ƒãªã„æ°—ãŒã™ã‚‹
                     if (classL.isInstance(tmpIw)) {
                         iwL = tmpIw;
 System.err.println("ImageWriter L: " + iwL.getClass());

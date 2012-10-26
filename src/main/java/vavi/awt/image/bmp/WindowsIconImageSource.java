@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 
 
 /**
- * ƒAƒCƒRƒ“‚ÌƒCƒ[ƒW‚ğì¬‚µ‚Ü‚·D
+ * ã‚¢ã‚¤ã‚³ãƒ³ã®ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’ä½œæˆã—ã¾ã™ï¼
  * 
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
@@ -30,10 +30,10 @@ public class WindowsIconImageSource implements ImageProducer {
     /** */
     private WindowsBitmapImageSource bitmap;
 
-    /** ƒAƒCƒRƒ“ƒtƒ@ƒCƒ‹‚É‚Í•¡”‚Ì‘å‚«‚³‚ÌƒAƒCƒRƒ“‚ª“ü‚Á‚Ä‚¢‚é */
+    /** ã‚¢ã‚¤ã‚³ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã«ã¯è¤‡æ•°ã®å¤§ãã•ã®ã‚¢ã‚¤ã‚³ãƒ³ãŒå…¥ã£ã¦ã„ã‚‹ */
     private WindowsIcon icons[];
 
-    /** ‚»‚ê‚¼‚ê‚Ì‘å‚«‚³‚ğƒfƒoƒCƒX‚ÆŒÄ‚Ñ‚»‚ê‚ğŠÇ—‚·‚é”’l */
+    /** ãã‚Œãã‚Œã®å¤§ãã•ã‚’ãƒ‡ãƒã‚¤ã‚¹ã¨å‘¼ã³ãã‚Œã‚’ç®¡ç†ã™ã‚‹æ•°å€¤ */
     private int deviceId = 0;
 
     /** @see ImageProducer */
@@ -60,20 +60,20 @@ public class WindowsIconImageSource implements ImageProducer {
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 
-    /** Œ»İ‚ÌƒfƒoƒCƒX ID ‚ğ•Ô‚µ‚Ü‚·D */
+    /** ç¾åœ¨ã®ãƒ‡ãƒã‚¤ã‚¹ ID ã‚’è¿”ã—ã¾ã™ï¼ */
     public int getDeviceId() {
         return deviceId;
     }
 
-    /** ‰½ŒÂƒfƒoƒCƒX‚ª‚ ‚é‚©‚ğ•Ô‚µ‚Ü‚·D */
+    /** ä½•å€‹ãƒ‡ãƒã‚¤ã‚¹ãŒã‚ã‚‹ã‹ã‚’è¿”ã—ã¾ã™ï¼ */
     public int getDeviceCount() {
         return icons.length;
     }
 
     /**
-     * ƒfƒoƒCƒX‚ğw’è‚µ‚½Œ`®‚É•ÏX‚µ‚Ü‚·D
+     * ãƒ‡ãƒã‚¤ã‚¹ã‚’æŒ‡å®šã—ãŸå½¢å¼ã«å¤‰æ›´ã—ã¾ã™ï¼
      * 
-     * @throws NoSuchElementException w’è‚µ‚½ƒfƒoƒCƒX‚ª‚È‚©‚Á‚½ê‡
+     * @throws NoSuchElementException æŒ‡å®šã—ãŸãƒ‡ãƒã‚¤ã‚¹ãŒãªã‹ã£ãŸå ´åˆ
      */
     public void changeDevice(WindowsIconDevice device) {
 
@@ -91,7 +91,7 @@ public class WindowsIconImageSource implements ImageProducer {
     /** */
     private Map<String, WindowsBitmapImageSource> bitmapCache = new HashMap<String, WindowsBitmapImageSource>();
 
-    /** ƒfƒoƒCƒX‚ğ ID ‚Åw’è‚µ‚Ü‚·D */
+    /** ãƒ‡ãƒã‚¤ã‚¹ã‚’ ID ã§æŒ‡å®šã—ã¾ã™ï¼ */
     public void changeDevice(int id) {
         if (id >= 0 && id < icons.length) {
             deviceId = id;
@@ -108,7 +108,7 @@ public class WindowsIconImageSource implements ImageProducer {
         }
     }
 
-    /** ƒXƒgƒŠ[ƒ€‚©‚çƒAƒCƒRƒ“‚ÌƒCƒ[ƒW‚ğì¬‚µ‚Ü‚·D */
+    /** ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰ã‚¢ã‚¤ã‚³ãƒ³ã®ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public WindowsIconImageSource(InputStream in) throws IOException {
 
         icons = WindowsIcon.readFrom(in);

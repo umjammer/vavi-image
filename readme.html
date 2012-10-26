@@ -4,7 +4,7 @@
 <head>
 <link rev="MADE" href="mailto:vavivavi@yahoo.co.jp">
 <link rel="INDEX" href="orverview.html">
-<meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="stylesheet" type="text/css" href="../../vavi.css">
 <style>
@@ -18,8 +18,8 @@
  *
  * Written by Naohide Sano
  *
- * @description	ImageIO ŠÖ˜A‚ÌƒNƒ‰ƒX
- * @status	“®ìŠm”F
+ * @description	ImageIO é–¢é€£ã®ã‚¯ãƒ©ã‚¹
+ * @status	å‹•ä½œç¢ºèª
  *
  * @author	<a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  *
@@ -30,26 +30,26 @@
 <body>
 
 <p>
-ImageIO ŠÖ˜A‚ÌƒNƒ‰ƒX‚ğ’ñ‹Ÿ‚µ‚Ü‚·D
+ImageIO é–¢é€£ã®ã‚¯ãƒ©ã‚¹ã‚’æä¾›ã—ã¾ã™ï¼
 </p>
 
-<h2>•]‰¿</h2>
+<h2>è©•ä¾¡</h2>
 
 <table>
 <tr>
  <th>type</th><th>quality</th><th>speed</th><th>comment</th>
 </tr>
 <tr>
- <td>AwtResampleOp</td><td>4</td><td>~</td><td>java.awt.Image#getScaledInstance(int,int,Image.SCALE_AREA_AVERAGING)</td>
+ <td>AwtResampleOp</td><td>4</td><td>Ã—</td><td>java.awt.Image#getScaledInstance(int,int,Image.SCALE_AREA_AVERAGING)</td>
 </tr>
 <tr>
- <td>FfmpegResamle</td><td>3</td><td>›</td><td>??? (AREA_AVERAGING)</td>
+ <td>FfmpegResamle</td><td>3</td><td>â—‹</td><td>??? (AREA_AVERAGING)</td>
 </tr>
 <tr>
- <td>Lanczos3ResampleOp</td><td>5</td><td>~</td><td>ƒxƒXƒg</td>
+ <td>Lanczos3ResampleOp</td><td>5</td><td>Ã—</td><td>ãƒ™ã‚¹ãƒˆ</td>
 </tr>
 <tr>
- <td>G2dResample</td><td>2</td><td>¢</td><td>Graphics2d#drawImage with rendering hints (VALUE_INTERPOLATION_NEAREST_NEIGHBOR)</td>
+ <td>G2dResample</td><td>2</td><td>â–³</td><td>Graphics2d#drawImage with rendering hints (VALUE_INTERPOLATION_NEAREST_NEIGHBOR)</td>
 </tr>
 <tr>
  <td>AffineTransformOp</td><td>2</td><td></td><td>TYPE_NEAREST_NEIGHBOR</td>
@@ -63,31 +63,31 @@ ImageIO ŠÖ˜A‚ÌƒNƒ‰ƒX‚ğ’ñ‹Ÿ‚µ‚Ü‚·D
 
 </table>
 
-<h2>‚±‚ê‚©‚çÀ‘•‚·‚é‚±‚Æ</h2>
+<h2>ã“ã‚Œã‹ã‚‰å®Ÿè£…ã™ã‚‹ã“ã¨</h2>
 
 <ul>
-  <li><del>OctTreeQuantizer ‚ÌƒeƒXƒg (256 ‚µ‚©o‚È‚¢H)</del></li>
-  <li><del>ImageMagikQuantizer ‚ÌŠ®¬</del></li>
-  <li><del>Lanczos3 ƒtƒBƒ‹ƒ^‚ğ AWT API ‚Åì‚é</del></li>
+  <li><del>OctTreeQuantizer ã®ãƒ†ã‚¹ãƒˆ (256 ã—ã‹å‡ºãªã„ï¼Ÿ)</del></li>
+  <li><del>ImageMagikQuantizer ã®å®Œæˆ</del></li>
+  <li><del>Lanczos3 ãƒ•ã‚£ãƒ«ã‚¿ã‚’ AWT API ã§ä½œã‚‹</del></li>
   <li><del>BufferedImageOp ???</del></li>
 </ul>
 
-<h2>‚í‚©‚Á‚½‚±‚Æ</h2>
+<h2>ã‚ã‹ã£ãŸã“ã¨</h2>
 
 <ul>
-  <li>Mac Open JDK ‚Ì JNI library Šg’£q‚Í .dylib </li>
-  <li>libsescale ‚É MMX ‚ÌƒoƒO‚ª‚ ‚è‚ ‚éƒTƒCƒY‚Ì‰æ‘œ‚ÅƒZƒOƒtƒH</li>
+  <li>Mac Open JDK ã® JNI library æ‹¡å¼µå­ã¯ .dylib </li>
+  <li>libsescale ã« MMX ã®ãƒã‚°ãŒã‚ã‚Šã‚ã‚‹ã‚µã‚¤ã‚ºã®ç”»åƒã§ã‚»ã‚°ãƒ•ã‚©</li>
 </ul>
 
-<h2>ˆêŸƒ‰ƒCƒZƒ“ƒX</h2>
+<h2>ä¸€æ¬¡ãƒ©ã‚¤ã‚»ãƒ³ã‚¹</h2>
 
 <ul>
-  <li><span class="license"><a href="http://oikaze.com/~tamada/Products/junk/index.html">Image I/O ‚Ì PPM Reader</a></span>
+  <li><span class="license"><a href="http://oikaze.com/~tamada/Products/junk/index.html">Image I/O ã® PPM Reader</a></span>
    <p>
-    <a href="http://nais.to/%7Eyto/doc/zb/0002.html">–³E–³•ÛØE’˜ìŒ •úŠü</a>
+    <a href="http://nais.to/%7Eyto/doc/zb/0002.html">ç„¡å„Ÿãƒ»ç„¡ä¿è¨¼ãƒ»è‘—ä½œæ¨©æ”¾æ£„</a>
    </p>
   </li>
-  <li><span class="license">‚³‚Ì</span>
+  <li><span class="license">ã•ã®</span>
   <li><span class="license"><a href="http://www.imagemagick.org/">ImageMagik</a></span>
    <pre>
 /*

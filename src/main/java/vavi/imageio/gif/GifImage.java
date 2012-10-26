@@ -25,12 +25,12 @@ import vavi.util.StringUtil;
  * 
  * <pre>
  * 
- *  ‹@”\_ƒo[ƒWƒ‡ƒ“  | GIF87  | GIF87a | GIF89a
+ *  æ©Ÿèƒ½ï¼¼ãƒãƒ¼ã‚¸ãƒ§ãƒ³  | GIF87  | GIF87a | GIF89a
  *  ------------------+--------+--------+-------
- *  ’Êí‰æ‘œ          |   ›   |   ›   |  ›
- *  ƒCƒ“ƒ^ƒŒ[ƒX GIF  |   ~   |   ›   |  ›
- *  “§‰ß GIF          |   ~   |   ~   |  ›
- *  GIF ƒAƒjƒ[ƒVƒ‡ƒ“|   ~   |   ~   |  ›
+ *  é€šå¸¸ç”»åƒ          |   â—‹   |   â—‹   |  â—‹
+ *  ã‚¤ãƒ³ã‚¿ãƒ¬ãƒ¼ã‚¹ GIF  |   Ã—   |   â—‹   |  â—‹
+ *  é€é GIF          |   Ã—   |   Ã—   |  â—‹
+ *  GIF ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³|   Ã—   |   Ã—   |  â—‹
  *  
  * </pre>
  * <pre>
@@ -54,14 +54,14 @@ public class GifImage {
     private static NonLzwGifDecoder decoder = new NonLzwGifDecoder();
 
     /**
-     * GIF ‚ÌƒpƒŒƒbƒg\‘¢‘Ì RGB ‡‚Ì•À‚Ñ‚Å 3 ƒoƒCƒg\¬
+     * GIF ã®ãƒ‘ãƒ¬ãƒƒãƒˆæ§‹é€ ä½“ RGB é †ã®ä¸¦ã³ã§ 3 ãƒã‚¤ãƒˆæ§‹æˆ
      */
     private static class GifRGB {
-        /** Ô¬•ª */
+        /** èµ¤æˆåˆ† */
         byte red;
-        /** —Î¬•ª */
+        /** ç·‘æˆåˆ† */
         byte green;
-        /** Â¬•ª */
+        /** é’æˆåˆ† */
         byte blue;
         /** */
         public static GifRGB readFrom(InputStream is) throws IOException {
@@ -75,7 +75,7 @@ public class GifImage {
     }
 
     /**
-     * GIF ‚Ì‰æ–Ê‹Lqî•ñ\‘¢‘Ì GIF ‘S‘Ì‚Ìî•ñ‚ğ‹Lq‚µ‚½ƒwƒbƒ_[•”B
+     * GIF ã®ç”»é¢è¨˜è¿°æƒ…å ±æ§‹é€ ä½“ GIF å…¨ä½“ã®æƒ…å ±ã‚’è¨˜è¿°ã—ãŸãƒ˜ãƒƒãƒ€ãƒ¼éƒ¨ã€‚
      */
     private static class GifHeader {
         /** GIF Signature ("GIF") */
@@ -83,12 +83,12 @@ public class GifImage {
         /** GIF Version ("87a" or "89a") */
         byte[] version = new byte[3];
         /**
-         * ‚±‚Ì GIF ‘S‘Ì‚ğ•\¦‚·‚é‚Ì‚É•K—v‚È‰¡ pixel ”
+         * ã“ã® GIF å…¨ä½“ã‚’è¡¨ç¤ºã™ã‚‹ã®ã«å¿…è¦ãªæ¨ª pixel æ•°
          */
         @SuppressWarnings("unused")
         int logicalScreenWidth;
         /**
-         * ‚±‚Ì GIF ‘S‘Ì‚ğ•\¦‚·‚é‚Ì‚É•K—v‚Èc pixel ”
+         * ã“ã® GIF å…¨ä½“ã‚’è¡¨ç¤ºã™ã‚‹ã®ã«å¿…è¦ãªç¸¦ pixel æ•°
          */
         @SuppressWarnings("unused")
         int logicalScreenHeight;
@@ -126,18 +126,18 @@ public class GifImage {
     }
 
     /**
-     * GIF ‚ÌƒCƒ[ƒW‹Lqî•ñ\‘¢‘Ì GIF ‰æ‘œˆê–‡‚É‚Â‚¢‚Ä‚Ìî•ñ‚ğ‹Lq‚µ‚½‚à‚ÌB
+     * GIF ã®ã‚¤ãƒ¡ãƒ¼ã‚¸è¨˜è¿°æƒ…å ±æ§‹é€ ä½“ GIF ç”»åƒä¸€æšã«ã¤ã„ã¦ã®æƒ…å ±ã‚’è¨˜è¿°ã—ãŸã‚‚ã®ã€‚
      */
     private static class ImageDescriptor {
-        /** ‰æ–Ê¶ã‚©‚ç‚Ì•\¦ˆÊ’u (‰¡ pixel ”) */
+        /** ç”»é¢å·¦ä¸Šã‹ã‚‰ã®è¡¨ç¤ºä½ç½® (æ¨ª pixel æ•°) */
         @SuppressWarnings("unused")
         int left;
-        /** ‰æ–Ê¶ã‚©‚ç‚Ì•\¦ˆÊ’u (c pixel ”) */
+        /** ç”»é¢å·¦ä¸Šã‹ã‚‰ã®è¡¨ç¤ºä½ç½® (ç¸¦ pixel æ•°) */
         @SuppressWarnings("unused")
         int top;
-        /** ‚±‚Ì‰æ‘œ‚Ì‰¡ pixel ” */
+        /** ã“ã®ç”»åƒã®æ¨ª pixel æ•° */
         int width;
-        /** ‚±‚Ì‰æ‘œ‚Ìc pixel ” */
+        /** ã“ã®ç”»åƒã®ç¸¦ pixel æ•° */
         int height;
         /**
          * Packed Fields
@@ -207,7 +207,7 @@ public class GifImage {
 //        return header.logicalScreenHeight; // TODO
     }
 
-    /** ƒpƒŒƒbƒg‚ğì¬‚µ‚Ü‚·D */
+    /** ãƒ‘ãƒ¬ãƒƒãƒˆã‚’ä½œæˆã—ã¾ã™ï¼ */
     public ColorModel getColorModel() {
 
         InternalImage image = images.get(index);
@@ -249,14 +249,14 @@ Debug.println("image[" + index + "]: " + images.get(index).tableBasedImageData.l
     /** */
     static GifImage readFrom(InputStream is) throws IOException {
         GifImage gifImage = new GifImage();
-        // ƒOƒ[ƒoƒ‹‰æ–Ê‹Lqî•ñ‚ğæ“¾B
+        // ã‚°ãƒ­ãƒ¼ãƒãƒ«ç”»é¢è¨˜è¿°æƒ…å ±ã‚’å–å¾—ã€‚
         gifImage.header = GifHeader.readFrom(is);
 //Debug.println(StringUtil.paramString(gifImage.header));
-        // Œ³‚Ì GIF ‚ÌƒJƒ‰[ƒrƒbƒg” (8 ƒrƒbƒgˆÈ‰º)
+        // å…ƒã® GIF ã®ã‚«ãƒ©ãƒ¼ãƒ“ãƒƒãƒˆæ•° (8 ãƒ“ãƒƒãƒˆä»¥ä¸‹)
         int sizeOfGlobalColorTable = gifImage.header.packedFields & 0x07;
 Debug.println("sizeOfGlobalColorTable: " + sizeOfGlobalColorTable);
 
-        // ƒOƒ[ƒoƒ‹ƒJƒ‰[ƒ}ƒbƒv‚Ìˆ—
+        // ã‚°ãƒ­ãƒ¼ãƒãƒ«ã‚«ãƒ©ãƒ¼ãƒãƒƒãƒ—ã®å‡¦ç†
         if ((gifImage.header.packedFields & 0x80) != 0) {
             gifImage.globalColorTable = new GifRGB[(int) Math.pow(2, sizeOfGlobalColorTable + 1)];
             if ((gifImage.header.packedFields & 0x80) != 0) {
@@ -274,14 +274,14 @@ Debug.println("sizeOfGlobalColorTable: " + sizeOfGlobalColorTable);
 Debug.println("2c: image block");
                 InternalImage image = new InternalImage();
 
-                // ˆê–‡–Ú‚ÌƒCƒ[ƒW‹Lqî•ñ‚ğæ“¾
+                // ä¸€æšç›®ã®ã‚¤ãƒ¡ãƒ¼ã‚¸è¨˜è¿°æƒ…å ±ã‚’å–å¾—
                 image.imageDescriptor = ImageDescriptor.readFrom(is);
 //Debug.println("imageHeader: " + StringUtil.paramString(imageHeader));
 
-                // ƒCƒ“ƒ^ƒŒ[ƒXƒtƒ‰ƒO
+                // ã‚¤ãƒ³ã‚¿ãƒ¬ãƒ¼ã‚¹ãƒ•ãƒ©ã‚°
                 boolean interlaced = (image.imageDescriptor.packedFields & 0x40) != 0;
 
-                // ƒ[ƒJƒ‹ƒJƒ‰[ƒ}ƒbƒv‚ª‚ ‚éê‡‚Ìˆ—
+                // ãƒ­ãƒ¼ã‚«ãƒ«ã‚«ãƒ©ãƒ¼ãƒãƒƒãƒ—ãŒã‚ã‚‹å ´åˆã®å‡¦ç†
                 if ((image.imageDescriptor.packedFields & 0x80) != 0) {
                     image.sizeOfColorTable = image.imageDescriptor.packedFields & 0x07;
 Debug.println("sizeOfLocalColorTable: " + image.sizeOfColorTable);
@@ -296,7 +296,7 @@ Debug.println("sizeOfLocalColorTable: " + image.sizeOfColorTable);
 
                 int bytesParLine = image.imageDescriptor.width;
                 int dibColorDepth = -1;
-                // ƒJƒ‰[ƒrƒbƒg”‚ğDIB‚Åg—p‚Å‚«‚é’l‚É‹­§•ÏŠ· (ƒI[ƒo[ƒTƒ“ƒvƒ‹)
+                // ã‚«ãƒ©ãƒ¼ãƒ“ãƒƒãƒˆæ•°ã‚’DIBã§ä½¿ç”¨ã§ãã‚‹å€¤ã«å¼·åˆ¶å¤‰æ› (ã‚ªãƒ¼ãƒãƒ¼ã‚µãƒ³ãƒ—ãƒ«)
                 if (image.sizeOfColorTable == 0) {
                     bytesParLine = (((image.imageDescriptor.width + 7) >> 3) + 3) & ~3;
                     dibColorDepth = 1;
@@ -339,13 +339,13 @@ Debug.println("2c: terminator");
                 byte[] data = baos.toByteArray();
 Debug.println("2c: data.length: " + data.length);
 
-                // GIF “WŠJ
+                // GIF å±•é–‹
                 image.tableBasedImageData = decoder.decode(data, image.imageDescriptor.width, image.imageDescriptor.height, bytesParLine, interlaced, dibColorDepth, data.length);
 
                 gifImage.images.add(image);
 Debug.println("2c: images: " + gifImage.images.size() + ", " + image.tableBasedImageData.length);
             } else if (blockType == 0x21) { // extention
-                // GIF Šg’£ƒuƒƒbƒN
+                // GIF æ‹¡å¼µãƒ–ãƒ­ãƒƒã‚¯
                 int extentionType = is.read();
 Debug.println(String.format("21: extentionType: %02x", extentionType));
                 switch (extentionType) {

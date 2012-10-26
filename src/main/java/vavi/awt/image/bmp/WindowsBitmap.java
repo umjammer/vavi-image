@@ -18,7 +18,7 @@ import vavi.util.Debug;
 
 
 /**
- * Windows ‚Ì bitmap Œ`®‚ğ•\‚·ƒIƒuƒWƒFƒNƒg‚Å‚·D
+ * Windows ã® bitmap å½¢å¼ã‚’è¡¨ã™ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã§ã™ï¼
  * 
  * <pre><code>
  *  
@@ -33,7 +33,7 @@ import vavi.util.Debug;
  *  
  * </code></pre>
  * 
- * @see "Windows TM 3.1 ƒOƒ‰ƒtƒBƒbƒNƒvƒƒOƒ‰ƒ~ƒ“ƒO ISBN4-8443-4628-8 p.187"
+ * @see "Windows TM 3.1 ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒ—ãƒ­ã‚°ãƒ©ãƒŸãƒ³ã‚° ISBN4-8443-4628-8 p.187"
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano move readFrom here <br>
@@ -45,81 +45,81 @@ import vavi.util.Debug;
  */
 public class WindowsBitmap {
 
-    /** ƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_ */
+    /** ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€ */
     private Header header;
 
-    /** ƒrƒbƒgƒ}ƒbƒvƒwƒbƒ_ */
+    /** ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ãƒ˜ãƒƒãƒ€ */
     private WindowsBitmapHeader bitmapHeader;
 
-    /** ƒCƒ[ƒW‚Ìƒoƒbƒtƒ@ */
+    /** ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ãƒãƒƒãƒ•ã‚¡ */
     private byte[] bitmap;
 
-    /** ƒTƒCƒY‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚µã‚¤ã‚ºã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getSize() {
         return header.bitmapSize;
     }
 
-    /** ƒCƒ[ƒW‚Ö‚ÌƒIƒtƒZƒbƒg‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚¤ãƒ¡ãƒ¼ã‚¸ã¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getOffset() {
         return header.bitmapOffset;
     }
 
-    /** ƒrƒbƒgƒ}ƒbƒvƒwƒbƒ_‚ğæ“¾‚µ‚Ü‚·D */
+    /** ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ãƒ˜ãƒƒãƒ€ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public WindowsBitmapHeader getBitmapHeader() {
         return bitmapHeader;
     }
 
-    /** ƒCƒ[ƒW‚Ìƒoƒbƒtƒ@‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ãƒãƒƒãƒ•ã‚¡ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public byte[] getBitmap() {
         return bitmap;
     }
 
-    /** ƒCƒ[ƒW‚Ìƒoƒbƒtƒ@‚ğİ’è‚µ‚Ü‚·D */
+    /** ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®šã—ã¾ã™ï¼ */
     public void setBitmap(byte[] bitmap) {
         this.bitmap = bitmap;
     }
 
-    /** ƒCƒ[ƒW‚Ìƒwƒbƒ_ƒTƒCƒY‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ãƒ˜ãƒƒãƒ€ã‚µã‚¤ã‚ºã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getHeaderSize() {
         return bitmapHeader.headerSize;
     }
 
-    /** •‚ğæ“¾‚µ‚Ü‚·D */
+    /** å¹…ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getWidth() {
         return bitmapHeader.width;
     }
 
-    /** ‚‚³‚ğæ“¾‚µ‚Ü‚·D */
+    /** é«˜ã•ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getHeight() {
         return bitmapHeader.height;
     }
 
-    /** bit of color depth ‚ğæ“¾‚µ‚Ü‚·D */
+    /** bit of color depth ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getBits() {
         return bitmapHeader.bits;
     }
 
-    /** bit of color depth ‚ğİ’è‚µ‚Ü‚·D */
+    /** bit of color depth ã‚’è¨­å®šã—ã¾ã™ï¼ */
     public void setBits(int bits) {
         bitmapHeader.bits = bits;
     }
 
-    /** ˆ³k•û–@‚ğæ“¾‚µ‚Ü‚·D */
+    /** åœ§ç¸®æ–¹æ³•ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getCompression() {
         return bitmapHeader.compression;
     }
 
-    /** ƒCƒ[ƒW‚ÌƒTƒCƒY‚ğæ“¾‚µ‚Ü‚·D */
+    /** ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ã‚µã‚¤ã‚ºã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getImageSize() {
         return bitmapHeader.imageSize;
     }
 
-    /** g—p‚µ‚Ä‚¢‚éF” 0(full)C2, 16, 256 ‚ğæ“¾‚µ‚Ü‚·D */
+    /** ä½¿ç”¨ã—ã¦ã„ã‚‹è‰²æ•° 0(full)ï¼Œ2, 16, 256 ã‚’å–å¾—ã—ã¾ã™ï¼ */
     public int getUsedColor() {
         return bitmapHeader.usedColor;
     }
 
-    /** g—p‚µ‚Ä‚¢‚éF” 0(full)C2, 16, 256 ‚ğİ’è‚µ‚Ü‚·D */
+    /** ä½¿ç”¨ã—ã¦ã„ã‚‹è‰²æ•° 0(full)ï¼Œ2, 16, 256 ã‚’è¨­å®šã—ã¾ã™ï¼ */
     public void setUsedColor(int colors) {
         bitmapHeader.usedColor = colors;
     }
@@ -202,7 +202,7 @@ Debug.println(Level.SEVERE, e);
     // -------------------------------------------------------------------------
 
     /**
-     * Bitmap ƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_
+     * Bitmap ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€
      * 
      * <pre><code>
      * 
@@ -220,7 +220,7 @@ Debug.println(Level.SEVERE, e);
 
         int bitmapSize;
 
-        /** ƒrƒbƒgƒ}ƒbƒvƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_‚ğ“Ç‚İ‚İ‚Ü‚·D */
+        /** ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€ã‚’èª­ã¿è¾¼ã¿ã¾ã™ï¼ */
         static final Header readFrom(InputStream in) throws IOException {
 
             Header header = new Header();
@@ -258,21 +258,21 @@ Debug.println(Level.SEVERE, e);
     // -------------------------------------------------------------------------
 
     /**
-     * Windows ‚Ì bitmap header ‚ğ•\‚·ƒIƒuƒWƒFƒNƒg‚Å‚·D
+     * Windows ã® bitmap header ã‚’è¡¨ã™ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã§ã™ï¼
      * 
      * <pre><code>
      * 
-     *  DWORD   size            ƒwƒbƒ_‚ÌƒoƒCƒg”
-     *  LONG    width           •
-     *  LONG    height          ‚‚³
-     *  WORD    planes          í‚É1
+     *  DWORD   size            ãƒ˜ãƒƒãƒ€ã®ãƒã‚¤ãƒˆæ•°
+     *  LONG    width           å¹…
+     *  LONG    height          é«˜ã•
+     *  WORD    planes          å¸¸ã«1
      *  WORD    bitCount        1: mono, 4: 16 colors, 8: 256 colors, 24: full colors
      *  DWORD   compression     0: no compression, 1: 8bit/pixel RLE, 2: 4bit/pixel RLE
-     *  DWORD   sizeImage       ƒCƒ[ƒW‚ÌƒTƒCƒY
+     *  DWORD   sizeImage       ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ã‚µã‚¤ã‚º
      *  LONG    XPelsPerMeter   X pixels/meter
      *  LONG    YPelsPerMeter   Y pixels/meter
      *  DWORD   ClrUsed         0: see bitCount, else: &lt;24:??? =24:???
-     *  DWORD   ClrImportant    •\¦‚É•K—v‚ÈƒCƒ“ƒfƒbƒNƒX” 0: ‚·‚×‚Ä
+     *  DWORD   ClrImportant    è¡¨ç¤ºã«å¿…è¦ãªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æ•° 0: ã™ã¹ã¦
      *  
      * </code></pre>
      * 
@@ -282,29 +282,29 @@ Debug.println(Level.SEVERE, e);
      *          1.10 010901 nsano be inner class <br>
      */
     private static final class WindowsBitmapHeader {
-        /** ƒwƒbƒ_‚ÌƒTƒCƒY */
+        /** ãƒ˜ãƒƒãƒ€ã®ã‚µã‚¤ã‚º */
         int headerSize;
-        /** • */
+        /** å¹… */
         int width;
-        /** ‚‚³ */
+        /** é«˜ã• */
         int height;
         /**  */
         int planes;
         /** bit of color depth */
         int bits;
-        /** ˆ³k•û–@ */
+        /** åœ§ç¸®æ–¹æ³• */
         int compression;
-        /** ƒCƒ[ƒW‚ÌƒTƒCƒY */
+        /** ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ã‚µã‚¤ã‚º */
         int imageSize;
-        /** ‰¡ pixel/m */
+        /** æ¨ª pixel/m */
         int ppmX;
-        /** c pixel/m */
+        /** ç¸¦ pixel/m */
         int ppmY;
-        /** g—p‚µ‚Ä‚¢‚éF” 0(full)C2, 16, 256 */
+        /** ä½¿ç”¨ã—ã¦ã„ã‚‹è‰²æ•° 0(full)ï¼Œ2, 16, 256 */
         int usedColor;
         /**  */
         int importantColor;
-        /** ƒpƒŒƒbƒg */
+        /** ãƒ‘ãƒ¬ãƒƒãƒˆ */
         ColorModel palette;
 
         /** for debug */
@@ -324,7 +324,7 @@ Debug.println(Level.SEVERE, e);
         }
 
         /**
-         * ƒXƒgƒŠ[ƒ€‚©‚çƒrƒbƒgƒ}ƒbƒvƒwƒbƒ_‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬‚µ‚Ü‚·D
+         * ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ãƒ˜ãƒƒãƒ€ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆã—ã¾ã™ï¼
          */
         static final WindowsBitmapHeader readFrom(InputStream in) throws IOException {
 
@@ -415,7 +415,7 @@ Debug.println("unknown color size: " + bh.usedColor);
 
     //----
 
-    /** 24 Bit ƒtƒ‹ƒJƒ‰[ƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** 24 Bit ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public int[] get24BitColorData() {
 
         int width = getWidth();
@@ -441,7 +441,7 @@ Debug.println("unknown color size: " + bh.usedColor);
         return ivram;
     }
 
-    /** 32 Bit ƒtƒ‹ƒJƒ‰[ƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** 32 Bit ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public int[] get32BitColorData() {
 
         int width = getWidth();
@@ -468,7 +468,7 @@ Debug.println("unknown color size: " + bh.usedColor);
         return ivram;
     }
 
-    /** ƒ‚ƒmƒJƒ‰[ƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** ãƒ¢ãƒã‚«ãƒ©ãƒ¼ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public byte[] getMonoColorData() {
 
         int width = getWidth();
@@ -504,7 +504,7 @@ Debug.println("unknown color size: " + bh.usedColor);
         return vram;
     }
 
-    /** 16 Fƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** 16 è‰²ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public byte[] get16ColorData() {
 
         int width = getWidth();
@@ -533,7 +533,7 @@ Debug.println("unknown color size: " + bh.usedColor);
         return vram;
     }
 
-    /** 16 Fˆ³kƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** 16 è‰²åœ§ç¸®ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public byte[] get16ColorRleData() {
 
         int width = getWidth();
@@ -589,7 +589,7 @@ Debug.println("unknown color size: " + bh.usedColor);
         return vram;
     }
 
-    /** 256 Fƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** 256 è‰²ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public byte[] get256ColorData() {
 
         int width = getWidth();
@@ -611,7 +611,7 @@ Debug.println("unknown color size: " + bh.usedColor);
         return vram;
     }
 
-    /** 256 Fˆ³kƒrƒbƒgƒ}ƒbƒv‚ğì¬‚µ‚Ü‚·D */
+    /** 256 è‰²åœ§ç¸®ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¾ã™ï¼ */
     public byte[] get256ColorRleData() {
 
         int width = getWidth();
@@ -665,7 +665,7 @@ Debug.println("unknown color size: " + bh.usedColor);
 
     // -------------------------------------------------------------------------
 
-    /** ƒrƒbƒgƒ}ƒbƒvƒCƒ[ƒW‚ğ“Ç‚İ‚İ‚Ü‚·D */
+    /** ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’èª­ã¿è¾¼ã¿ã¾ã™ï¼ */
     private static byte[] readBitmap(InputStream in, int num) throws IOException {
 
         byte buf[] = new byte[num];
@@ -679,9 +679,9 @@ Debug.println("unknown color size: " + bh.usedColor);
     }
 
     /**
-     * ƒrƒbƒgƒ}ƒbƒv‚ğƒXƒgƒŠ[ƒ€‚©‚çì¬‚µ‚Ü‚·D
+     * ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰ä½œæˆã—ã¾ã™ï¼
      * <p>
-     * •’Ê‚Ìƒrƒbƒgƒ}ƒbƒv—p
+     * æ™®é€šã®ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ç”¨
      * </p>
      */
     public static WindowsBitmap readFrom(InputStream in) throws IOException {
@@ -702,9 +702,9 @@ Debug.println("unknown color size: " + bh.usedColor);
     }
 
     /**
-     * ƒrƒbƒgƒ}ƒbƒv‚ğƒXƒgƒŠ[ƒ€‚©‚çì¬‚µ‚Ü‚·D
+     * ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰ä½œæˆã—ã¾ã™ï¼
      * <p>
-     * ƒAƒCƒRƒ“—p
+     * ã‚¢ã‚¤ã‚³ãƒ³ç”¨
      * </p>
      * 
      * <pre><code>

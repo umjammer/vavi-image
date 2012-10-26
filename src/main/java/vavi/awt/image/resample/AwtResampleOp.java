@@ -35,16 +35,16 @@ public class AwtResampleOp implements BufferedImageOp {
 
     /**
      * TODO hints
-     * @param sx ”ä—¦‚¾‚æI
-     * @param sy ”ä—¦‚¾‚æI
+     * @param sx æ¯”ç‡ã ã‚ˆï¼
+     * @param sy æ¯”ç‡ã ã‚ˆï¼
      */
     public AwtResampleOp(double sx, double sy) {
         this(sx, sy, Image.SCALE_AREA_AVERAGING);
     }
 
     /**
-     * @param sx ”ä—¦‚¾‚æI
-     * @param sy ”ä—¦‚¾‚æI
+     * @param sx æ¯”ç‡ã ã‚ˆï¼
+     * @param sy æ¯”ç‡ã ã‚ˆï¼
      */
     public AwtResampleOp(double sx, double sy, int hint) {
         this.sx = sx;
