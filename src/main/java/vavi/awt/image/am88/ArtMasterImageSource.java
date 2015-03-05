@@ -30,7 +30,7 @@ import java.util.Hashtable;
 public class ArtMasterImageSource implements ImageProducer {
 
     /** イメージのバッファ */
-    private byte vram[];
+    private byte[] vram;
 
     /** PC9801 の Digital Color Model */
     private static final ColorModel defaultCm = new IndexColorModel(8, 8, new byte[] {
@@ -51,13 +51,13 @@ public class ArtMasterImageSource implements ImageProducer {
     private static final int H = 200;
 
     /** Red バッファ */
-    private byte R[] = new byte[(W / 8) * H + 256];
+    private byte[] R = new byte[(W / 8) * H + 256];
 
     /** Blue バッファ */
-    private byte G[] = new byte[(W / 8) * H + 256];
+    private byte[] G = new byte[(W / 8) * H + 256];
 
     /** Green バッファ */
-    private byte B[] = new byte[(W / 8) * H + 256];
+    private byte[] B = new byte[(W / 8) * H + 256];
 
     /** */
     private ImageConsumer ic;
@@ -96,8 +96,8 @@ public class ArtMasterImageSource implements ImageProducer {
      */
     public ArtMasterImageSource(InputStream in) throws IOException {
 
-        byte buf[] = new byte[40];
-        final byte header[] = {
+        byte[] buf = new byte[40];
+        final byte[] header = {
             'S', 'S', '_', 'S', 'I', 'F', ' ', ' ', ' ', ' ', '0', '.', '0', '0', 0x1a, 0
         };
 
