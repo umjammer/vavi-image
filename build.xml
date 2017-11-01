@@ -61,17 +61,14 @@
     <artifact:dependencies fileSetId="maven-ant-tasks.dependency.fileset">
       <pom refid="maven.project"/>
     </artifact:dependencies>
+    <artifact:mvn pom="pom.xml">
+      <arg value="package"/>
+      <arg value="-Dmaven.test.skip=true"/>
+    </artifact:mvn>
   </target>
 
   <property name="dir.native" value="src/main/jni" />
   <property name="dir.build" value="target/classes" />
-
-  <!-- クラスパスの定義 -->
-  <path id="project.class.path">
-    <fileset dir="lib">
-      <include name="*.jar" />
-    </fileset>
-  </path>
 
   <!-- javac 1.4 -->
   <target name="compile.1.4" description="コンパイル 1.4">

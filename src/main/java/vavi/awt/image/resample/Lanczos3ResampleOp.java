@@ -88,7 +88,7 @@ public class Lanczos3ResampleOp extends BasicBufferedImageOp {
         }
 
         return outPixels;
-    }    
+    }
 
     /* */
     public Rectangle2D getBounds2D(BufferedImage src) {
