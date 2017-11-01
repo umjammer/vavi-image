@@ -124,7 +124,7 @@ Debug.println(input);
         }
 
         ImageTypeSpecifier specifier = null;
-        java.util.List<ImageTypeSpecifier> l = new ArrayList<ImageTypeSpecifier>();
+        java.util.List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);
         return l.iterator();
     }

@@ -115,7 +115,7 @@ Debug.println("unsupported input: " + input);
         }
 
         ImageTypeSpecifier specifier = null;
-        List<ImageTypeSpecifier> l = new ArrayList<ImageTypeSpecifier>();
+        List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);
         return l.iterator();
     }

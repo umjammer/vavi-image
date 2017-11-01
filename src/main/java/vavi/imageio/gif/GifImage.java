@@ -66,6 +66,7 @@ public class GifImage {
         /** */
         public static GifRGB readFrom(InputStream is) throws IOException {
             GifRGB rgb = new GifRGB();
+            @SuppressWarnings("resource")
             LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is);
             rgb.red = (byte) dis.read();
             rgb.green = (byte) dis.read();
@@ -113,6 +114,7 @@ public class GifImage {
         /** */
         static GifHeader readFrom(InputStream is) throws IOException {
             GifHeader gh = new GifHeader();
+            @SuppressWarnings("resource")
             LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is);
             dis.readFully(gh.signature);
             dis.readFully(gh.version);
@@ -155,6 +157,7 @@ public class GifImage {
         /** */
         static ImageDescriptor readFrom(InputStream is) throws IOException {
             ImageDescriptor id = new ImageDescriptor();
+            @SuppressWarnings("resource")
             LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is);
             // gih.split = (byte) dis.read();
             id.left = dis.readUnsignedShort();
@@ -244,7 +247,7 @@ Debug.println("image[" + index + "]: " + images.get(index).tableBasedImageData.l
     private GifRGB[] globalColorTable;
 
     /** */
-    private List<InternalImage> images = new ArrayList<InternalImage>();
+    private List<InternalImage> images = new ArrayList<>();
 
     /** */
     static GifImage readFrom(InputStream is) throws IOException {

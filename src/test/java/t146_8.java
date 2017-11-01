@@ -12,6 +12,7 @@ import java.awt.image.BufferedImageOp;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
@@ -49,7 +50,7 @@ public class t146_8 {
     }
 
     static final float[] elements;
-    
+
     static {
         int N = 3;
         elements = new float[N * N];
@@ -88,7 +89,7 @@ System.err.println(w + ", " + h);
             {
                 Properties props = new Properties();
                 try {
-                    props.load(t146_8.class.getResourceAsStream("local.properties"));
+                    props.load(new FileInputStream("local.properties"));
                 } catch (Exception e) {
 e.printStackTrace(System.err);
                 }
@@ -127,12 +128,12 @@ System.err.println("ImageWriter: " + iw.getClass());
                 try {
                     //
                     BufferedImage image = converter.toBufferedImage(rightImage);
-    
+
                     //
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
                     iw.setOutput(ios);
-    
+
                     ImageWriteParam iwp = iw.getDefaultWriteParam();
                     iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
                     ((JPEGImageWriteParam) iwp).setOptimizeHuffmanTables(true);
@@ -148,7 +149,7 @@ System.err.println("ImageWriter: " + iw.getClass());
                     BufferedImageOp filter = new GaussianBlurOp(1.3f);
                     BufferedImage bluredImage = filter.filter(tmpImage, null);
 
-                    //                    
+                    //
                     iw.write(null, new IIOImage(bluredImage, null, null), iwp);
 
                     //

@@ -42,7 +42,7 @@ public class G2dResampleOp implements BufferedImageOp {
     public G2dResampleOp(double sx, double sy) {
         this.sx = sx;
         this.sy = sy;
-        Map<RenderingHints.Key, Object> map = new HashMap<RenderingHints.Key, Object>();
+        Map<RenderingHints.Key, Object> map = new HashMap<>();
         map.put(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         map.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         map.put(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);

@@ -180,7 +180,7 @@ public class ArtMasterImageSource implements ImageProducer {
     private void loadPixel() {
 
         ic.setDimensions(W, H);
-        ic.setProperties(new Hashtable<Object, Object>());
+        ic.setProperties(new Hashtable<>());
         ic.setColorModel(cm);
 
         ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT | ImageConsumer.COMPLETESCANLINES | ImageConsumer.SINGLEPASS | ImageConsumer.SINGLEFRAME);

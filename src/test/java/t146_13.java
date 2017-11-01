@@ -37,14 +37,15 @@ public class t146_13 {
     public static void main(String[] args) throws Exception {
         String imageFilename = args[0];
 System.err.println("image: " + args[0]);
-        String text = "エリカタソ(;´Д｀)ハァハァ\nKLab Inc.";
+        String text = args[1];
+        String fontName = args[2];
         int point = 60;
         int ratio = 12;
 
         final BufferedImage image = ImageIO.read(new File(imageFilename));
 System.err.println(image);
 
-        Font font = new Font("MS UI Gothic", Font.PLAIN, point);
+        Font font = new Font(fontName, Font.PLAIN, point);
 
         float stroke = point / (float) ratio;
 

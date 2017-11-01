@@ -41,10 +41,10 @@ public class TestQuantize {
      */
     static int[][] getPixels(Image image) throws IOException {
         int w = image.getWidth(null);
-        int h = image.getHeight(null);        
+        int h = image.getHeight(null);
         int[] pix = new int[w * h];
         PixelGrabber grabber = new PixelGrabber(image, 0, 0, w, h, pix, 0, w);
-        
+
         try {
             if (grabber.grabPixels() != true) {
                 throw new IOException("Grabber returned false: " +
@@ -60,7 +60,7 @@ public class TestQuantize {
                 pixels[x][y] = pix[y * w + x];
             }
         }
-        
+
         return pixels;
     }
 
@@ -89,7 +89,7 @@ public class TestQuantize {
 System.out.println("reduced to " + args[i] + " in " + tm + "ms using ImageMagikQuantizer direct");
             ImageFrame filteredFrame = new ImageFrame();
             filteredFrame.setImage(palette, pixels);
-            
+
             filteredFrame.setTitle(args[i] + " colors");
             filteredFrame.setLocation(x, y);
 

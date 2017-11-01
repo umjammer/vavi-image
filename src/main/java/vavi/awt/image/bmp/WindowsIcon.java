@@ -134,6 +134,7 @@ public class WindowsIcon {
 
             Header h = new Header();
 
+            @SuppressWarnings("resource")
             LittleEndianDataInputStream iin = new LittleEndianDataInputStream(in);
 
             @SuppressWarnings("unused")

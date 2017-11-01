@@ -89,7 +89,7 @@ public class WindowsIconImageSource implements ImageProducer {
     }
 
     /** */
-    private Map<String, WindowsBitmapImageSource> bitmapCache = new HashMap<String, WindowsBitmapImageSource>();
+    private Map<String, WindowsBitmapImageSource> bitmapCache = new HashMap<>();
 
     /** デバイスを ID で指定します． */
     public void changeDevice(int id) {

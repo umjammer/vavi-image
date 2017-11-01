@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -69,7 +70,7 @@ System.err.println(w + ", " + h);
             {
                 Properties props = new Properties();
                 try {
-                    props.load(t146_9.class.getResourceAsStream("local.properties"));
+                    props.load(new FileInputStream("local.properties"));
                 } catch (Exception e) {
 e.printStackTrace(System.err);
                 }

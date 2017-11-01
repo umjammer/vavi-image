@@ -120,6 +120,7 @@ public class WindowsIconDevice {
 
         WindowsIconDevice iconDevices[] = new WindowsIconDevice[number];
 
+        @SuppressWarnings("resource")
         LittleEndianDataInputStream iin = new LittleEndianDataInputStream(in);
 
         for (int i = 0; i < number; i++) {

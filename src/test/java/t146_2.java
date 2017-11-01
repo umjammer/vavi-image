@@ -58,12 +58,12 @@ Debug.println("reader: " + readerMIMEType + ", writer: " + writerMIMEType);
                             ImageTranscoder imageTranscoder = imageTranscoders.next(); 
 
 Debug.println(imageReader + ", " + imageWriter + ", " + imageTranscoder);
-                        }                    
-                    }                    
-                }            
+                        }
+                    }
+                }
             }
         }
-        
+
         BufferedImage image = ImageIO.read(new File(args[1]));
         ImageIO.write(image, args[0], new File(args[2]));
     }

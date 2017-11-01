@@ -262,7 +262,7 @@ public class PpmImageReader extends ImageReader {
         checkIndex(imageIndex);
         readHeader();
         ImageTypeSpecifier specifier = null;
-        java.util.List<ImageTypeSpecifier> l = new ArrayList<ImageTypeSpecifier>();
+        java.util.List<ImageTypeSpecifier> l = new ArrayList<>();
         switch (ppm.getImageType()) {
         case Ppm.BINARY_PBM:
             specifier = ImageTypeSpecifier.createGrayscale(1, 0, false);

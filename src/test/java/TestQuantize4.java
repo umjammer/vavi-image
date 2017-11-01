@@ -52,7 +52,7 @@ long tm = System.currentTimeMillis();
 tm = System.currentTimeMillis() - tm;
             ImageFrame filteredFrame = new ImageFrame();
             filteredFrame.setImage(filteredImage);
-            
+
             filteredFrame.setTitle(args[i] + " colors (NeuralNet)");
             filteredFrame.setLocation(x, y);
 

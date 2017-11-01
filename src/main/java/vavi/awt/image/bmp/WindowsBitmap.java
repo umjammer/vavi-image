@@ -225,6 +225,7 @@ Debug.println(Level.SEVERE, e);
 
             Header header = new Header();
 
+            @SuppressWarnings("resource")
             LittleEndianDataInputStream iin = new LittleEndianDataInputStream(in);
 
             @SuppressWarnings("unused")
@@ -330,6 +331,7 @@ Debug.println(Level.SEVERE, e);
 
             WindowsBitmapHeader bh = new WindowsBitmapHeader();
 
+            @SuppressWarnings("resource")
             LittleEndianDataInputStream iin = new LittleEndianDataInputStream(in);
 
             // read 40 bytes

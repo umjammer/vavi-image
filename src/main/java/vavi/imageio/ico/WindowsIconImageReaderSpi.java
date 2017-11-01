@@ -26,54 +26,54 @@ import vavi.util.Debug;
  */
 public class WindowsIconImageReaderSpi extends ImageReaderSpi {
 
-    private static final String vendorName = "http://www.vavisoft.com";
-    private static final String version = "0.00";
-    private static final String readerClassName =
+    private static final String VendorName = "http://www.vavisoft.com";
+    private static final String Version = "0.00";
+    private static final String ReaderClassName =
         "vavi.imageio.ico.WindowsIconImageReader";
-    private static final String names[] = {
+    private static final String[] Names = {
         "ICO"
     };
-    private static final String suffixes[] = {
+    private static final String[] Suffixes = {
         "ico", "ICO"
     };
-    private static final String mimeTypes[] = {
+    private static final String[] mimeTypes = {
         "image/x-icon"
     };
-    static final String writerSpiNames[] = {
+    static final String[] WriterSpiNames = {
         /*"vavi.imageio.ico.WindowsIconWriterSpi"*/
     };
-    private static final boolean supportsStandardStreamMetadataFormat = false;
-    private static final String nativeStreamMetadataFormatName = null;
-    private static final String nativeStreamMetadataFormatClassName = null;
-    private static final String extraStreamMetadataFormatNames[] = null;
-    private static final String extraStreamMetadataFormatClassNames[] = null;
-    private static final boolean supportsStandardImageMetadataFormat = false;
-    private static final String nativeImageMetadataFormatName = "ico";
-    private static final String nativeImageMetadataFormatClassName =
+    private static final boolean SupportsStandardStreamMetadataFormat = false;
+    private static final String NativeStreamMetadataFormatName = null;
+    private static final String NativeStreamMetadataFormatClassName = null;
+    private static final String[] ExtraStreamMetadataFormatNames = null;
+    private static final String[] ExtraStreamMetadataFormatClassNames = null;
+    private static final boolean SupportsStandardImageMetadataFormat = false;
+    private static final String NativeImageMetadataFormatName = "ico";
+    private static final String NativeImageMetadataFormatClassName =
         /*"vavi.imageio.ico.WindowsIconMetaData"*/ null;
-    private static final String extraImageMetadataFormatNames[] = null;
-    private static final String extraImageMetadataFormatClassNames[] = null;
+    private static final String[] ExtraImageMetadataFormatNames = null;
+    private static final String[] ExtraImageMetadataFormatClassNames = null;
     
     /** */
     public WindowsIconImageReaderSpi() {
-        super(vendorName,
-              version,
-              names,
-              suffixes,
+        super(VendorName,
+              Version,
+              Names,
+              Suffixes,
               mimeTypes,
-              readerClassName,
+              ReaderClassName,
               new Class[] { ImageInputStream.class, InputStream.class },
-              writerSpiNames,
-              supportsStandardStreamMetadataFormat,
-              nativeStreamMetadataFormatName,
-              nativeStreamMetadataFormatClassName,
-              extraStreamMetadataFormatNames,
-              extraStreamMetadataFormatClassNames,
-              supportsStandardImageMetadataFormat,
-              nativeImageMetadataFormatName,
-              nativeImageMetadataFormatClassName,
-              extraImageMetadataFormatNames,
-              extraImageMetadataFormatClassNames);
+              WriterSpiNames,
+              SupportsStandardStreamMetadataFormat,
+              NativeStreamMetadataFormatName,
+              NativeStreamMetadataFormatClassName,
+              ExtraStreamMetadataFormatNames,
+              ExtraStreamMetadataFormatClassNames,
+              SupportsStandardImageMetadataFormat,
+              NativeImageMetadataFormatName,
+              NativeImageMetadataFormatClassName,
+              ExtraImageMetadataFormatNames,
+              ExtraImageMetadataFormatClassNames);
     }
 
     /* */

@@ -66,7 +66,7 @@ public class NeuralNetQuantizeOp implements BufferedImageOp {
             return dest;
 
         } catch (IOException e) {
-            throw (RuntimeException) new IllegalStateException().initCause(e);
+            throw new IllegalStateException(e);
         }
     }
 

@@ -68,9 +68,9 @@ public class Lanczos3ResampleOp extends BasicBufferedImageOp {
             resample.setFilter(Resample.FILTER_TYPE_LANCZOS3);
             resample.process();
         } catch (MissingParameterException e) {
-            throw (RuntimeException) new IllegalStateException().initCause(e);
+            throw new IllegalStateException(e);
         } catch (WrongParameterException e) {
-            throw (RuntimeException) new IllegalStateException().initCause(e);
+            throw new IllegalStateException(e);
         }
 
         RGB24Image outImage = (RGB24Image) resample.getOutputImage(); 

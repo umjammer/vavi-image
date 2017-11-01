@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
@@ -47,7 +48,7 @@ public class t146_14 {
     }
 
     static final float[] elements;
-    
+
     static {
         int N = 3;
         elements = new float[N * N];
@@ -92,7 +93,7 @@ System.err.println(w + ", " + h);
             {
                 Properties props = new Properties();
                 try {
-                    props.load(t146_14.class.getResourceAsStream("local.properties"));
+                    props.load(new FileInputStream("local.properties"));
                 } catch (Exception e) {
 e.printStackTrace(System.err);
                 }
@@ -144,12 +145,12 @@ System.err.println("ImageWriter R: " + iwR.getClass());
                 try {
                     // L
                     BufferedImage image = converter.toBufferedImage(leftImage);
-    
+
                     //
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
                     iwL.setOutput(ios);
-    
+
                     ImageWriteParam iwp = iwL.getDefaultWriteParam();
                     iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
                     iwp.setCompressionQuality(quality);
@@ -159,7 +160,7 @@ System.err.println("ImageWriter R: " + iwR.getClass());
                     }
 //System.err.println(StringUtil.paramString(iwp.getCompressionTypes()));
 
-                    //                    
+                    //
                     iwL.write(null, new IIOImage(image, null, null), iwp);
                     ios.flush();
                     ios.close();
@@ -175,12 +176,12 @@ System.err.println("ImageWriter R: " + iwR.getClass());
 
                     // R
                     image = converter.toBufferedImage(rightImage);
-    
+
                     //
                     baos = new ByteArrayOutputStream();
                     ios = ImageIO.createImageOutputStream(baos);
                     iwR.setOutput(ios);
-    
+
                     iwp = iwR.getDefaultWriteParam();
                     iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
                     iwp.setCompressionQuality(quality);
@@ -189,7 +190,7 @@ System.err.println("ImageWriter R: " + iwR.getClass());
                     }
 //System.err.println(StringUtil.paramString(iwp));
 
-                    //                    
+                    //
 //iwR.write(image);
                     iwR.write(null, new IIOImage(image, null, null), iwp);
                     ios.flush();

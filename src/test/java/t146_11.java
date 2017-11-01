@@ -13,6 +13,7 @@ import java.awt.image.BufferedImageOp;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
@@ -49,19 +50,6 @@ public class t146_11 {
     public static void main(String[] args) throws Exception {
         new t146_11(args);
     }
-
-    static final float[] elements;
-    
-    static {
-        int N = 3;
-        elements = new float[N * N];
-        float center = .4f;
-        float othes = (1 - center) / (N * N - 1);
-        for (int i = 0; i < N * N; i++) {
-            elements[i] = othes;
-        }
-        elements[N * N / 2] = center;
-    };
 
     BufferedImage rightImage;
 
@@ -163,7 +151,7 @@ System.err.println(args[0]);
 
         JFrame frame = new JFrame();
         frame.setTitle("normal | blur");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(scrollPane);
         frame.pack();
         frame.setVisible(true);
@@ -215,11 +203,11 @@ System.err.println("quality: " + quality + ", size: " + size + ", blur: " + blur
         static {
             Properties props = new Properties();
             try {
-                props.load(t146_11.class.getResourceAsStream("local.properties"));
+                props.load(new FileInputStream("local.properties"));
             } catch (Exception e) {
 e.printStackTrace(System.err);
             }
-    
+
             String className = props.getProperty("image.writer.class", "com.sun.imageio.plugins.jpeg.JPEGImageWriter");
             Class<?> clazz;
             try {
@@ -263,7 +251,7 @@ System.err.println("ImageWriter: " + iw.getClass());
                 iwp.setCompressionQuality(quality);
 //System.err.println(StringUtil.paramString(iwp.getCompressionTypes()));
 
-                //                    
+                //
                 iw.write(null, new IIOImage(src, null, null), iwp);
 
                 //
@@ -272,7 +260,7 @@ System.err.println("ImageWriter: " + iw.getClass());
                 return dst;
 
             } catch (IOException e) {
-                throw (RuntimeException) new IllegalStateException().initCause(e);
+                throw new IllegalStateException(e);
             }
         }
         int getSize() {
