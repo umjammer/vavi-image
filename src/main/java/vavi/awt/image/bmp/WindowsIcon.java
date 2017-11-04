@@ -111,13 +111,13 @@ public class WindowsIcon {
 
     /**
      * アイコンファイルのヘッダを表すクラスです．
-     * 
+     *
      * <pre>
-     * 
+     *
      *  WORD  dummy
-     *  WORD  type	1: icon
+     *  WORD  type  1: icon
      *  WORD  count
-     *  
+     *
      * </pre>
      */
     private static final class Header {
@@ -150,10 +150,9 @@ public class WindowsIcon {
         }
 
         /** for debug */
-        @SuppressWarnings("unused")
-        final void print() {
-            System.err.println("type: " + type);
-            System.err.println("has: " + number);
+        public String toString() {
+            return "type: " + type +
+                    ", has: " + number;
         }
     }
 
@@ -173,11 +172,11 @@ public class WindowsIcon {
      */
     public static WindowsIcon[] readFrom(InputStream in) throws IOException {
 
-        WindowsIcon icons[];
-        WindowsIconDevice iconDevices[];
+        WindowsIcon[] icons;
+        WindowsIconDevice[] iconDevices;
 
         Header h = Header.readFrom(in);
-// h.print();
+System.err.println(h);
         icons = new WindowsIcon[h.number];
         iconDevices = WindowsIconDevice.readFrom(in, h.number);
 

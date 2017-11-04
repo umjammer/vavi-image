@@ -53,7 +53,7 @@ public class WindowsIconImageReaderSpi extends ImageReaderSpi {
         /*"vavi.imageio.ico.WindowsIconMetaData"*/ null;
     private static final String[] ExtraImageMetadataFormatNames = null;
     private static final String[] ExtraImageMetadataFormatClassNames = null;
-    
+
     /** */
     public WindowsIconImageReaderSpi() {
         super(VendorName,
@@ -80,31 +80,35 @@ public class WindowsIconImageReaderSpi extends ImageReaderSpi {
     public String getDescription(Locale locale) {
         return "Windows Icon Image";
     }
-    
+
     /* TODO InputStream */
     public boolean canDecodeInput(Object obj) throws IOException {
 
         if (obj instanceof ImageInputStream) {
             ImageInputStream is = (ImageInputStream) obj;
-            int type;
+            int type, count;
+            byte[] bytes = new byte[2];
             try {
-                is.setByteOrder(ByteOrder.LITTLE_ENDIAN);
                 is.mark();
-                is.skipBytes(2);
+                ByteOrder byteOrder = is.getByteOrder();
+                is.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+                is.readFully(bytes);
                 type = is.readShort();
+                count = is.readShort();
+                is.setByteOrder(byteOrder);
                 is.reset();
             } catch (IOException e) {
 Debug.println(e);
                 return false;
             }
-//Debug.println(type);
-            return type == 1;
+//Debug.println(type + ", " + count + ", " + (bytes[0] == 0 && bytes[1] == 0 && type == 1 && count > 0));
+            return bytes[0] == 0 && bytes[1] == 0 && type == 1 && count > 0;
         } else {
 Debug.println(obj);
             return false;
         }
     }
-    
+
     /* */
     public ImageReader createReaderInstance(Object obj) {
         return new WindowsIconImageReader(this);

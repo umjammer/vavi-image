@@ -203,16 +203,16 @@ Debug.println(Level.SEVERE, e);
 
     /**
      * Bitmap ファイルのヘッダ
-     * 
+     *
      * <pre><code>
-     * 
-     *  0  BYTE	'B'
-     *  1  BYTE	'M'
-     *  2  DWORD	size
-     *  6  WORD	reserved always 0
-     *  8  WORD	reserved always 0
-     *  10 DWORD	offset
-     *  
+     *
+     *  0  BYTE  'B'
+     *  1  BYTE  'M'
+     *  2  DWORD size
+     *  6  WORD  reserved always 0
+     *  8  WORD  reserved always 0
+     *  10 DWORD offset
+     *
      * </code></pre>
      */
     private static final class Header {
@@ -249,10 +249,9 @@ Debug.println(Level.SEVERE, e);
             return 14;
         }
 
-        @SuppressWarnings("unused")
-        final void print() {
-            Debug.println("size: " + bitmapSize);
-            Debug.println("offset: " + bitmapOffset);
+        public String toString() {
+            return "size: " + bitmapSize +
+                    ", offset: " + bitmapOffset;
         }
     }
 
@@ -309,19 +308,18 @@ Debug.println(Level.SEVERE, e);
         ColorModel palette;
 
         /** for debug */
-        @SuppressWarnings("unused")
-        final void print() {
-            System.err.println(" header size: " + headerSize);
-            System.err.println(" width: " + width);
-            System.err.println(" height: " + height);
-            System.err.println(" planes: " + planes);
-            System.err.println(" bits: " + bits);
-            System.err.println(" compression: " + compression);
-            System.err.println(" image size: " + imageSize);
-            System.err.println(" ppm x: " + ppmX);
-            System.err.println(" ppm y: " + ppmY);
-            System.err.println(" color used: " + usedColor);
-            System.err.println(" color important: " + importantColor);
+        public String toString() {
+            return "header size: " + headerSize +
+                    ", width: " + width +
+                    ", height: " + height +
+                    ", planes: " + planes +
+                    ", bits: " + bits +
+                    ", compression: " + compression +
+                    ", image size: " + imageSize +
+                    ", ppm x: " + ppmX +
+                    ", ppm y: " + ppmY +
+                    ", color used: " + usedColor +
+                    ", color important: " + importantColor;
         }
 
         /**
@@ -348,7 +346,7 @@ Debug.println(Level.SEVERE, e);
             bh.importantColor = iin.readInt();
 
 //Debug.println("bitmap");
-//bh.print();
+Debug.print(bh);
 
             if (bh.usedColor == 0) {
                 switch (bh.bits) {
@@ -362,7 +360,7 @@ Debug.println(Level.SEVERE, e);
                     bh.usedColor = 256;
                     break;
                 default:
-//Debug.println("unknown bits: " + bh.bits);
+Debug.println("unknown bits: " + bh.bits);
                     break;
                 }
 //Debug.println("usedColor: " + bh.usedColor);
