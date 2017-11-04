@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import vavi.io.LittleEndianDataInputStream;
+import vavi.util.Debug;
 
 
 /**
@@ -103,14 +104,14 @@ public class WindowsIconDevice {
     }
 
     /** for debug */
-    public void print() {
-        System.err.println(" width: " + width);
-        System.err.println(" height: " + height);
-        System.err.println(" colors: " + colors);
-        System.err.println(" hotspot x: " + hotspotX);
-        System.err.println(" hotspot y: " + hotspotY);
-        System.err.println(" size: " + size);
-        System.err.println(" offset: " + offset);
+    public String toString() {
+        return " width: " + width +
+                ", height: " + height +
+                ", colors: " + colors +
+                ", hotspot x: " + hotspotX +
+                ", hotspot y: " + hotspotY +
+                ", size: " + size +
+                ", offset: " + offset;
     }
 
     /**
@@ -146,7 +147,7 @@ public class WindowsIconDevice {
 //          }
 
 // Debug.println("device [" + i + "]");
-//          iconDevices[i].print();
+            Debug.println(iconDevices[i]);
         }
 
         return iconDevices;
