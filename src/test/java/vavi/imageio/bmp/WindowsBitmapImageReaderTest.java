@@ -19,11 +19,9 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 
 /**
- * WindowsBitmapImageReaderTest. 
+ * WindowsBitmapImageReaderTest.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (umjammer)
  * @version 0.00 2013/08/19 umjammer initial version <br>
@@ -31,8 +29,8 @@ import static org.junit.Assert.*;
 public class WindowsBitmapImageReaderTest {
 
     @Test
-    public void test() {
-        fail("Not yet implemented");
+    public void test() throws Exception {
+        WindowsBitmapImageReaderTest.main(new String[] { "tmp/qr.bmp" });
     }
 
     //----

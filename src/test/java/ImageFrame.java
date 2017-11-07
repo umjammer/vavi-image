@@ -18,7 +18,7 @@ import javax.swing.JFrame;
 /**
  * A frame that displays an image. Create an ImageFrame, then use one
  * of the setImage() methods to show the image.
- * 
+ *
  * @version 0.90 19 Sep 2000
  * @author <a href="http://www.gurge.com/amd/">Adam Doppelt</a>
  */
@@ -26,7 +26,7 @@ public class ImageFrame extends JFrame {
     int left = -1;
     int top;
     Image image;
-        
+
     ImageFrame() {
         setLayout(null);
         setSize(100, 100);
@@ -39,7 +39,7 @@ public class ImageFrame extends JFrame {
     public void setImage(File file) throws IOException {
         // load the image
         Image image = getToolkit().getImage(file.getAbsolutePath());
-        
+
         // wait for the image to entirely load
         MediaTracker tracker = new MediaTracker(this);
         tracker.addImage(image, 0);
@@ -48,7 +48,7 @@ public class ImageFrame extends JFrame {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-            
+
         if (tracker.statusID(0, true) != MediaTracker.COMPLETE) {
             throw new IOException("Could not load: " + file + " " +
                                   tracker.statusID(0, true));
@@ -87,7 +87,7 @@ public class ImageFrame extends JFrame {
                 pix[y * w + x] = palette[pixels[x][y]];
             }
         }
-            
+
         setImage(w, h, pix);
     }
 
@@ -139,7 +139,7 @@ public class ImageFrame extends JFrame {
             Insets insets = getInsets();
             left = insets.left;
             top = insets.top;
-                
+
             setSize(image.getWidth(null)  + left + insets.right,
                     image.getHeight(null) + top  + insets.bottom);
         }

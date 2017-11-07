@@ -11,7 +11,7 @@ import vavi.util.Debug;
 
 /**
  * 非 LZW 理論 GIF デコーダ。
- * 
+ *
  * @author DJ.Uchi [H.Uchida]
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 1.20 xxxxxx huchida original version <br>
@@ -285,22 +285,22 @@ Debug.println("maybe broken");
 //Debug.println("gif.rgb.color: " + gif.rgb.colors);
 //Debug.println("rgb.offset: " + gif.rgb.offset + ", rgb.rgb.point: " + gif.rgb.xPoint + ", code: " + code);
 //System.out.printf("%d\n", code);
-    	switch (gif.rgb.colorDepth) {
-    	case 1: // モノクロ画像の場合
-    	    i = gif.rgb.offset + (gif.rgb.xPoint / 8);
-    	    j = 7 - (gif.rgb.xPoint & 0x07);
-    	    rgb[i] = (byte) ((rgb[i] & ~(1 << j)) | (code << j));
+        switch (gif.rgb.colorDepth) {
+        case 1: // モノクロ画像の場合
+            i = gif.rgb.offset + (gif.rgb.xPoint / 8);
+            j = 7 - (gif.rgb.xPoint & 0x07);
+            rgb[i] = (byte) ((rgb[i] & ~(1 << j)) | (code << j));
 //Debug.println("x: " + gif.rgb.xPoint + ", y: " + (gif.rgb.offset / gif.rgb.bytesPerLine) + " / w: " + gif.rgb.width + ", h: " + gif.rgb.height + ": " + StringUtil.toHex2(rgb[i]));
-    	    break;
-    	case 4: // 16色画像の場合
-    	    i = gif.rgb.offset + (gif.rgb.xPoint >> 1);
-    	    j = (gif.rgb.xPoint & 0x01) << 2;
-    	    rgb[i] = (byte) ((rgb[i] & (0x0f << j)) | (code << (4 - j)));
-    	    break;
-    	default: // 256色の場合
-        	rgb[gif.rgb.offset + gif.rgb.xPoint] = (byte) code;
             break;
-    	}
+        case 4: // 16色画像の場合
+            i = gif.rgb.offset + (gif.rgb.xPoint >> 1);
+            j = (gif.rgb.xPoint & 0x01) << 2;
+            rgb[i] = (byte) ((rgb[i] & (0x0f << j)) | (code << (4 - j)));
+            break;
+        default: // 256色の場合
+            rgb[gif.rgb.offset + gif.rgb.xPoint] = (byte) code;
+            break;
+        }
 
         // 書き込み位置をインクリメント
         gif.rgb.xPoint++;

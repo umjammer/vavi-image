@@ -17,7 +17,7 @@ import javax.imageio.stream.ImageInputStream;
 
 /**
  * PpmImageReaderSpi.
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 020603 nsano port from <br>
  *          0.01 021116 nsano refine <br>
@@ -92,7 +92,7 @@ public class PpmImageReaderSpi extends ImageReaderSpi {
             } catch (IOException e) {
                 return false;
             }
-            return abyte0[0] == 80 && abyte0[1] == 54 && abyte0[1] == 10;
+            return abyte0[0] == 80 && abyte0[1] == 54 && abyte0[2] == 10;
         } else {
             return false;
         }

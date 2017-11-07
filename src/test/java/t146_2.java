@@ -18,7 +18,7 @@ import vavi.util.Debug;
 
 /**
  * ImageIO conversion.
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 021117 nsano initial version <br>
  */
@@ -44,18 +44,18 @@ public class t146_2 {
 //Debug.println("reader: " + readerMIMEType);
             Iterator<ImageReader> imageReaders = ImageIO.getImageReadersByMIMEType(readerMIMEType);
             while (imageReaders.hasNext()) {
-                ImageReader imageReader = imageReaders.next(); 
+                ImageReader imageReader = imageReaders.next();
 
                 for (String writerMIMEType : writerMIMETypes) {
 //Debug.println("writer: " + writerMIMEType);
                     Iterator<ImageWriter> imageWriters = ImageIO.getImageWritersByMIMEType(writerMIMEType);
                     while (imageWriters.hasNext()) {
-                        ImageWriter imageWriter = imageWriters.next(); 
+                        ImageWriter imageWriter = imageWriters.next();
 
 Debug.println("reader: " + readerMIMEType + ", writer: " + writerMIMEType);
                         Iterator<ImageTranscoder> imageTranscoders = ImageIO.getImageTranscoders(imageReader, imageWriter);
                         while (imageTranscoders.hasNext()) {
-                            ImageTranscoder imageTranscoder = imageTranscoders.next(); 
+                            ImageTranscoder imageTranscoder = imageTranscoders.next();
 
 Debug.println(imageReader + ", " + imageWriter + ", " + imageTranscoder);
                         }

@@ -16,9 +16,9 @@ import vavi.util.Debug;
 
 /**
  * アイコンの大きさ等の情報を表すクラスです．
- * 
+ *
  * <pre>
- * 
+ *
  *  BYTE  width
  *  BYTE  height
  *  BYTE  colors - 16: 16 colors, 0: 256 colors
@@ -27,9 +27,9 @@ import vavi.util.Debug;
  *  WORD  hotspot y
  *  DWORD size
  *  DWORD offset - ヘッダ(6) + デバイス(16) x 個数 + size x #
- *  
+ *
  * </pre>
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano move readFrom here <br>

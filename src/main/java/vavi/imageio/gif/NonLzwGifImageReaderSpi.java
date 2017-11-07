@@ -19,7 +19,7 @@ import vavi.util.Debug;
 
 /**
  * NonLzwGifDecoderSPI.
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 1.10
  */
@@ -94,9 +94,9 @@ Debug.printStackTrace(e);
                 return false;
             }
             return bytes[0] == 'G' && // 識別子 = "GIF8" + ("7a" or "9a")
-    	           bytes[1] == 'I' &&
-    	           bytes[2] == 'F' &&
-    	           bytes[3] == '8';
+                   bytes[1] == 'I' &&
+                   bytes[2] == 'F' &&
+                   bytes[3] == '8';
         } else {
 Debug.println("unsupported input: " + source);
             return false;

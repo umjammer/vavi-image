@@ -30,7 +30,7 @@ import vavi.util.Debug;
 
 /**
  * NonLzwGifImageReader.
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 040914 nsano initial version <br>
  */
@@ -85,6 +85,7 @@ Debug.println("unsupported input: " + input);
         }
 
         try {
+            // TODO eliminate image source
             imageSource = new NonLzwGifImageSource(is);
             Toolkit t = Toolkit.getDefaultToolkit();
             Image image = t.createImage(imageSource);

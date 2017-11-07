@@ -49,7 +49,7 @@ public class Lanczos3ResampleOp extends BasicBufferedImageOp {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int pixel = inPixels[offset++] & 0xffffff;
-                // TODO: store alpha value; requires some sort of 
+                // TODO: store alpha value; requires some sort of
                 // transparency channel data type yet to be implemented
                 inImage.putSample(RGBIndex.INDEX_RED, x, y, pixel >> 16);
                 inImage.putSample(RGBIndex.INDEX_GREEN, x, y, (pixel >> 8) & 0xff);
@@ -73,7 +73,7 @@ public class Lanczos3ResampleOp extends BasicBufferedImageOp {
             throw new IllegalStateException(e);
         }
 
-        RGB24Image outImage = (RGB24Image) resample.getOutputImage(); 
+        RGB24Image outImage = (RGB24Image) resample.getOutputImage();
         int[] outPixels = new int[destWidth * destHeight];
         byte[] red = new byte[destWidth];
         byte[] green = new byte[destWidth];

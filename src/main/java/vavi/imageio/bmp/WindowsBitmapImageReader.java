@@ -30,7 +30,7 @@ import vavi.util.Debug;
 
 /**
  * WindowsBitmapImageReader.
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 020603 nsano initial version <br>
  *          0.01 021116 nsano refine <br>
@@ -86,6 +86,7 @@ Debug.println(input);
         }
 
         try {
+            // TODO eliminate image source
             imageSource = new WindowsBitmapImageSource(is);
 //            int w = imageSource.getWindowsBitmap().getWidth();
 //            int h = imageSource.getWindowsBitmap().getHeight();

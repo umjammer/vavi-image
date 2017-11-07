@@ -22,26 +22,26 @@ import vavi.util.StringUtil;
 
 /**
  * GifImage.
- * 
+ *
  * <pre>
- * 
+ *
  *  機能＼バージョン  | GIF87  | GIF87a | GIF89a
  *  ------------------+--------+--------+-------
  *  通常画像          |   ○   |   ○   |  ○
  *  インタレース GIF  |   ×   |   ○   |  ○
  *  透過 GIF          |   ×   |   ×   |  ○
  *  GIF アニメーション|   ×   |   ×   |  ○
- *  
+ *
  * </pre>
  * <pre>
- * 
- *  GIF Header 
+ *
+ *  GIF Header
  *  Block
  *   :
- *  Trailer 0x3b 
- *  
+ *  Trailer 0x3b
+ *
  * </pre>
- * 
+ *
  * @author DJ.Uchi [H.Uchida]
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 2.00 xxxxxx original version <br>
@@ -97,7 +97,7 @@ public class GifImage {
          * Packed Fields
          * <pre>
          * 7 654 3 210
-         * ~ ~~~ ~ ~~~ 
+         * ~ ~~~ ~ ~~~
          * | |   | +--- Size of Global Color Table
          * | |   +----- Sort Flag
          * | +--------- Color Resolution
@@ -145,7 +145,7 @@ public class GifImage {
          * Packed Fields
          * <pre>
          * 7 6 5 43 210
-         * ~ ~ ~ ~~ ~~~ 
+         * ~ ~ ~ ~~ ~~~
          * | | | |  +--- Size of Local Color Table
          * | | | +------ Reserved
          * | | +-------- Sort Flag

@@ -45,7 +45,7 @@ public abstract class BasicBufferedImageOp extends AbstractBufferedImageOp imple
     }
 
     /**
-     * @param destCM when null, used src color model 
+     * @param destCM when null, used src color model
      */
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
         Rectangle2D destBounds = getBounds2D(src);
@@ -60,7 +60,7 @@ public abstract class BasicBufferedImageOp extends AbstractBufferedImageOp imple
     public abstract Rectangle2D getBounds2D(BufferedImage src);
 
     /**
-     * @param width src width 
+     * @param width src width
      * @param height src height
      */
     protected abstract int[] filterPixels(int width, int height, int[] inPixels);

@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import vavi.imageio.bmp.WindowsBitmapImageReaderTest;
 
 
 /**
@@ -31,10 +31,9 @@ import static org.junit.Assert.*;
 public class WindowsIconImageReaderTest {
 
     @Test
-    public void test() {
-        fail("Not yet implemented");
+    public void test() throws Exception {
+        WindowsBitmapImageReaderTest.main(new String[] { "src/test/resources/test.ico" });
     }
-
 
     //----
 

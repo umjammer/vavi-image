@@ -17,12 +17,14 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -33,11 +35,18 @@ import vavi.swing.JImageComponent;
 
 /**
  * Scaling. (awt, ffmpeg)
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 061012 nsano initial version <br>
  */
 public class t146_12 {
+
+    static {
+        UIManager.getDefaults().put("SplitPane.border", BorderFactory.createEmptyBorder());
+        UIManager.getDefaults().put("TextField.background", UIManager.getColor("Panel.background"));
+        UIManager.getDefaults().put("TextField.border", BorderFactory.createLineBorder(UIManager.getColor("Panel.background"), 4));
+        UIManager.getDefaults().put("ScrollPane.border", BorderFactory.createEmptyBorder());
+    }
 
     public static void main(String[] args) throws Exception {
         new t146_12(args);
@@ -125,7 +134,7 @@ System.err.println("left: " + (System.currentTimeMillis() - t) + "ms");
                     BufferedImage image = rightImage;
                     BufferedImageOp filter = new FfmpegResampleOp(scale, scale, FfmpegResampleOp.Hint.LANCZOS);
 long t = System.currentTimeMillis();
-                    BufferedImage filteredImage = filter.filter(image, null); 
+                    BufferedImage filteredImage = filter.filter(image, null);
 System.err.println("right: " + (System.currentTimeMillis() - t) + "ms");
 //System.err.println("image: " + filteredImage);
                     rightImageComponent.setImage(filteredImage);

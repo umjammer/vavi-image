@@ -14,10 +14,10 @@ import vavi.io.LittleEndianDataInputStream;
 
 /**
  * Windows の Icon 形式です．
- * 
+ *
  * <pre><code>
- * 
- *  
+ *
+ *
  *   --- TOF FILE header ( 6 bytes ) --- ... Header
  *   [a header]
  *   --- 1 / count of ICON/CURSOR header ( 16 bytes ) --- ... WindowsIconDevice
@@ -25,11 +25,11 @@ import vavi.io.LittleEndianDataInputStream;
  *   --- 2 / count ---
  *   [one device]
  *         :
- *  	   :
- *   
- *  
+ *         :
+ *
+ *
  * </code></pre>
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano move readFrom here <br>

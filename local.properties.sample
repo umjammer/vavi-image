@@ -24,29 +24,5 @@ w32api.include=${cygwin.home}/usr/include/w32api
 mingw.lib=${cygwin.home}/lib/mingw
 ffmpeg.include=/usr/local/include
 ffmpeg.lib=/usr/local/lib
-jdk.home=${java.home}
-
-my.java.home=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home
-
-#
-# run
-#
-test.146.run.in=../image/ga003.gif
-
-test.146.t3.content=B
-test.146.t3.size=32
-
-test.146.t4.content=A
-test.146.t4.size=8
-test.146.t4.out=tmp/qr.gif
-
-test.146.t6.in=tmp/in.gif
-
-test.146.t12.in=tmp/erika.jpg
-
-test.146.t14.in=tmp/erika.jpg
-
-vavi-image.nq.in=tmp/T.jpg
-vavi-image.nq.colors=256 128 64 32 16
 
 ##

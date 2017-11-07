@@ -32,7 +32,7 @@ import java.awt.image.ColorModel;
 public abstract class AbstractBufferedImageOp implements BufferedImageOp, Cloneable {
 
     /**
-     * @return same size as src 
+     * @return same size as src
      */
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel dstCM) {
         if (dstCM == null) {

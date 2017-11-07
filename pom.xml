@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>vavi</groupId>
   <artifactId>vavi-image</artifactId>
@@ -19,7 +17,14 @@
 
 1.0.1
 
-    initial version</description>
+    initial version
+
+TODO
+
+    windows icon reader spi fails on sample ico
+    imageio ppm doesn't work
+    pom
+        jni  bcel 5 on java8 ???</description>
   <build>
     <plugins>
       <plugin>
@@ -30,6 +35,62 @@
           <encoding>UTF-8</encoding>
           <compilerVersion>6</compilerVersion>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <!--
+        *** on java8, javah doesn't work cause bcel5, need bcel6 version *** 
+         -->
+        <artifactId>native-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <!-- trigger javah execution -->
+          <javahClassNames>
+            <javahClassName>vavi.awt.image.resample.FfmpegResampleOp</javahClassName>
+          </javahClassNames>
+          <!-- enable additional javah interface in dependencies list -->
+          <javahSearchJNIFromDependencies>true</javahSearchJNIFromDependencies>
+          <!-- | Add jdk include directories to system include path | Override 
+            ${jkdIncludePath} If your jdk does not conform to Sun JDK layout -->
+          <javahOS>macosx</javahOS>
+          <compilerProvider>generic-classic</compilerProvider>
+          <compilerStartOptions>
+            <compilerStartOption> -g -Wall -O2 -fomit-frame-pointer
+              -fPIC</compilerStartOption>
+            <compilerStartOption>-arch x86_64
+              -I/Library/Java/JavaVirtualMachines/jdk1.8.0_74.jdk/Contents/Home/include
+              -I/Library/Java/JavaVirtualMachines/jdk1.8.0_74.jdk/Contents/Home/include/darwin
+              -I/usr/local/include/libavformat
+              -I/usr/local/include/libavcodec
+              -I/usr/local/include/libavutil
+              -I/usr/local/include/libswscale
+            </compilerStartOption>
+          </compilerStartOptions>
+          <sources>
+            <source>
+              <!-- relative to your project directory -->
+              <directory>src/main/native</directory>
+              <fileNames>
+                <fileName>FfmpegResampleOpWrapper.c</fileName>
+              </fileNames>
+            </source>
+          </sources>
+          <!-- deploy the accompany .lib file as well -->
+          <linkerSecondaryOutputExtensions>lib</linkerSecondaryOutputExtensions>
+          <linkerStartOptions>
+            <linkerStartOption> -dynamiclib -arch x86_64
+              -L/usr/local/lib -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
+          </linkerStartOptions>
+        </configuration>
+        <executions>
+          <execution>
+            <id>javah</id>
+            <phase>none</phase>
+            <goals>
+              <goal>javah</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -42,29 +103,13 @@
   <dependencies>
     <dependency>
       <groupId>com.github.umjammer</groupId>
-      <artifactId>vavi-awt</artifactId>
-      <version>1.0.1</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.1</version>
-      <type>jar</type>
-      <scope>test</scope>
-      <optional>false</optional>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.5</version>
-      <type>jar</type>
-      <scope>test</scope>
+      <artifactId>vavi-commons</artifactId>
+      <version>1.0.6</version>
     </dependency>
     <dependency>
       <groupId>com.github.umjammer</groupId>
-      <artifactId>vavi-commons</artifactId>
-      <version>1.0.6</version>
+      <artifactId>vavi-awt</artifactId>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>com.github.umjammer</groupId>
@@ -72,9 +117,21 @@
       <version>0.14.3</version>
     </dependency>
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.github.umjammer</groupId>
       <artifactId>javapng-spi</artifactId>
       <version>2.1.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

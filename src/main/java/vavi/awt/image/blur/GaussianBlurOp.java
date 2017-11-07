@@ -14,7 +14,7 @@ import vavi.awt.image.AbstractBufferedImageOp;
  * A filter which applies Gaussian blur to an image. This is a subclass of
  * ConvolveFilter which simply creates a kernel with a Gaussian distribution for
  * blurring.
- * 
+ *
  * @author Jerry Huxtable
  */
 public class GaussianBlurOp extends AbstractBufferedImageOp {
@@ -44,7 +44,7 @@ public class GaussianBlurOp extends AbstractBufferedImageOp {
 
     /**
      * Construct a Gaussian filter
-     * 
+     *
      * @param radius blur radius in pixels
      */
     public GaussianBlurOp(float radius) {
@@ -54,7 +54,7 @@ public class GaussianBlurOp extends AbstractBufferedImageOp {
     /**
      * Set the radius of the kernel, and hence the amount of blur. The bigger
      * the radius, the longer this filter will take.
-     * 
+     *
      * @param radius the radius of the blur in pixels.
      */
     public void setRadius(float radius) {
@@ -64,7 +64,7 @@ public class GaussianBlurOp extends AbstractBufferedImageOp {
 
     /**
      * Get the radius of the kernel.
-     * 
+     *
      * @return the radius
      */
     public float getRadius() {

@@ -20,7 +20,7 @@ import vavi.awt.image.quantize.QuantizeOp;
 
 /**
  * TestQuantize2. (OctTree)
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 061012 nsano initial version <br>
  */

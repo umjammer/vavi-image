@@ -17,7 +17,7 @@ import javax.imageio.stream.ImageInputStream;
 
 /**
  * WindowsBitmapImageReaderSpi.
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 020603 nsano initial version <br>
  *          0.01 021116 nsano refine <br>
@@ -51,7 +51,7 @@ public class WindowsBitmapImageReaderSpi extends ImageReaderSpi {
         /*"vavi.imageio.bmp.WindowsBitmapMetaData"*/ null;
     private static final String[] ExtraImageMetadataFormatNames = null;
     private static final String[] ExtraImageMetadataFormatClassNames = null;
-    
+
     /** */
     public WindowsBitmapImageReaderSpi() {
         super(VendorName,
@@ -78,7 +78,7 @@ public class WindowsBitmapImageReaderSpi extends ImageReaderSpi {
     public String getDescription(Locale locale) {
         return "Windows Bitmap Image";
     }
-    
+
     /* TODO InputStream */
     public boolean canDecodeInput(Object obj)
         throws IOException {
@@ -97,7 +97,7 @@ public class WindowsBitmapImageReaderSpi extends ImageReaderSpi {
             return false;
         }
     }
-    
+
     /* */
     public ImageReader createReaderInstance(Object obj) {
         return new WindowsBitmapImageReader(this);

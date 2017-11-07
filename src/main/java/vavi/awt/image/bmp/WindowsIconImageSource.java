@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 
 /**
  * アイコンのイメージを作成します．
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano refine <br>
@@ -72,7 +72,7 @@ public class WindowsIconImageSource implements ImageProducer {
 
     /**
      * デバイスを指定した形式に変更します．
-     * 
+     *
      * @throws NoSuchElementException 指定したデバイスがなかった場合
      */
     public void changeDevice(WindowsIconDevice device) {

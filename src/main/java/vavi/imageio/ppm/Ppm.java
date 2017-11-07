@@ -12,7 +12,7 @@ import java.io.InputStream;
 
 /**
  * Ppm.
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 020603 nsano initial version <br>
  *          0.01 021116 nsano refine <br>
@@ -80,7 +80,7 @@ public class Ppm {
         }
         return c;
     }
-    
+
     /** */
     private static char readNonwhiteChar(InputStream is) throws IOException {
 
@@ -90,7 +90,7 @@ public class Ppm {
         } while (c == ' ' || c == '\t' || c == '\n' || c == '\r');
         return c;
     }
-    
+
     /** */
     private static int readInt(InputStream is) throws IOException {
 

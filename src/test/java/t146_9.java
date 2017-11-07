@@ -30,7 +30,7 @@ import vavi.swing.JImageComponent;
 
 /**
  * Scaling. (awt, java2d)
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 061012 nsano initial version <br>
  */
@@ -118,7 +118,7 @@ System.err.println("left: " + (System.currentTimeMillis() - t) + "ms");
                 filter = new vavi.awt.image.resample.Lanczos3ResampleOp(scale, scale);
 //                filter = new vavi.awt.image.resample.G2dResampleOp(scale, scale);
 t = System.currentTimeMillis();
-                filteredImage = filter.filter(image, null); 
+                filteredImage = filter.filter(image, null);
 System.err.println("right: " + (System.currentTimeMillis() - t) + "ms");
                 rightImageComponent.setImage(filteredImage);
                 rightImageComponent.repaint();

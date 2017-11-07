@@ -133,7 +133,7 @@ public class FfmpegResampleOp implements BufferedImageOp {
         filterInternal(srcBuffer, srcDataType, srcPixelSize, srcWidth, srcHeight, destBuffer, destDataType, destPixelSize, resizedWidth, resizedHeight, hint.value);
 
         return dest;
-    }    
+    }
 
     /**
      * @param destCM when null, used src color model 

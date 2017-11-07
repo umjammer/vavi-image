@@ -17,17 +17,15 @@ import vavi.awt.image.am88.ArtMasterImageSource;
 /**
  * Content Handler for ArtMaster Image File.
  *
- * @author	<a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
- * @version	0.00	970928	nsano	initial version <br>
- *		1.00	010814	nsano	repackage <br>
+ * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @version 0.00 970928 nsano initial version <br>
+ *          1.00 010814 nsano repackage <br>
  */
 public class x_art88 extends ContentHandler {
 
-    public Object getContent(URLConnection connection)
-	throws IOException {
-
-	InputStream in = connection.getInputStream();
-	return new ArtMasterImageSource(in);
+    public Object getContent(URLConnection connection) throws IOException {
+        InputStream in = connection.getInputStream();
+        return new ArtMasterImageSource(in);
     }
 
 //    public x_art88() {}

@@ -16,7 +16,7 @@ import java.util.Hashtable;
 
 /**
  * NonLzwGifImageSource．
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 040913 nsano initail version <br>
  */

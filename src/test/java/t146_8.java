@@ -39,7 +39,7 @@ import vavi.swing.JImageComponent;
 
 /**
  * Jpeg quality, blur.
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 061012 nsano initial version <br>
  */

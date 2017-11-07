@@ -16,44 +16,21 @@
   xmlns:artifact="urn:maven-artifact-ant">
 
   <path id="maven-ant-tasks.classpath">
-    <fileset dir="${user.home}/lib/java/maven-ant-tasks">
-      <include name="*.jar" />
+    <fileset dir="${user.home}/lib/java">
+      <include name="maven-ant-tasks*.jar" />
     </fileset>
   </path>
-  <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
-           uri="urn:maven-artifact-ant"
-           classpathref="maven-ant-tasks.classpath" />
+  <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant"
+           classpathref="maven-ant-tasks.classpath" /> 
 
-  <property environment="env" />
+  <property environment="env"/>
   <property file="local.properties" />
-
   <xmlproperty file="pom.xml" />
 
   <!-- Path Definitions -->
   <path id="project.class.path">
     <fileset refid="maven-ant-tasks.dependency.fileset" />
   </path>
-
-  <!-- clean -->
-  <target name="clean" description="Cleaning">
-    <delete>
-      <fileset dir="${javac.dest}">
-        <include name="**/*" />
-      </fileset>
-      <fileset dir="${javac.dest.test}">
-        <include name="**/*" />
-      </fileset>
-    </delete>
-    <delete file="lib/FfmpegResampleOpWrapper.dll"/>
-    <delete file="lib/libFfmpegResampleOpWrapper.dylib"/>
-    <delete file="lib/libFfmpegResampleOpWrapper.so"/>
-    <delete>
-      <fileset dir="${dir.native}">
-        <include name="*.o" />
-        <include name="vavi_*.h" />
-      </fileset>
-    </delete>
-  </target>
 
   <!-- prepare -->
   <target name="prepare" description="Preparing">
@@ -62,60 +39,18 @@
       <pom refid="maven.project"/>
     </artifact:dependencies>
     <artifact:mvn pom="pom.xml">
-      <arg value="package"/>
-      <arg value="-Dmaven.test.skip=true"/>
+      <arg value="-q" />
+      <arg value="clean" />
+      <arg value="package" />
+      <arg value="-DskipTests=true" />
     </artifact:mvn>
   </target>
 
   <property name="dir.native" value="src/main/jni" />
   <property name="dir.build" value="target/classes" />
 
-  <!-- javac 1.4 -->
-  <target name="compile.1.4" description="コンパイル 1.4">
-    <javac debug="on" source="1.4" target="1.4" destdir="${dir.build}" encoding="${encoding}">
-      <classpath refid="project.class.path" />
-      <include name="vavi/imageio/ImageConverter.java" />
-      <src path="src/main/java" />
-    </javac>
-  </target>
-
-  <!-- javac 1.5 -->
-  <target name="compile.1.5" description="コンパイル 1.5">
-    <javac debug="on" source="1.5" target="1.5" destdir="${dir.build}" encoding="MS932">
-      <classpath refid="project.class.path" />
-      <include name="**/*.java" />
-      <exclude name="**/ImageConverter.java" />
-      <exclude name="*.java" />
-      <src path="src/main/java" />
-    </javac>
-  </target>
-
-  <!-- javac -->
-  <target name="compile" depends="prepare,compile.1.4,compile.1.5" description="コンパイル">
-    <copy todir="${dir.build}">
-      <fileset dir="src/main/resources">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-
-    <javac debug="on" deprecation="on" target="1.5" encoding="${encoding}"
-           destdir="target/test-classes">
-      <classpath>
-        <path refid="project.class.path" />
-        <pathelement location="${dir.build}" />
-      </classpath>
-      <include name="**/*.java" />
-      <src path="src/test/java" />
-    </javac>
-    <copy todir="target/test-classes">
-      <fileset dir="src/test/resources">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-  </target>
-
   <!-- javah -->
-  <target name="javah" depends="compile" description="Makeing Header">
+  <target name="javah" depends="prepare" description="Makeing Header">
     <javah destdir="${dir.native}">
       <classpath>
         <path refid="project.class.path" />
@@ -253,36 +188,25 @@
     </apply>
   </target>
 
-  <!-- jar -->
-  <target name="packaging" depends="compile" description="パッケージング">
-    <jar jarfile="target/vavi-image.jar">
-      <fileset dir="${dir.build}">
-        <include name="**/*" />
-      </fileset>
-    </jar>
-  </target>
-
   <!-- link -->
   <target name="link" description="link">
   </target>
 
   <!-- run -->
-  <target name="run" depends="packaging" description="show imageio spec">
+  <target name="run" depends="prepare" description="show imageio spec">
     <java classname="t146_1" fork="yes">
       <classpath>
         <path refid="project.class.path" />
-        <pathelement location="target/test-classes" />
       </classpath>
       <arg value="${test.146.run.in}" />
     </java>
   </target>
 
   <!-- t2 -->
-  <target name="convert" depends="packaging" description="convert format">
+  <target name="convert" depends="prepare" description="convert format">
     <java classname="t146_2" fork="yes">
       <classpath>
         <path refid="project.class.path" />
-        <pathelement location="target/test-classes" />
       </classpath>
       <arg value="gif" />
       <arg value="tmp/in.gif" />
@@ -291,12 +215,11 @@
   </target>
 
   <!-- t3 -->
-  <target name="t3" depends="compile" description="QR">
+  <target name="t3" depends="prepare" description="QR">
     <java classname="t146_3" fork="yes">
       <env key="PATH" path="lib" />
       <classpath>
         <path refid="project.class.path" />
-        <pathelement location="target/test-classes" />
       </classpath>
       <arg value="${test.146.t3.content}" />
       <arg value="${test.146.t3.size}" />
@@ -304,12 +227,11 @@
   </target>
 
   <!-- t4 -->
-  <target name="t4" depends="compile" description="save QR">
+  <target name="t4" depends="prepare" description="save QR">
     <java classname="t146_4" fork="yes">
       <env key="PATH" path="lib" />
       <classpath>
         <path refid="project.class.path" />
-        <pathelement location="target/test-classes" />
       </classpath>
       <arg value="${test.146.t4.content}" />
       <arg value="${test.146.t4.size}" />
@@ -318,11 +240,10 @@
   </target>
 
   <!-- t5 -->
-  <target name="t5" depends="compile" description="1D Barcode">
+  <target name="t5" depends="prepare" description="1D Barcode">
     <java classname="t146_5" fork="yes">
       <classpath>
         <path refid="project.class.path" />
-        <pathelement location="target/test-classes" />
       </classpath>
       <arg value="0123456" />
       <arg value="150" />
@@ -332,22 +253,20 @@
   </target>
 
   <!-- t6 -->
-  <target name="t6" depends="compile" description="Image Magik quantize">
+  <target name="t6" depends="prepare" description="Image Magik quantize">
     <java classname="vavi.awt.image.quantize.ImageMagikQuantizeOp" fork="yes">
       <classpath>
         <path refid="project.class.path" />
-        <pathelement location="target/test-classes" />
       </classpath>
       <arg value="${test.146.t6.in}" />
     </java>
   </target>
 
   <!-- t14 -->
-  <target name="t14" depends="compile" description="Jpeg quality">
+  <target name="t14" depends="prepare" description="Jpeg quality">
     <java classname="t146_14" fork="yes">
       <jvmarg value="-Djava.library.path=lib" />
       <classpath>
-        <pathelement location="target/test-classes" />
         <path refid="project.class.path" />
       </classpath>
       <arg value="${test.146.t14.in}" />
@@ -355,7 +274,7 @@
   </target>
 
   <!-- t12 -->
-  <target name="t12" depends="compile" description="Scaling. (awt, ffmpeg)">
+  <target name="t12" depends="prepare" description="Scaling. (awt, ffmpeg)">
     <!--
     <echo message="you must export JAVA_HOME=${my.java.home}" />
     <exec executable="open">
@@ -368,8 +287,6 @@
       <jvmarg value="-Dswing.defaultlaf=ch.randelshofer.quaqua.QuaquaLookAndFeel" />
       <jvmarg value="-d32" />
       <classpath>
-        <pathelement location="target/test-classes" />
-        <pathelement location="target/classes" />
         <path refid="project.class.path" />
         <pathelement location="${user.home}/lib/java/Quaqua/dist/quaqua.jar" />
       </classpath>
@@ -377,27 +294,12 @@
     </java>
   </target>
 
-  <!-- -->
-
-  <!-- jar -->
-  <target name="packaging.nq" depends="compile" description="NeuralQuantizer パッケージング">
-    <jar jarfile="tmp/nq.jar" manifest="etc/manifest.mf">
-      <fileset dir="${dir.build}">
-        <include name="vavi/awt/image/quantize/NeuralNet*.class" />
-      </fileset>
-      <fileset dir="target/test-classes">
-        <include name="TestQuantize4*.class" />
-        <include name="ImageFrame*.class" />
-      </fileset>
-    </jar>
-  </target>
-
   <!-- nq -->
-  <target name="nq" depends="packaging.nq"
+  <target name="nq" depends="prepare"
           description="run NeuralQuantizer">
     <java classname="TestQuantize4" fork="yes">
       <classpath>
-        <pathelement location="tmp/nq.jar" />
+        <path refid="project.class.path" />
       </classpath>
       <arg value="${vavi-image.nq.in}" />
       <arg line="${vavi-image.nq.colors}" />

@@ -234,8 +234,7 @@ public class PpmImageReader extends ImageReader {
     private IIOMetadata readMetadata() throws IIOException {
         if (metadata != null) {
             return null;
-        }
-        else {
+        } else {
             readHeader();
             return null;
         }

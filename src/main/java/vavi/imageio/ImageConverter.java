@@ -14,7 +14,7 @@ import java.awt.image.ImageObserver;
 
 /**
  * Image を BufferedImage に変換するユーティリティです。
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 021124 nsano initial version <br>
  */
@@ -41,7 +41,7 @@ public class ImageConverter {
     public void setColorModelType(int cmType) {
         this.cmType = cmType;
     }
-    
+
     /** TODO BufferedImage のカラーモデルを自動設定する */
     public BufferedImage toBufferedImage(Image image) {
         int w = image.getWidth(imageObserver);

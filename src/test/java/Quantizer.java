@@ -16,14 +16,14 @@ import vavi.awt.image.quantize.NeuralNetQuantizeOp;
 
 /**
  * Quantizer. (NeuralNet)
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 070628 nsano initial version <br>
  */
 public class Quantizer {
 
     /**
-     * 
+     *
      * @param args 0 in_file, 1: out_file, 2: colors
      */
     public static void main(String args[]) throws Exception {

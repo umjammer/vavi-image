@@ -18,9 +18,9 @@ import java.util.Hashtable;
 
 /**
  * アートマスター形式のイメージを作成します．
- * 
+ *
  * TODO palette control
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano refine access mode, messages <br>

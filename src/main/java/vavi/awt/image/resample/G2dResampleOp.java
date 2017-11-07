@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * G2dResampleOp (Java 2D with rendering hints).
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 060616 nsano initial version <br>
  */

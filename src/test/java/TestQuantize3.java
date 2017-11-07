@@ -20,14 +20,14 @@ import vavi.awt.image.quantize.ImageMagikQuantizeOp;
 
 /**
  * TestQuantize3. (ImageMagik)
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 061012 nsano initial version <br>
  */
 public class TestQuantize3 {
 
     /**
-     * @param args in out colors... 
+     * @param args in out colors...
      */
     public static void main(String args[]) throws Exception {
 

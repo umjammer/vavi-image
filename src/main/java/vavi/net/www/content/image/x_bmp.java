@@ -17,17 +17,16 @@ import vavi.awt.image.bmp.WindowsBitmapImageSource;
 /**
  * Content Handler for Windows Bitmap.
  *
- * @author	<a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
- * @version	0.00	970928	nsano	initial version <br>
- *		1.00	010814	nsano	repackage <br>
+ * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @version 0.00 970928 nsano initial version <br>
+ *          1.00 010814 nsano repackage <br>
  */
 public class x_bmp extends ContentHandler {
 
-    public Object getContent(URLConnection connection)
-	throws IOException {
+    public Object getContent(URLConnection connection) throws IOException {
 //System.err.println("x_bmp::getContent: here");
-	InputStream in = connection.getInputStream();
-	return new WindowsBitmapImageSource(in);
+        InputStream in = connection.getInputStream();
+        return new WindowsBitmapImageSource(in);
     }
 
 //    public x_bmp() {}

@@ -14,7 +14,7 @@ import javax.imageio.stream.ImageInputStream;
 
 /**
  * WrappedImageInputStream.
- * 
+ *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 021115 nsano initial version <br>
  */

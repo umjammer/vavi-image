@@ -16,16 +16,26 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
+import org.junit.Test;
+
+import vavi.imageio.bmp.WindowsBitmapImageReaderTest;
 import vavi.swing.JImageComponent;
 
 
 /**
- * GifImageTest. 
+ * GifImageTest.
  *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
  * @version 0.00 2009/06/21 nsano initial version <br>
  */
 public class GifImageTest {
+
+    @Test
+    public void test() throws Exception {
+        WindowsBitmapImageReaderTest.main(new String[] { "tmp/qr.gif" });
+    }
+
+    //----
 
     /** */
     public static void main(final String[] args) throws IOException {
@@ -50,7 +60,7 @@ System.err.println(args[count]);
                 if (count == args.length) {
                     count = 0;
                 }
-            } 
+            }
         });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
