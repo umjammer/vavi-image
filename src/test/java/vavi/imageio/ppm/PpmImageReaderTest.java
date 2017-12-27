@@ -19,20 +19,18 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-import vavi.imageio.bmp.WindowsBitmapImageReaderTest;
-
 
 /**
  * PpmImageReaderTest.
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 2009/06/21 nsano initial version <br>
  */
 public class PpmImageReaderTest {
 
     @Test
     public void test() throws Exception {
-        WindowsBitmapImageReaderTest.main(new String[] { "tmp/west_1.ppm" });
+        main(new String[] { "tmp/west_1.ppm" });
     }
 
     //----

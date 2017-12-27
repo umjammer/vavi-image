@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 /**
  * ImageIO display.
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 021117 nsano initial version <br>
  */
 public class t146_3 {

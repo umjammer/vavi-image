@@ -17,7 +17,7 @@ import java.util.Hashtable;
 /**
  * NonLzwGifImageSource．
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 040913 nsano initail version <br>
  */
 public class NonLzwGifImageSource implements ImageProducer {

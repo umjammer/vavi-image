@@ -17,7 +17,7 @@ import java.util.Hashtable;
 /**
  * ウインドウズビットマップを作成します．
  * 
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano refine <br>
  *          1.10 010901 nsano refine <br>

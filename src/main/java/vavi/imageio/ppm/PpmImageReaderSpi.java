@@ -18,7 +18,7 @@ import javax.imageio.stream.ImageInputStream;
 /**
  * PpmImageReaderSpi.
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 020603 nsano port from <br>
  *          0.01 021116 nsano refine <br>
  */

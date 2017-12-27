@@ -21,7 +21,7 @@ import java.util.Hashtable;
  *
  * TODO palette control
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano refine access mode, messages <br>
  *          1.01 010903 nsano fix read bug <br>

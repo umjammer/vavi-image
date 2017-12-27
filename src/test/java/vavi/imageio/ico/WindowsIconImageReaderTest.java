@@ -19,8 +19,6 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-import vavi.imageio.bmp.WindowsBitmapImageReaderTest;
-
 
 /**
  * WindowsIconImageReaderTest.
@@ -32,7 +30,7 @@ public class WindowsIconImageReaderTest {
 
     @Test
     public void test() throws Exception {
-        WindowsBitmapImageReaderTest.main(new String[] { "src/test/resources/test.ico" });
+        main(new String[] { "src/test/resources/test.ico" });
     }
 
     //----

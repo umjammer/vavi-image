@@ -30,7 +30,7 @@ import vavi.io.LittleEndianDataInputStream;
  *
  * </code></pre>
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano move readFrom here <br>
  *          1.01 010817 nsano use Header class <br>

@@ -15,7 +15,7 @@ import java.awt.image.ImageObserver;
 /**
  * Image を BufferedImage に変換するユーティリティです。
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 021124 nsano initial version <br>
  */
 public class ImageConverter {

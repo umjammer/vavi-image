@@ -20,7 +20,7 @@ import net.sourceforge.jiu.gui.awt.RGBA;
 /**
  * Lanczos (jiu).
  * 
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 061010 nsano initial version <br>
  */
 public class t146_7 {

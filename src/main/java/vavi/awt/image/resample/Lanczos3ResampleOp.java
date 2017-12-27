@@ -25,7 +25,7 @@ import vavi.awt.image.BasicBufferedImageOp;
 /**
  * Lanczos3ResampleOp.
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 060616 nsano initial version <br>
  */
 public class Lanczos3ResampleOp extends BasicBufferedImageOp {

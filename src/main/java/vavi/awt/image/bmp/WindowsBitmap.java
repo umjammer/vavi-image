@@ -34,7 +34,7 @@ import vavi.util.Debug;
  * </code></pre>
  * 
  * @see "Windows TM 3.1 グラフィックプログラミング ISBN4-8443-4628-8 p.187"
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano move readFrom here <br>
  *          1.01 010817 nsano use Header class <br>
@@ -276,7 +276,7 @@ Debug.println(Level.SEVERE, e);
      *  
      * </code></pre>
      * 
-     * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+     * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
      * @version 0.00 970713 nsano initial version <br>
      *          1.00 010731 nsano move readFrom here <br>
      *          1.10 010901 nsano be inner class <br>

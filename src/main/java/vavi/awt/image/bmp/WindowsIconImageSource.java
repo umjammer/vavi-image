@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 /**
  * アイコンのイメージを作成します．
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano refine <br>
  *          1.01 020413 nsano independent of WindowsBitmapSource <br>

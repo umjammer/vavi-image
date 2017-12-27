@@ -31,36 +31,19 @@ import vavi.imageio.WrappedImageInputStream;
 /**
  * PpmImageReader.
  * <li>TODO when input is InputStream
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 020603 nsano port from <br>
  *          0.01 021116 nsano refine <br>
  */
 public class PpmImageReader extends ImageReader {
 
     private IIOMetadata metadata;
-    private ImageInputStream stream;
     private Ppm ppm;
 
     /** */
     public PpmImageReader(ImageReaderSpi originatingProvider) {
         super(originatingProvider);
         metadata = null;
-        stream = null;
-    }
-
-    /** @see ImageReader */
-    public void setInput(Object input, boolean isStreamable) {
-        super.setInput(input, isStreamable);
-
-        if (input == null) {
-            stream = null;
-            return;
-        }
-        if (input instanceof ImageInputStream) {
-            stream = (ImageInputStream) input;
-        } else {
-            throw new IllegalArgumentException("bad input");
-        }
     }
 
     /** @see ImageReader */
@@ -177,7 +160,7 @@ public class PpmImageReader extends ImageReader {
 
         for (int srcY = 0; srcY < ppm.getHeight(); srcY++) {
             try {
-                stream.readFully(rowBuf);
+                ImageInputStream.class.cast(input).readFully(rowBuf);
             } catch (IOException e) {
                 throw new IIOException("Error reading line " + srcY, e);
             }
@@ -242,7 +225,7 @@ public class PpmImageReader extends ImageReader {
 
     /** */
     private void readHeader() throws IIOException {
-        if (stream == null) {
+        if (input == null) {
             throw new IllegalStateException("No input stream");
         }
 
@@ -250,7 +233,7 @@ public class PpmImageReader extends ImageReader {
             if (ppm == null) {
                 ppm = new Ppm();
             }
-            ppm.readHeader(new WrappedImageInputStream(stream));
+            ppm.readHeader(new WrappedImageInputStream(ImageInputStream.class.cast(input)));
         } catch (IOException e) {
             throw new IIOException("Error reading header", e);
         }

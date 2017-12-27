@@ -17,7 +17,7 @@ import vavi.awt.image.am88.ArtMasterImageSource;
 /**
  * Content Handler for ArtMaster Image File.
  *
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970928 nsano initial version <br>
  *          1.00 010814 nsano repackage <br>
  */

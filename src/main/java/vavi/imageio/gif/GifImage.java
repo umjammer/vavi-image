@@ -43,7 +43,7 @@ import vavi.util.StringUtil;
  * </pre>
  *
  * @author DJ.Uchi [H.Uchida]
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 2.00 xxxxxx original version <br>
  * @version 2.10 040914 nsano initial version <br>
  * @see "http://www.w3.org/Graphics/GIF/spec-gif89a.txt"

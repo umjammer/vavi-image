@@ -13,7 +13,7 @@ import vavi.util.Debug;
  * 非 LZW 理論 GIF デコーダ。
  *
  * @author DJ.Uchi [H.Uchida]
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 1.20 xxxxxx huchida original version <br>
  * @version 2.00 040913 nsano port to java <br>
  */

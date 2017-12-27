@@ -19,7 +19,7 @@ import vavi.util.win32.RIFF;
 /**
  * Animated Cursor File Format.
  * 
- * @author <a href="mailto:vavivavi@yahoo.co.jp">Naohide Sano</a> (nsano)
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 020507 nsano initial version <br>
  *          0.10 021124 nsano complete <br>
  *          0.20 030605 nsano new version compliant <br>
