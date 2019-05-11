@@ -60,7 +60,7 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
     AVPicture tmpInPicture;
     int tmpInSize = avpicture_get_size(PIX_FMT_YUV420P, inWidth, inHeight);
     uint8_t *tmpInBuf = (uint8_t *) av_malloc(tmpInSize);
-    avpicture_fill(&tmpInPicture, tmpInBuf, PIX_FMT_YUV420P, inWidth, inHeight);    
+    avpicture_fill(&tmpInPicture, tmpInBuf, PIX_FMT_YUV420P, inWidth, inHeight);
     int ret = img_convert(&tmpInPicture, PIX_FMT_YUV420P, &inPicture, PIX_FMT_RGB24, inWidth, inHeight);
 //fprintf(stderr, "here1.5: %d\n", ret);
 //fflush(stderr);
@@ -163,10 +163,18 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
     avpicture_fill(&inPic, inBuf, inFormat, inWidth, inHeight);
     avpicture_fill(&outPic, outBuf, outFormat, outWidth, outHeight);
 
+//fprintf(stderr, "pic: %d\n", sizeof(inPic));
+//fprintf(stderr, "in: %d, out: %d, 32: %d\n", inFormat, outFormat, AV_PIX_FMT_RGB32_1);
+//fflush(stderr);
 //fprintf(stderr, "here 1b: %d, %d, %d, %d\n", (int) ((*env)->GetArrayLength(env, (jbyteArray) inBuffer) * (inPixelSize / 8)),
 //                                             avpicture_get_size(inFormat, inWidth, inHeight),
 //                                             (int) ((*env)->GetArrayLength(env, (jbyteArray) outBuffer) * (outPixelSize / 8)),
 //                                             avpicture_get_size(outFormat, outWidth, outHeight));
+//fflush(stderr);
+//int i;
+//for (i = 0; i < AV_NUM_DATA_POINTERS; i++) {
+// fprintf(stderr, "%d: %d, %d\n", i, inPic.linesize[i], outPic.linesize[i]);
+//}
 //fflush(stderr);
     sws_scale(swsContext, inPic.data, inPic.linesize, 0, inHeight, outPic.data, outPic.linesize);
 

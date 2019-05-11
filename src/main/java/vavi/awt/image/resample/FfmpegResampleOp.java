@@ -140,11 +140,7 @@ public class FfmpegResampleOp implements BufferedImageOp {
      */
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
         Rectangle2D destBounds = getBounds2D(src);
-        if (destCM != null) {
-            return new BufferedImage(destCM, destCM.createCompatibleWritableRaster((int) destBounds.getWidth(), (int) destBounds.getHeight()), destCM.isAlphaPremultiplied(), null);
-        } else {
-            return new BufferedImage((int) destBounds.getWidth(), (int) destBounds.getHeight(), src.getType());
-        }
+        return new BufferedImage(destCM, destCM.createCompatibleWritableRaster((int) destBounds.getWidth(), (int) destBounds.getHeight()), destCM.isAlphaPremultiplied(), null);
     }
 
     /* */
