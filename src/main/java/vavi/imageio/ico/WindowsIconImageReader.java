@@ -35,9 +35,11 @@ import vavi.util.Debug;
  * @version 0.00 021116 nsano initial version <br>
  */
 public class WindowsIconImageReader extends ImageReader {
+
     /** */
     private IIOMetadata metadata;
-    /** */
+
+    /** TODO eliminate */
     private WindowsIconImageSource imageSource;
 
     /** */
@@ -62,10 +64,8 @@ public class WindowsIconImageReader extends ImageReader {
         return imageSource.getWindowsBitmap().getHeight();
     }
 
-    /** @see ImageReader */
-    public BufferedImage read(int imageIndex, ImageReadParam param)
-        throws IIOException {
-
+    /** */
+    private WindowsIconImageSource load() throws IOException {
         InputStream is = null;
 
         if (input instanceof ImageInputStream) {
@@ -76,16 +76,26 @@ public class WindowsIconImageReader extends ImageReader {
 Debug.println(input);
         }
 
-        Toolkit t = Toolkit.getDefaultToolkit();
-        try {
-            imageSource = new WindowsIconImageSource(is);
-            imageSource.changeDevice(imageIndex);
-            Image image = t.createImage(imageSource);
-//Debug.println(w + ", " + h + ": " + image.getClass().getName() + "[" + imageIndex + "]");
-            return ImageConverter.getInstance().toBufferedImage(image);
-        } catch (IOException e) {
-            throw new IIOException(e.getMessage(), e);
+        return new WindowsIconImageSource(is);
+    }
+
+    /** @see ImageReader */
+    public BufferedImage read(int imageIndex, ImageReadParam param)
+        throws IIOException {
+
+        if (imageSource == null) {
+            try {
+                imageSource = load();
+            } catch (IOException e) {
+                throw new IIOException(e.getMessage(), e);
+            }
         }
+
+        imageSource.changeDevice(imageIndex);
+        Toolkit t = Toolkit.getDefaultToolkit();
+        Image image = t.createImage(imageSource);
+//Debug.println(w + ", " + h + ": " + image.getClass().getName() + "[" + imageIndex + "]");
+        return ImageConverter.getInstance().toBufferedImage(image);
     }
 
     /** @see ImageReader */
