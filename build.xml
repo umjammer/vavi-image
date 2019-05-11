@@ -46,7 +46,7 @@
     </artifact:mvn>
   </target>
 
-  <property name="dir.native" value="src/main/jni" />
+  <property name="dir.native" value="src/main/native" />
   <property name="dir.build" value="target/classes" />
 
   <!-- javah -->

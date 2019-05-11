@@ -12,7 +12,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**

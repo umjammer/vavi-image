@@ -30,10 +30,9 @@ TODO
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>8</source>
+          <target>8</target>
           <encoding>UTF-8</encoding>
-          <compilerVersion>6</compilerVersion>
         </configuration>
       </plugin>
       <plugin>
@@ -52,14 +51,14 @@ TODO
           <javahSearchJNIFromDependencies>true</javahSearchJNIFromDependencies>
           <!-- | Add jdk include directories to system include path | Override 
             ${jkdIncludePath} If your jdk does not conform to Sun JDK layout -->
-          <javahOS>macosx</javahOS>
           <compilerProvider>generic-classic</compilerProvider>
+          <javahOS>macosx</javahOS>
           <compilerStartOptions>
             <compilerStartOption> -g -Wall -O2 -fomit-frame-pointer
               -fPIC</compilerStartOption>
             <compilerStartOption>-arch x86_64
-              -I/Library/Java/JavaVirtualMachines/jdk1.8.0_74.jdk/Contents/Home/include
-              -I/Library/Java/JavaVirtualMachines/jdk1.8.0_74.jdk/Contents/Home/include/darwin
+              -I${java.home}/../include
+              -I${java.home}/../include/darwin
               -I/usr/local/include/libavformat
               -I/usr/local/include/libavcodec
               -I/usr/local/include/libavutil
@@ -117,9 +116,15 @@ TODO
       <version>0.14.3</version>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.5</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.3.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.3.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -12,11 +12,10 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
-import java.io.IOException;
 
 import javax.swing.JFrame;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import vavi.swing.JImageComponent;
 
@@ -36,8 +35,10 @@ public class GifImageTest {
 
     //----
 
-    /** */
-    public static void main(final String[] args) throws IOException {
+    /**
+     * @param args
+     */
+    public static void main(final String[] args) throws Exception {
 System.err.println(args[0]);
         Image image = Toolkit.getDefaultToolkit().createImage(new NonLzwGifImageSource(new FileInputStream(args[0])));
         final JImageComponent component = new JImageComponent();
