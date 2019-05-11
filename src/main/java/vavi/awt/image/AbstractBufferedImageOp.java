@@ -28,6 +28,8 @@ import java.awt.image.ColorModel;
 /**
  * A convenience class which implements those methods of BufferedImageOp which
  * are rarely changed.
+ *
+ * @see "http://www.jhlabs.com/"
  */
 public abstract class AbstractBufferedImageOp implements BufferedImageOp, Cloneable {
 
@@ -69,8 +71,9 @@ public abstract class AbstractBufferedImageOp implements BufferedImageOp, Clonea
         int type = image.getType();
         if (type == BufferedImage.TYPE_INT_ARGB || type == BufferedImage.TYPE_INT_RGB) {
             return (int[]) image.getRaster().getDataElements(x, y, width, height, pixels);
+        } else {
+            return image.getRGB(x, y, width, height, pixels, 0, width);
         }
-        return image.getRGB(x, y, width, height, pixels, 0, width);
     }
 
     /**
@@ -87,7 +90,7 @@ public abstract class AbstractBufferedImageOp implements BufferedImageOp, Clonea
         }
     }
 
-    /** TODO hide CloneNotSupportedException */
+    /* TODO hide CloneNotSupportedException */
     public Object clone() {
         try {
             return super.clone();

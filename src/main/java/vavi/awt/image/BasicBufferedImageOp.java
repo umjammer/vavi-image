@@ -25,6 +25,8 @@ import java.io.Serializable;
 /**
  * A filter which acts as a superclass for filters which need to have the whole
  * image in memory to do their stuff.
+ *
+ * @see "http://www.jhlabs.com/"
  */
 public abstract class BasicBufferedImageOp extends AbstractBufferedImageOp implements Serializable {
 
