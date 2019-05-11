@@ -36,10 +36,8 @@
  * maintenance of any nuclear facility.
  */
 
-import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -54,8 +52,11 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class Blur extends Applet {
+
+public class Blur extends JPanel {
 
     private BufferedImage bi;
 
@@ -115,9 +116,9 @@ public class Blur extends Applet {
                 System.exit(0);
             }
         };
-        Frame f = new Frame("Blur");
+        JFrame f = new JFrame("Blur");
         f.addWindowListener(l);
-        f.add("Center", new Blur());
+        f.getContentPane().add("Center", new Blur());
         f.pack();
         f.setSize(new Dimension(600, 300));
         f.setVisible(true);

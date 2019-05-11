@@ -2,3 +2,4 @@ vavi.imageio.gif.NonLzwGifImageReaderSpi
 vavi.imageio.ppm.PpmImageReaderSpi
 vavi.imageio.bmp.WindowsBitmapImageReaderSpi
 vavi.imageio.ico.WindowsIconImageReaderSpi
+vavi.imageio.am88.ArtMasterImageReaderSpi

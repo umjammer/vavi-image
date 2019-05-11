@@ -55,8 +55,6 @@ public class PpmImageReader extends ImageReader {
     private void checkIndex(int imageIndex) {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException("bad index");
-        } else {
-            return;
         }
     }
 
