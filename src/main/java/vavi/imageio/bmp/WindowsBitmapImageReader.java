@@ -6,9 +6,8 @@
 
 package vavi.imageio.bmp;
 
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -22,8 +21,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
-import vavi.awt.image.bmp.WindowsBitmapImageSource;
-import vavi.imageio.ImageConverter;
+import vavi.awt.image.bmp.WindowsBitmap;
 import vavi.imageio.WrappedImageInputStream;
 import vavi.util.Debug;
 
@@ -37,7 +35,7 @@ import vavi.util.Debug;
  */
 public class WindowsBitmapImageReader extends ImageReader {
     /** */
-    private WindowsBitmapImageSource imageSource;
+    private WindowsBitmap windowsBitmap;
     /** */
     private IIOMetadata metadata;
 
@@ -56,7 +54,7 @@ public class WindowsBitmapImageReader extends ImageReader {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
-        return imageSource.getWindowsBitmap().getWidth();
+        return windowsBitmap.getWidth();
     }
 
     /** @see ImageReader */
@@ -64,7 +62,65 @@ public class WindowsBitmapImageReader extends ImageReader {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
-        return imageSource.getWindowsBitmap().getHeight();
+        return windowsBitmap.getHeight();
+    }
+
+    /** */
+    public static BufferedImage readImage(InputStream is) throws IOException {
+        WindowsBitmap windowsBitmap = WindowsBitmap.readFrom(is);
+
+        // インデックスカラー用イメージバッファ
+        byte[] vram = null;
+        // フルカラー用イメージ用バッファ
+        int[] ivram = null;
+
+        int bits = windowsBitmap.getBits();
+        int compression = windowsBitmap.getCompression();
+        int width = windowsBitmap.getWidth();
+        int height = windowsBitmap.getHeight();
+
+        switch (bits) {
+        case 1:
+            vram = windowsBitmap.getMonoColorData();
+            break;
+        case 4:
+            if (compression == WindowsBitmap.Type.RLE4.ordinal()) {
+                vram = windowsBitmap.get16ColorRleData();
+            } else {
+                vram = windowsBitmap.get16ColorData();
+            }
+            break;
+        case 8:
+            if (compression == WindowsBitmap.Type.RLE8.ordinal()) {
+                vram = windowsBitmap.get256ColorRleData();
+            } else {
+                vram = windowsBitmap.get256ColorData();
+            }
+            break;
+        case 24:
+            ivram = windowsBitmap.get24BitColorData();
+            break;
+        case 32:
+            ivram = windowsBitmap.get32BitColorData();
+            break;
+        }
+
+        BufferedImage image = null;
+        if (bits == 24) {
+            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
+//Debug.println(image.getType() + ", " + image.getColorModel());
+            image.getRaster().setDataElements(0, 0, width, height, ivram);
+        } else if (bits == 32) { // TODO test
+            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+Debug.println(image.getType() + ", " + image.getColorModel());
+            image.getRaster().setDataElements(0, 0, width, height, ivram);
+        } else {
+            image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED, (IndexColorModel) windowsBitmap.getColorModel());
+//Debug.println(image.getType() + ", " + image.getColorModel());
+            image.getRaster().setDataElements(0, 0, width, height, vram);
+        }
+
+        return image;
     }
 
     /** @see ImageReader */
@@ -86,14 +142,7 @@ Debug.println(input);
         }
 
         try {
-            // TODO eliminate image source
-            imageSource = new WindowsBitmapImageSource(is);
-//            int w = imageSource.getWindowsBitmap().getWidth();
-//            int h = imageSource.getWindowsBitmap().getHeight();
-            Toolkit t = Toolkit.getDefaultToolkit();
-            Image image = t.createImage(imageSource);
-//Debug.println(w + ", " + h + ": " + image.getClass().getName() + "[" + imageIndex + "]");
-            return ImageConverter.getInstance().toBufferedImage(image);
+            return readImage(is);
         } catch (IOException e) {
             throw new IIOException(e.getMessage(), e);
         }

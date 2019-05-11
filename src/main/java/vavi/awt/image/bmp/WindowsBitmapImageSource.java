@@ -28,17 +28,6 @@ public class WindowsBitmapImageSource implements ImageProducer {
     /** WindowsBitmap */
     private WindowsBitmap bitmap;
 
-    /** */
-    private enum Type {
-        RGB,
-        /** 圧縮 */
-        RLE8,
-        /** 圧縮 */
-        RLE4,
-        /** */
-        BITFIELDS
-    };
-
     /** @see ImageConsumer */
     private ImageConsumer ic;
 
@@ -104,23 +93,23 @@ public class WindowsBitmapImageSource implements ImageProducer {
         ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT | ImageConsumer.COMPLETESCANLINES | ImageConsumer.SINGLEPASS | ImageConsumer.SINGLEFRAME);
 
         // インデックスカラー用イメージバッファ
-        byte vram[] = null;
+        byte[] vram = null;
         // フルカラー用イメージ用バッファ
-        int ivram[] = null;
+        int[] ivram = null;
 
         switch (bits) {
         case 1:
             vram = bitmap.getMonoColorData();
             break;
         case 4:
-            if (compression == Type.RLE4.ordinal()) {
+            if (compression == WindowsBitmap.Type.RLE4.ordinal()) {
                 vram = bitmap.get16ColorRleData();
             } else {
                 vram = bitmap.get16ColorData();
             }
             break;
         case 8:
-            if (compression == Type.RLE8.ordinal()) {
+            if (compression == WindowsBitmap.Type.RLE8.ordinal()) {
                 vram = bitmap.get256ColorRleData();
             } else {
                 vram = bitmap.get256ColorData();

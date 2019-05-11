@@ -6,8 +6,6 @@
 
 package vavi.awt.image.bmp;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -176,15 +174,6 @@ public class ACON extends RIFF {
                 sequences[i] = ledis.readInt();
             }
         }
-    }
-
-    // -------------------------------------------------------------------------
-
-    /** */
-    public static void main(String[] args) throws Exception {
-        InputStream is = new BufferedInputStream(new FileInputStream(args[0]));
-        ACON ani = (ACON) ACON.readFrom(is);
-System.err.println("ACON: " + ani);
     }
 }
 

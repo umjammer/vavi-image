@@ -6,10 +6,16 @@
 
 package vavi.awt.image.bmp;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.imageio.ImageIO;
+
 import vavi.io.LittleEndianDataInputStream;
+import vavi.util.Debug;
 
 
 /**
@@ -45,6 +51,9 @@ public class WindowsIcon {
     /** アイコンのビットマップ */
     private WindowsBitmap bitmap;
 
+    /** アイコンのビットマップ */
+    private BufferedImage image;
+
     /** マスク */
     private byte mask[];
 
@@ -55,9 +64,20 @@ public class WindowsIcon {
         createMask();
     }
 
+    /** アイコンを作成します． */
+    public WindowsIcon(WindowsIconDevice device, BufferedImage image) {
+        this.device = device;
+        this.image = image;
+    }
+
     /** アイコンデバイスを取得します． */
     public WindowsIconDevice getDevice() {
         return device;
+    }
+
+    /** アイコンのビットマップを取得します． */
+    public BufferedImage getImage() {
+        return image;
     }
 
     /** アイコンのビットマップを取得します． */
@@ -76,30 +96,30 @@ public class WindowsIcon {
     private void createMask() {
         int off = bitmap.getImageSize() + bitmap.getOffset();
         int size = bitmap.getSize() - off;
-// Debug.println("mask: " + size);
-// Debug.println(bitmap.getWidth() + ", " + bitmap.getHeight());
+//Debug.println("mask: " + size);
+//Debug.println(bitmap.getWidth() + ", " + bitmap.getHeight());
 
         byte[] buf = new byte[size]; // データののマスクサイズ
         for (int i = 0; i < size; i++) {
             buf[i] = bitmap.getBitmap()[bitmap.getImageSize() + i];
         }
 
-// Debug.dump(buf);
+//Debug.dump(buf);
 
         // パディングを取り除いたマスク
         mask = new byte[(bitmap.getWidth() / 8) * bitmap.getHeight()];
-// Debug.println("real: " + (bitmap.getWidth() / 8) * bitmap.getHeight());
+//Debug.println("real: " + (bitmap.getWidth() / 8) * bitmap.getHeight());
 
         int m = (((bitmap.getWidth() / 8) + 3) / 4) * 4; // パディング入りの幅
-// Debug.println("x: " + m);
+//Debug.println("x: " + m);
         int i = 0;
-        top: for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y 軸を逆転
+top:    for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y 軸を逆転
             for (int x = 0; x < m; x++) {
                 if (x < bitmap.getWidth() / 8) {
-// Debug.println(y * m + x);
+//Debug.println(y * m + x);
                     if (i < size) {
                         mask[i++] = buf[y * m + x];
-// System.err.print(Debug.toBits(mask[i-1]));
+//System.err.print(Debug.toBits(mask[i-1]));
                     } else {
                         break top;
                     }
@@ -164,7 +184,19 @@ public class WindowsIcon {
         int offset = iconDevice.getOffset();
         int size = iconDevice.getSize();
 
-        return new WindowsIcon(iconDevice, WindowsBitmap.readFrom(in, offset, size));
+        if (iconDevice.getWidth() == 0 && iconDevice.getHeight() == 0) {
+            byte[] buf = new byte[size];
+            DataInputStream dis = new DataInputStream(in);
+            dis.readFully(buf);
+//System.err.println(StringUtil.getDump(buf, 128));
+            ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+            BufferedImage image = ImageIO.read(bais);
+Debug.println(image);
+
+            return new WindowsIcon(iconDevice, image);
+        } else {
+            return new WindowsIcon(iconDevice, WindowsBitmap.readFrom(in, offset, size));
+        }
     }
 
     /**
@@ -176,16 +208,16 @@ public class WindowsIcon {
         WindowsIconDevice[] iconDevices;
 
         Header h = Header.readFrom(in);
-System.err.println(h);
+Debug.println(h);
         icons = new WindowsIcon[h.number];
         iconDevices = WindowsIconDevice.readFrom(in, h.number);
 
         for (int i = 0; i < h.number; i++) {
             icons[i] = readIcon(in, iconDevices[i]);
-// if (iconDevices[i].getColors() == 0) {
+//if (iconDevices[i].getColors() == 0) {
 // icons[i].bitmap.setUsedColor(256);
 // icons[i].bitmap.setBits(8);
-// }
+//}
         }
 
         return icons;

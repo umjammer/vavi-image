@@ -6,14 +6,16 @@
 
 package vavi.awt.image.bmp;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.ImageConsumer;
 import java.awt.image.ImageProducer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.NoSuchElementException;
-
 
 
 /**
@@ -36,24 +38,63 @@ public class WindowsIconImageSource implements ImageProducer {
     /** それぞれの大きさをデバイスと呼びそれを管理する数値 */
     private int deviceId = 0;
 
+    /** */
+    private BufferedImage image;
+
+    /** @see ImageConsumer */
+    private ImageConsumer ic;
+
     /** @see ImageProducer */
     public synchronized void addConsumer(ImageConsumer ic) {
-        bitmap.addConsumer(ic);
+        if (bitmap != null) {
+            bitmap.addConsumer(ic);
+        } else {
+            this.ic = ic;
+            if (this.ic != null) {
+                int width = image.getWidth();
+                int height = image.getHeight();
+                ColorModel cm = image.getColorModel();
+                ic.setDimensions(width, height);
+                ic.setProperties(new Hashtable<>());
+                ic.setColorModel(cm);
+//Debug.println(image.getType() + ", " + cm);
+                ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT | ImageConsumer.COMPLETESCANLINES | ImageConsumer.SINGLEPASS | ImageConsumer.SINGLEFRAME);
+                int[] buf = image.getRGB(0, 0, width, height, (int[]) null, 0, width);
+//Debug.println(buf.length + ", " + width * height);
+                ic.setPixels(0, 0, width, height, ColorModel.getRGBdefault(), buf, 0, width); // colorModel ???
+                ic.imageComplete(ImageConsumer.STATICIMAGEDONE);
+            }
+            this.ic = null;
+        }
     }
 
     /** @see ImageProducer */
     public void startProduction(ImageConsumer ic) {
-        bitmap.addConsumer(ic);
+        if (bitmap != null) {
+            bitmap.addConsumer(ic);
+        } else {
+            addConsumer(ic);
+        }
     }
 
     /** @see ImageProducer */
     public synchronized boolean isConsumer(ImageConsumer ic) {
-        return bitmap.isConsumer(ic);
+        if (bitmap != null) {
+            return bitmap.isConsumer(ic);
+        } else {
+            return ic == this.ic;
+        }
     }
 
     /** @see ImageProducer */
     public synchronized void removeConsumer(ImageConsumer ic) {
-        bitmap.removeConsumer(ic);
+        if (bitmap != null) {
+            bitmap.removeConsumer(ic);
+        } else {
+            if (this.ic == ic) {
+                this.ic = null;
+            }
+        }
     }
 
     /** @see ImageProducer */
@@ -97,11 +138,15 @@ public class WindowsIconImageSource implements ImageProducer {
             deviceId = id;
             if (bitmapCache.containsKey(String.valueOf(id))) {
                 bitmap = bitmapCache.get(String.valueOf(id));
-// Debug.println("cache hit: " + id);
+//Debug.println("cache hit: " + id);
             } else {
-                bitmap = new WindowsBitmapImageSource(icons[id].getBitmap());
-                bitmapCache.put(String.valueOf(id), bitmap);
-// Debug.println("new: " + id);
+                if (icons[id].getBitmap() == null) {
+                    image = icons[id].getImage();
+                } else {
+                    bitmap = new WindowsBitmapImageSource(icons[id].getBitmap());
+                    bitmapCache.put(String.valueOf(id), bitmap);
+                }
+//Debug.println("new: " + id);
             }
         } else {
             throw new IndexOutOfBoundsException(String.valueOf(id));

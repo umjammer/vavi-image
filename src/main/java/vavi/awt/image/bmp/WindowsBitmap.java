@@ -19,9 +19,9 @@ import vavi.util.Debug;
 
 /**
  * Windows の bitmap 形式を表すオブジェクトです．
- * 
+ *
  * <pre><code>
- *  
+ *
  *  Top of File
  *
  *   Header         16
@@ -30,9 +30,9 @@ import vavi.util.Debug;
  *   bitmap         BitmapHeader.imageSize
  *
  *  End of File
- *  
+ *
  * </code></pre>
- * 
+ *
  * @see "Windows TM 3.1 グラフィックプログラミング ISBN4-8443-4628-8 p.187"
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
@@ -44,6 +44,17 @@ import vavi.util.Debug;
  *          1.05 021104 nsano add #setBits for icon <br>
  */
 public class WindowsBitmap {
+
+    /** */
+    public enum Type {
+        RGB,
+        /** 圧縮 */
+        RLE8,
+        /** 圧縮 */
+        RLE4,
+        /** */
+        BITFIELDS
+    };
 
     /** ファイルのヘッダ */
     private Header header;
@@ -359,6 +370,10 @@ Debug.print(bh);
                 case 8:
                     bh.usedColor = 256;
                     break;
+                case 24:
+                case 32:
+                    // DO NOT SET
+                    break;
                 default:
 Debug.println("unknown bits: " + bh.bits);
                     break;
@@ -396,18 +411,21 @@ Debug.println("unknown bits: " + bh.bits);
             if (bh.palette == null) { // IndexColorModel
                  switch (bh.usedColor) {
                  case 2:
-Debug.println("use default bw");
+//Debug.println("use default bw");
                     bh.palette = systemBWIndexColorModel;
                  case 16:
-Debug.println("use default 16 color");
+//Debug.println("use default 16 color");
                     bh.palette = system16IndexColorModel;
                  case 256:
-Debug.println("use system 256 color ");
+//Debug.println("use system 256 color ");
                     bh.palette = system256IndexColorModel;
                  default:
 Debug.println("unknown color size: " + bh.usedColor);
                  }
             }
+
+            in.skip(bh.headerSize - 40);
+Debug.println("skip: " + (bh.headerSize - 40));
 
             return bh;
         }
@@ -693,7 +711,7 @@ Debug.println("unknown color size: " + bh.usedColor);
 
         if (bitmap.bitmapHeader.imageSize == 0) {
             bitmap.bitmapHeader.imageSize = bitmap.header.bitmapSize - bitmap.header.bitmapOffset;
-// Debug.println(b.bitmapHeader.imageSize);
+//Debug.println(b.bitmapHeader.imageSize);
         }
 
         bitmap.bitmap = readBitmap(in, bitmap.bitmapHeader.imageSize);
@@ -706,16 +724,16 @@ Debug.println("unknown color size: " + bh.usedColor);
      * <p>
      * アイコン用
      * </p>
-     * 
+     *
      * <pre><code>
-     * 
+     *
      *  Top of Block
      *   BitmapHeader   40
      *   palette        4 x colors (if index color)
      *   bitmap         BitmapHeader.imageSize
      *   mask           size - (header + bitmap + palette)
      *  End of File
-     *  
+     *
      * </code></pre>
      */
     protected static WindowsBitmap readFrom(InputStream in, int off, int size) throws IOException {
@@ -731,10 +749,10 @@ Debug.println("unknown color size: " + bh.usedColor);
         bitmap.bitmapHeader.height /= 2;
         bitmap.header.bitmapOffset = bitmap.bitmapHeader.headerSize + 4 * bitmap.bitmapHeader.usedColor;
 
-// b.header.print();
-// b.bitmapHeader.print();
-// included mask
-// Debug.println("read: " + (b.header.bitmapSize - b.header.bitmapOffset));
+//b.header.print();
+//b.bitmapHeader.print();
+//included mask
+//Debug.println("read: " + (b.header.bitmapSize - b.header.bitmapOffset));
         bitmap.bitmap = readBitmap(in, bitmap.header.bitmapSize - bitmap.header.bitmapOffset);
 
         return bitmap;
