@@ -9,9 +9,13 @@
   <organization>
     <name></name>
   </organization>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <url>https://github.com/umjammer/vavi-image</url>
-  <description>1.0.2
+  <description>1.0.3
+
+    fix non lzw gif
+
+1.0.2
 
     fix windows icon reader spi
 
@@ -34,62 +38,6 @@ TODO
           <target>8</target>
           <encoding>UTF-8</encoding>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <!--
-        *** on java8, javah doesn't work cause bcel5, need bcel6 version *** 
-         -->
-        <artifactId>native-maven-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <!-- trigger javah execution -->
-          <javahClassNames>
-            <javahClassName>vavi.awt.image.resample.FfmpegResampleOp</javahClassName>
-          </javahClassNames>
-          <!-- enable additional javah interface in dependencies list -->
-          <javahSearchJNIFromDependencies>true</javahSearchJNIFromDependencies>
-          <!-- | Add jdk include directories to system include path | Override 
-            ${jkdIncludePath} If your jdk does not conform to Sun JDK layout -->
-          <compilerProvider>generic-classic</compilerProvider>
-          <javahOS>macosx</javahOS>
-          <compilerStartOptions>
-            <compilerStartOption> -g -Wall -O2 -fomit-frame-pointer
-              -fPIC</compilerStartOption>
-            <compilerStartOption>-arch x86_64
-              -I${java.home}/../include
-              -I${java.home}/../include/darwin
-              -I/usr/local/include/libavformat
-              -I/usr/local/include/libavcodec
-              -I/usr/local/include/libavutil
-              -I/usr/local/include/libswscale
-            </compilerStartOption>
-          </compilerStartOptions>
-          <sources>
-            <source>
-              <!-- relative to your project directory -->
-              <directory>src/main/native</directory>
-              <fileNames>
-                <fileName>FfmpegResampleOpWrapper.c</fileName>
-              </fileNames>
-            </source>
-          </sources>
-          <!-- deploy the accompany .lib file as well -->
-          <linkerSecondaryOutputExtensions>lib</linkerSecondaryOutputExtensions>
-          <linkerStartOptions>
-            <linkerStartOption> -dynamiclib -arch x86_64
-              -L/usr/local/lib -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
-          </linkerStartOptions>
-        </configuration>
-        <executions>
-          <execution>
-            <id>javah</id>
-            <phase>none</phase>
-            <goals>
-              <goal>javah</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

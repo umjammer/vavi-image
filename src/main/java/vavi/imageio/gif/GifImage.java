@@ -17,7 +17,6 @@ import java.util.List;
 
 import vavi.io.LittleEndianDataInputStream;
 import vavi.util.Debug;
-import vavi.util.StringUtil;
 
 
 /**
@@ -44,7 +43,7 @@ import vavi.util.StringUtil;
  *
  * @author DJ.Uchi [H.Uchida]
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 2.00 xxxxxx original version <br>
+ * @version 2.00 xxxxxx huchida original version <br>
  * @version 2.10 040914 nsano initial version <br>
  * @see "http://www.w3.org/Graphics/GIF/spec-gif89a.txt"
  */
@@ -117,6 +116,9 @@ public class GifImage {
             @SuppressWarnings("resource")
             LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is);
             dis.readFully(gh.signature);
+            if (gh.signature[0] != 'G' || gh.signature[1] != 'I' || gh.signature[2] != 'F') {
+                throw new IllegalArgumentException("not gif file");
+            }
             dis.readFully(gh.version);
             gh.logicalScreenWidth = dis.readUnsignedShort();
             gh.logicalScreenHeight = dis.readUnsignedShort();
@@ -236,7 +238,7 @@ public class GifImage {
      * @return pixels
      */
     public byte[] getPixels() {
-Debug.println("image[" + index + "]: " + images.get(index).tableBasedImageData.length);
+//Debug.println("image[" + index + "]: " + images.get(index).tableBasedImageData.length);
         return images.get(index).tableBasedImageData;
     }
 
@@ -257,24 +259,25 @@ Debug.println("image[" + index + "]: " + images.get(index).tableBasedImageData.l
 //Debug.println(StringUtil.paramString(gifImage.header));
         // 元の GIF のカラービット数 (8 ビット以下)
         int sizeOfGlobalColorTable = gifImage.header.packedFields & 0x07;
-Debug.println("sizeOfGlobalColorTable: " + sizeOfGlobalColorTable);
+//Debug.println("sizeOfGlobalColorTable: " + sizeOfGlobalColorTable);
 
         // グローバルカラーマップの処理
         if ((gifImage.header.packedFields & 0x80) != 0) {
-            gifImage.globalColorTable = new GifRGB[(int) Math.pow(2, sizeOfGlobalColorTable + 1)];
-            if ((gifImage.header.packedFields & 0x80) != 0) {
-                for (int i = 0; i < (2 << sizeOfGlobalColorTable); i++) {
-                    gifImage.globalColorTable[i] = GifRGB.readFrom(is);
+            int size = (int) Math.pow(2, sizeOfGlobalColorTable + 1);
+            gifImage.globalColorTable = new GifRGB[size];
+//Debug.println("globalColorTable: " + size);
+            for (int i = 0; i < size; i++) {
+                gifImage.globalColorTable[i] = GifRGB.readFrom(is);
 //Debug.println("gifRGB: " + StringUtil.paramString(gifImage.palette[i]));
-                }
             }
         }
 
         while (true) {
             int blockType = is.read();
+//Debug.println(String.format("block type: %02x\n", blockType));
             if (blockType == 0x2c) { // Image Separator
 
-Debug.println("2c: image block");
+//Debug.println("2c: image block");
                 InternalImage image = new InternalImage();
 
                 // 一枚目のイメージ記述情報を取得
@@ -287,7 +290,7 @@ Debug.println("2c: image block");
                 // ローカルカラーマップがある場合の処理
                 if ((image.imageDescriptor.packedFields & 0x80) != 0) {
                     image.sizeOfColorTable = image.imageDescriptor.packedFields & 0x07;
-Debug.println("sizeOfLocalColorTable: " + image.sizeOfColorTable);
+//Debug.println("sizeOfLocalColorTable: " + image.sizeOfColorTable);
                     image.localColorTable = new GifRGB[(int) Math.pow(2, image.sizeOfColorTable + 1)];
                     for (int i = 0; i < (2 << image.sizeOfColorTable); i++) {
                         image.localColorTable[i] = GifRGB.readFrom(is);
@@ -313,17 +316,17 @@ Debug.println("sizeOfLocalColorTable: " + image.sizeOfColorTable);
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 int lzwMinimumCodeSize = is.read();
-Debug.println("2c: lzwMinimumCodeSize: " + lzwMinimumCodeSize);
+//Debug.println("2c: lzwMinimumCodeSize: " + lzwMinimumCodeSize);
                 if (lzwMinimumCodeSize < 0) {
-                    throw new EOFException();
+                    throw new EOFException("readFrom: 2c: lzwMinimumCodeSize");
                 }
                 baos.write(lzwMinimumCodeSize);
                 while (true) {
                     int subBlockSize = is.read();
                     if (subBlockSize < 0) {
-                        throw new EOFException();
+                        throw new EOFException("readFrom: 2c: subBlockSize");
                     } else if (subBlockSize == 0) {
-Debug.println("2c: terminator");
+//Debug.println("2c: terminator");
                         break;
                     }
 //Debug.println("2c: subBlockSize: " + subBlockSize);
@@ -333,31 +336,31 @@ Debug.println("2c: terminator");
                     while (l < subBlockSize) {
                         int r = is.read(subBlockData, l, subBlockSize - l);
                         if (r < 0) {
-                            throw new EOFException();
+                            throw new EOFException("readFrom: 2c: subBlockData");
                         }
                         l += r;
                     }
                     baos.write(subBlockData);
                 }
                 byte[] data = baos.toByteArray();
-Debug.println("2c: data.length: " + data.length);
+//Debug.println("2c: data.length: " + data.length);
 
                 // GIF 展開
                 image.tableBasedImageData = decoder.decode(data, image.imageDescriptor.width, image.imageDescriptor.height, bytesParLine, interlaced, dibColorDepth, data.length);
 
                 gifImage.images.add(image);
-Debug.println("2c: images: " + gifImage.images.size() + ", " + image.tableBasedImageData.length);
+//Debug.println("2c: images: " + gifImage.images.size() + ", " + image.tableBasedImageData.length);
             } else if (blockType == 0x21) { // extention
                 // GIF 拡張ブロック
                 int extentionType = is.read();
-Debug.println(String.format("21: extentionType: %02x", extentionType));
+//Debug.println(String.format("21: extentionType: %02x", extentionType));
                 switch (extentionType) {
                 case 0xf9: { // 0xf9 Graphic Control Label
                     int blockSize = is.read(); // always 4
                     if (blockSize < 0) {
                         throw new EOFException();
                     }
-Debug.println("21 f9: blockSize: " + blockSize);
+//Debug.println("21 f9: blockSize: " + blockSize);
                     byte[] data = new byte[4];
                     int l = 0;
                     while (l < 4) {
@@ -367,9 +370,10 @@ Debug.println("21 f9: blockSize: " + blockSize);
                         }
                         l += r;
                     }
-Debug.println("21 f9: Graphic Control:\n" + StringUtil.getDump(data));
+//Debug.println("21 f9: Graphic Control:\n" + StringUtil.getDump(data));
+                    @SuppressWarnings("unused")
                     int blockTerminator = is.read(); // should be 0
-Debug.println("21 f9: terminator: " + blockTerminator);
+//Debug.println("21 f9: terminator: " + blockTerminator);
                 }
                     break;
                 case 0xfe: { // 0xfe Comment Label
@@ -378,10 +382,10 @@ Debug.println("21 f9: terminator: " + blockTerminator);
                         if (subBlockSize < 0) {
                             throw new EOFException();
                         } else if (subBlockSize == 0) {
-Debug.println("21 fe: terminator");
+//Debug.println("21 fe: terminator");
                             break;
                         }
-Debug.println("21 fe: subBlockSize: " + subBlockSize);
+//Debug.println("21 fe: subBlockSize: " + subBlockSize);
                         byte[] subBlockData = new byte[subBlockSize];
                         int l = 0;
                         while (l < subBlockSize) {
@@ -391,13 +395,14 @@ Debug.println("21 fe: subBlockSize: " + subBlockSize);
                             }
                             l += r;
                         }
-Debug.println("21 fe: subBlock:\n" + StringUtil.getDump(subBlockData));
+//Debug.println("21 fe: subBlock:\n" + StringUtil.getDump(subBlockData));
                     }
                 }
                     break;
                 case 0x01: { // 0x01 Plain Text Label
+                    @SuppressWarnings("unused")
                     int blockSize = is.read(); // always 12
-Debug.println("21 01: size: " + blockSize);
+//Debug.println("21 01: size: " + blockSize);
                     byte[] data = new byte[12];
                     int l = 0;
                     while (l < 12) {
@@ -407,14 +412,14 @@ Debug.println("21 01: size: " + blockSize);
                         }
                         l += r;
                     }
-Debug.println("21 01: Plain Text:\n" + StringUtil.getDump(data));
+//Debug.println("21 01: Plain Text:\n" + StringUtil.getDump(data));
                     while (true) {
                         int subBlockSize = is.read();
-Debug.println("21 01: subBlockSize: " + subBlockSize);
+//Debug.println("21 01: subBlockSize: " + subBlockSize);
                         if (subBlockSize < 0) {
                             throw new EOFException();
                         } else if (subBlockSize == 0) {
-Debug.println("21 01: terminator");
+//Debug.println("21 01: terminator");
                             break;
                         }
                         byte[] subBlockData = new byte[subBlockSize];
@@ -426,13 +431,14 @@ Debug.println("21 01: terminator");
                             }
                             l += r;
                         }
-Debug.println("21 01: subBlock:\n" + StringUtil.getDump(subBlockData));
+//Debug.println("21 01: subBlock:\n" + StringUtil.getDump(subBlockData));
                     }
                 }
                     break;
                 case 0xff: { // 0xff Application Extension Label
+                    @SuppressWarnings("unused")
                     int blockSize = is.read(); // always 11
-Debug.println("21 ff: size: " + blockSize);
+//Debug.println("21 ff: size: " + blockSize);
                     byte[] applicationIdentifier = new byte[8];
                     byte[] applicationAuthenticationCode = new byte[3];
                     int l = 0;
@@ -443,7 +449,7 @@ Debug.println("21 ff: size: " + blockSize);
                         }
                         l += r;
                     }
-Debug.println("21 ff: applicationIdentifier:\n" + StringUtil.getDump(applicationIdentifier));
+//Debug.println("21 ff: applicationIdentifier:\n" + StringUtil.getDump(applicationIdentifier));
                     l = 0;
                     while (l < 3) {
                         int r = is.read(applicationAuthenticationCode, l, 3 - l);
@@ -452,14 +458,14 @@ Debug.println("21 ff: applicationIdentifier:\n" + StringUtil.getDump(application
                         }
                         l += r;
                     }
-Debug.println("21 ff: applicationAuthenticationCode:\n" + StringUtil.getDump(applicationAuthenticationCode));
+//Debug.println("21 ff: applicationAuthenticationCode:\n" + StringUtil.getDump(applicationAuthenticationCode));
                     while (true) {
                         int subBlockSize = is.read();
-Debug.println("21 ff: subBlockSize: " + subBlockSize);
+//Debug.println("21 ff: subBlockSize: " + subBlockSize);
                         if (subBlockSize < 0) {
                             throw new EOFException();
                         } else if (subBlockSize == 0) {
-Debug.println("21 ff: terminator");
+//Debug.println("21 ff: terminator");
                             break;
                         }
                         byte[] subBlockData = new byte[subBlockSize];
@@ -471,21 +477,30 @@ Debug.println("21 ff: terminator");
                             }
                             l += r;
                         }
-Debug.println("21 ff: subBlock:\n" + StringUtil.getDump(subBlockData));
+//Debug.println("21 ff: subBlock:\n" + StringUtil.getDump(subBlockData));
                     }
                 }
                     break;
                 default:
 Debug.println(String.format("21 %02x unknown extention type", extentionType));
+                    int subBlockSize = is.read();
+                    is.skip(subBlockSize);
                     break;
                 }
             } else if (blockType == 0x3b) {
-Debug.println("3b: Trailer");
+//Debug.println("3b: Trailer");
             } else if (blockType == -1) {
+Debug.println("unexpected eof");
                 break;
             } else {
 Debug.println(String.format("%02x: unknown block type", blockType));
+                int blockSize = is.read();
+                is.skip(blockSize);
             }
+        }
+
+        if (gifImage.images.size() == 0) {
+            throw new IllegalStateException("no image");
         }
 
         return gifImage;

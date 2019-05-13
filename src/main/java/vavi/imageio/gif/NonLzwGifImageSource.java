@@ -178,11 +178,13 @@ public class NonLzwGifImageSource implements ImageProducer {
         case 1:
             vram = loadMonoColor();
             break;
+        case 2:
+        case 3:
         case 4:
             vram = load16Color();
             break;
-        case 8:
         default:
+        case 8:
             vram = load256Color();
             break;
         }
