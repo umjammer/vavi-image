@@ -6,9 +6,9 @@
 
 package vavi.imageio.gif;
 
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
-import vavi.imageio.ImageConverter;
+import vavi.awt.image.gif.GifImage;
 import vavi.imageio.WrappedImageInputStream;
 import vavi.util.Debug;
 
@@ -36,7 +36,7 @@ import vavi.util.Debug;
  */
 public class NonLzwGifImageReader extends ImageReader {
     /** */
-    private NonLzwGifImageSource imageSource;
+    private GifImage imageSource;
     /** */
     private IIOMetadata metadata;
 
@@ -55,7 +55,7 @@ public class NonLzwGifImageReader extends ImageReader {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
-        return imageSource.getGifImage().getWidth();
+        return imageSource.getWidth();
     }
 
     /** @see ImageReader */
@@ -63,7 +63,40 @@ public class NonLzwGifImageReader extends ImageReader {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
-        return imageSource.getGifImage().getHeight();
+        return imageSource.getHeight();
+    }
+
+    /** */
+    public static BufferedImage readImage(InputStream is) throws IOException {
+        GifImage gifImage = GifImage.readFrom(is);
+
+        ColorModel cm = gifImage.getColorModel();
+
+        int width = gifImage.getWidth();
+        int height = gifImage.getHeight();
+
+        int pixelSize = cm.getPixelSize();
+
+        byte[] vram = null;
+        switch (pixelSize) {
+        case 1:
+            vram = gifImage.loadMonoColor();
+            break;
+        case 2:
+        case 3:
+        case 4:
+            vram = gifImage.load16Color();
+            break;
+        default:
+        case 8:
+            vram = gifImage.load256Color();
+            break;
+        }
+
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED, (IndexColorModel) cm);
+        image.getRaster().setDataElements(0, 0, width, height, vram);
+
+        return image;
     }
 
     /** @see ImageReader */
@@ -85,11 +118,7 @@ Debug.println("unsupported input: " + input);
         }
 
         try {
-            // TODO eliminate image source
-            imageSource = new NonLzwGifImageSource(is);
-            Toolkit t = Toolkit.getDefaultToolkit();
-            Image image = t.createImage(imageSource);
-            return ImageConverter.getInstance().toBufferedImage(image);
+            return readImage(is);
         } catch (IOException e) {
             throw new IIOException(e.getMessage(), e);
         }

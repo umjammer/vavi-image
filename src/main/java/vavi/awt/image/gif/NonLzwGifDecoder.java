@@ -4,7 +4,7 @@
  * Programmed by Naohide Sano
  */
 
-package vavi.imageio.gif;
+package vavi.awt.image.gif;
 
 import vavi.util.Debug;
 

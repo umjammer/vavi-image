@@ -4,7 +4,7 @@
  * Programmed by Naohide Sano
  */
 
-package vavi.imageio.gif;
+package vavi.awt.image.gif;
 
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
@@ -252,7 +252,7 @@ public class GifImage {
     private List<InternalImage> images = new ArrayList<>();
 
     /** */
-    static GifImage readFrom(InputStream is) throws IOException {
+    public static GifImage readFrom(InputStream is) throws IOException {
         GifImage gifImage = new GifImage();
         // グローバル画面記述情報を取得。
         gifImage.header = GifHeader.readFrom(is);
@@ -490,7 +490,7 @@ Debug.println(String.format("21 %02x unknown extention type", extentionType));
             } else if (blockType == 0x3b) {
 //Debug.println("3b: Trailer");
             } else if (blockType == -1) {
-Debug.println("unexpected eof");
+//Debug.println("unexpected eof");
                 break;
             } else {
 Debug.println(String.format("%02x: unknown block type", blockType));
@@ -504,6 +504,97 @@ Debug.println(String.format("%02x: unknown block type", blockType));
         }
 
         return gifImage;
+    }
+
+    /** モノカラービットマップを作成します． */
+    public byte[] loadMonoColor() {
+
+        int width = getWidth();
+        int height = getHeight();
+        byte[] buffer = getPixels();
+
+        byte[] vram = new byte[width * height];
+
+        int count = 0;
+        int skip = ((width + 7) / 8) % 4 != 0 ? 4 - ((width + 7) / 8) % 4 : 0;
+
+        for (int j = 0; j < height; j++) {
+            int ofs = (height - 1 - j) * width;
+            int d = 0;
+            for (int i = 0; i < width / 8; i++) {
+                byte b = buffer[count++];
+                int mask = 0x80;
+                for (int k = 0; k < 8; k++) {
+                    vram[ofs + d++] = (byte) ((b & mask) >> (7 - k));
+                    mask >>= 1;
+                }
+            }
+            if (width % 8 != 0) {
+                byte b = buffer[count++];
+                int mask = 0x80;
+                for (int k = 0; k < width % 8; k++) {
+                    vram[ofs + d++] = (byte) ((b & mask) >> (7 - k));
+                    mask >>= 1;
+                }
+            }
+            count += skip;
+        }
+
+        return vram;
+    }
+
+    /** 16 色ビットマップを作成します． */
+    public byte[] load16Color() {
+
+        int width = getWidth();
+        int height = getHeight();
+        byte[] buffer = getPixels();
+
+        byte[] vram = new byte[width * height];
+
+        int count = 0;
+        int skip = ((width + 1) / 2) % 4 != 0 ? 4 - ((width + 1) / 2) % 4 : 0;
+
+        for (int j = 0; j < height; j++) {
+            int ofs = (height - 1 - j) * width;
+            int d = 0;
+            for (int i = 0; i < width / 2; i++) {
+                int b = buffer[count++];
+                vram[ofs + d++] = (byte) ((b & 0xf0) >> 4);
+                vram[ofs + d++] = (byte) (b & 0x0f);
+            }
+            if (width % 2 != 0) {
+                int b = buffer[count++];
+                vram[ofs + d] = (byte) ((b & 0xf0) >> 4);
+            }
+            count += skip;
+        }
+
+        return vram;
+    }
+
+    /** 256 色ビットマップを作成します． */
+    public byte[] load256Color() {
+
+        int width = getWidth();
+        int height = getHeight();
+        byte[] buffer = getPixels();
+
+        byte[] vram = new byte[width * height];
+//Debug.println(width + ", " + height + ", " + width * height + ", " + buffer.length);
+
+        int count = 0;
+        int skip = (width % 4 != 0) ? 4 - width % 4 : 0;
+
+        for (int j = 0; j < height; j++) {
+            int ofs = (height - 1 - j) * width;
+            for (int i = 0; i < width; i++) {
+                vram[ofs + i] = buffer[count++];
+            }
+            count += skip;
+        }
+
+        return vram;
     }
 }
 
