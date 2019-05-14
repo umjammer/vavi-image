@@ -9,9 +9,13 @@
   <organization>
     <name></name>
   </organization>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <url>https://github.com/umjammer/vavi-image</url>
-  <description>1.0.3
+  <description>1.0.4
+
+    off non lzw gif
+
+1.0.3
 
     fix non lzw gif
 
