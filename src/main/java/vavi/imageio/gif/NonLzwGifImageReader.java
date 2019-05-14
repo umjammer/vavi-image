@@ -36,7 +36,7 @@ import vavi.util.Debug;
  */
 public class NonLzwGifImageReader extends ImageReader {
     /** */
-    private GifImage imageSource;
+    private GifImage gifImage;
     /** */
     private IIOMetadata metadata;
 
@@ -55,7 +55,7 @@ public class NonLzwGifImageReader extends ImageReader {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
-        return imageSource.getWidth();
+        return gifImage.getWidth();
     }
 
     /** @see ImageReader */
@@ -63,7 +63,7 @@ public class NonLzwGifImageReader extends ImageReader {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
-        return imageSource.getHeight();
+        return gifImage.getHeight();
     }
 
     /** */
