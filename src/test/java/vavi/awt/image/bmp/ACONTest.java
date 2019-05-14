@@ -12,6 +12,8 @@ import java.io.InputStream;
 
 import org.junit.jupiter.api.Test;
 
+import vavi.awt.image.ico.ACON;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 

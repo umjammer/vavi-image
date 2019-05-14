@@ -736,7 +736,7 @@ Debug.println("skip: " + (bh.headerSize - 40));
      *
      * </code></pre>
      */
-    protected static WindowsBitmap readFrom(InputStream in, int off, int size) throws IOException {
+    public static WindowsBitmap readFrom(InputStream in, int off, int size) throws IOException {
 
         WindowsBitmap bitmap = new WindowsBitmap();
 
