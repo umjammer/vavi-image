@@ -8,7 +8,6 @@ package vavi.awt.image.ico;
 
 import java.awt.Point;
 import java.io.IOException;
-import java.io.InputStream;
 
 import vavi.io.LittleEndianDataInputStream;
 import vavi.util.Debug;
@@ -117,28 +116,22 @@ public class WindowsIconDevice {
     /**
      * アイコンのデバイスのインスタンスをストリームから指定した個数作成します．
      */
-    public static WindowsIconDevice[] readFrom(InputStream in, int number) throws IOException {
+    public static WindowsIconDevice[] readFrom(LittleEndianDataInputStream lin, int number) throws IOException {
 
         WindowsIconDevice iconDevices[] = new WindowsIconDevice[number];
-
-        @SuppressWarnings("resource")
-        LittleEndianDataInputStream iin = new LittleEndianDataInputStream(in);
 
         for (int i = 0; i < number; i++) {
             iconDevices[i] = new WindowsIconDevice();
 
-            @SuppressWarnings("unused")
-            int dummy;
-
             // read 16 bytes
-            iconDevices[i].width = iin.read();
-            iconDevices[i].height = iin.read();
-            iconDevices[i].colors = iin.read();
-            dummy = iin.read();
-            iconDevices[i].hotspotX = iin.readShort();
-            iconDevices[i].hotspotY = iin.readShort();
-            iconDevices[i].size = iin.readInt();
-            iconDevices[i].offset = iin.readInt();
+            iconDevices[i].width = lin.read();
+            iconDevices[i].height = lin.read();
+            iconDevices[i].colors = lin.read();
+            lin.readByte();
+            iconDevices[i].hotspotX = lin.readShort();
+            iconDevices[i].hotspotY = lin.readShort();
+            iconDevices[i].size = lin.readInt();
+            iconDevices[i].offset = lin.readInt();
 
             // 書き出しのときは 0 に戻す！
 //          if (iconDevices[i].colors == 0) {

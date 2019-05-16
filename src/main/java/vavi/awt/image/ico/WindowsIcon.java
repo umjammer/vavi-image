@@ -151,21 +151,18 @@ top:    for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y 軸を逆転
         /**
          * ストリームからファイルヘッダのインスタンスを作成します．
          */
-        static final Header readFrom(InputStream in) throws IOException {
+        static final Header readFrom(LittleEndianDataInputStream lin) throws IOException {
 
             Header h = new Header();
-
-            @SuppressWarnings("resource")
-            LittleEndianDataInputStream iin = new LittleEndianDataInputStream(in);
 
             @SuppressWarnings("unused")
             int dummy;
 
             // 6 bytes
-            dummy = iin.read();
-            dummy = iin.read();
-            h.type = iin.readShort();
-            h.number = iin.readShort();
+            dummy = lin.readByte();
+            dummy = lin.readByte();
+            h.type = lin.readShort();
+            h.number = lin.readShort();
 
             return h;
         }
@@ -180,14 +177,14 @@ top:    for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y 軸を逆転
     /**
      * 指定したデバイスのアイコンをストリームから読み込みます．
      */
-    private static WindowsIcon readIcon(InputStream in, WindowsIconDevice iconDevice) throws IOException {
+    private static WindowsIcon readIcon(LittleEndianDataInputStream lin, WindowsIconDevice iconDevice) throws IOException {
 
         int offset = iconDevice.getOffset();
         int size = iconDevice.getSize();
 
         if (iconDevice.getWidth() == 0 && iconDevice.getHeight() == 0) {
             byte[] buf = new byte[size];
-            DataInputStream dis = new DataInputStream(in);
+            DataInputStream dis = new DataInputStream(lin);
             dis.readFully(buf);
 //System.err.println(StringUtil.getDump(buf, 128));
             ByteArrayInputStream bais = new ByteArrayInputStream(buf);
@@ -196,7 +193,7 @@ Debug.println(image);
 
             return new WindowsIcon(iconDevice, image);
         } else {
-            return new WindowsIcon(iconDevice, WindowsBitmap.readFrom(in, offset, size));
+            return new WindowsIcon(iconDevice, WindowsBitmap.readFrom(lin, offset, size));
         }
     }
 
@@ -205,16 +202,18 @@ Debug.println(image);
      */
     public static WindowsIcon[] readFrom(InputStream in) throws IOException {
 
+        LittleEndianDataInputStream lin = new LittleEndianDataInputStream(in);
+
         WindowsIcon[] icons;
         WindowsIconDevice[] iconDevices;
 
-        Header h = Header.readFrom(in);
+        Header h = Header.readFrom(lin);
 Debug.println(h);
         icons = new WindowsIcon[h.number];
-        iconDevices = WindowsIconDevice.readFrom(in, h.number);
+        iconDevices = WindowsIconDevice.readFrom(lin, h.number);
 
         for (int i = 0; i < h.number; i++) {
-            icons[i] = readIcon(in, iconDevices[i]);
+            icons[i] = readIcon(lin, iconDevices[i]);
 //if (iconDevices[i].getColors() == 0) {
 // icons[i].bitmap.setUsedColor(256);
 // icons[i].bitmap.setBits(8);

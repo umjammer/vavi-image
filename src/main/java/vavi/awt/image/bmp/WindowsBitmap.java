@@ -231,26 +231,26 @@ Debug.println(Level.SEVERE, e);
 
         int bitmapSize;
 
-        /** ビットマップファイルのヘッダを読み込みます． */
-        static final Header readFrom(InputStream in) throws IOException {
+        /**
+         * ビットマップファイルのヘッダを読み込みます．
+         * @throws IllegalArgumentException not a windows bitmap
+         */
+        static final Header readFrom(LittleEndianDataInputStream lin) throws IOException {
 
             Header header = new Header();
 
-            @SuppressWarnings("resource")
-            LittleEndianDataInputStream iin = new LittleEndianDataInputStream(in);
-
-            @SuppressWarnings("unused")
-            int dummy;
+            byte[] signature = new byte[2];
 
             // 14 bytes
-            dummy = iin.read();
-            // Debug.println((byte) dummy);
-            dummy = iin.read();
-            // Debug.println((char) dummy);
-            header.bitmapSize = iin.readInt();
-            dummy = iin.readShort();
-            dummy = iin.readShort();
-            header.bitmapOffset = iin.readInt();
+
+            lin.readFully(signature);
+            if (signature[0] != 'B' || signature[1] != 'M') {
+                throw new IllegalArgumentException("not a windows bitmap");
+            }
+            header.bitmapSize = lin.readInt();
+            lin.readShort();
+            lin.readShort();
+            header.bitmapOffset = lin.readInt();
 
             return header;
         }
@@ -336,28 +336,25 @@ Debug.println(Level.SEVERE, e);
         /**
          * ストリームからビットマップヘッダのインスタンスを作成します．
          */
-        static final WindowsBitmapHeader readFrom(InputStream in) throws IOException {
+        static final WindowsBitmapHeader readFrom(LittleEndianDataInputStream lin) throws IOException {
 
             WindowsBitmapHeader bh = new WindowsBitmapHeader();
 
-            @SuppressWarnings("resource")
-            LittleEndianDataInputStream iin = new LittleEndianDataInputStream(in);
-
             // read 40 bytes
-            bh.headerSize = iin.readInt();
-            bh.width = iin.readInt();
-            bh.height = iin.readInt();
-            bh.planes = iin.readShort();
-            bh.bits = iin.readShort();
-            bh.compression = iin.readInt();
-            bh.imageSize = iin.readInt();
-            bh.ppmX = iin.readInt();
-            bh.ppmY = iin.readInt();
-            bh.usedColor = iin.readInt();
-            bh.importantColor = iin.readInt();
+            bh.headerSize = lin.readInt();
+            bh.width = lin.readInt();
+            bh.height = lin.readInt();
+            bh.planes = lin.readShort();
+            bh.bits = lin.readShort();
+            bh.compression = lin.readInt();
+            bh.imageSize = lin.readInt();
+            bh.ppmX = lin.readInt();
+            bh.ppmY = lin.readInt();
+            bh.usedColor = lin.readInt();
+            bh.importantColor = lin.readInt();
 
 //Debug.println("bitmap");
-Debug.print(bh);
+//Debug.print(bh);
 
             if (bh.usedColor == 0) {
                 switch (bh.bits) {
@@ -387,12 +384,13 @@ Debug.println("unknown bits: " + bh.bits);
                 byte[] reds = new byte[bh.usedColor];
                 byte[] greens = new byte[bh.usedColor];
                 byte[] blues = new byte[bh.usedColor];
+                byte[] alphas = new byte[bh.usedColor];
 
                 for (int i = 0; i < bh.usedColor; i++) {
-                    blues[i] = (byte) in.read();
-                    greens[i] = (byte) in.read();
-                    reds[i] = (byte) in.read();
-                    /* alpha */ in.read();
+                    blues[i] = lin.readByte();
+                    greens[i] = lin.readByte();
+                    reds[i] = lin.readByte();
+                    alphas[i] = lin.readByte();
 //System.err.print("(" + i + ")");
 //bh.palette[i].print();
                 }
@@ -424,8 +422,10 @@ Debug.println("unknown color size: " + bh.usedColor);
                  }
             }
 
-            in.skip(bh.headerSize - 40);
-Debug.println("skip: " + (bh.headerSize - 40));
+            lin.skipBytes(bh.headerSize - 40);
+if (bh.headerSize - 40 > 0) {
+ Debug.println("skip: " + (bh.headerSize - 40));
+}
 
             return bh;
         }
@@ -684,15 +684,9 @@ Debug.println("skip: " + (bh.headerSize - 40));
     // -------------------------------------------------------------------------
 
     /** ビットマップイメージを読み込みます． */
-    private static byte[] readBitmap(InputStream in, int num) throws IOException {
-
-        byte buf[] = new byte[num];
-
-        int l = 0;
-        while (l < num) {
-            l += in.read(buf, l, num - l);
-        }
-
+    private static byte[] readBitmap(LittleEndianDataInputStream in, int num) throws IOException {
+        byte[] buf = new byte[num];
+        in.readFully(buf, 0, num);
         return buf;
     }
 
@@ -704,17 +698,19 @@ Debug.println("skip: " + (bh.headerSize - 40));
      */
     public static WindowsBitmap readFrom(InputStream in) throws IOException {
 
+        LittleEndianDataInputStream lin = new LittleEndianDataInputStream(in);
+
         WindowsBitmap bitmap = new WindowsBitmap();
 
-        bitmap.header = Header.readFrom(in);
-        bitmap.bitmapHeader = WindowsBitmapHeader.readFrom(in);
+        bitmap.header = Header.readFrom(lin);
+        bitmap.bitmapHeader = WindowsBitmapHeader.readFrom(lin);
 
         if (bitmap.bitmapHeader.imageSize == 0) {
             bitmap.bitmapHeader.imageSize = bitmap.header.bitmapSize - bitmap.header.bitmapOffset;
 //Debug.println(b.bitmapHeader.imageSize);
         }
 
-        bitmap.bitmap = readBitmap(in, bitmap.bitmapHeader.imageSize);
+        bitmap.bitmap = readBitmap(lin, bitmap.bitmapHeader.imageSize);
 
         return bitmap;
     }
@@ -736,7 +732,7 @@ Debug.println("skip: " + (bh.headerSize - 40));
      *
      * </code></pre>
      */
-    public static WindowsBitmap readFrom(InputStream in, int off, int size) throws IOException {
+    public static WindowsBitmap readFrom(LittleEndianDataInputStream lin, int off, int size) throws IOException {
 
         WindowsBitmap bitmap = new WindowsBitmap();
 
@@ -744,7 +740,7 @@ Debug.println("skip: " + (bh.headerSize - 40));
 
         bitmap.header.bitmapSize = size;
 
-        bitmap.bitmapHeader = WindowsBitmapHeader.readFrom(in);
+        bitmap.bitmapHeader = WindowsBitmapHeader.readFrom(lin);
 
         bitmap.bitmapHeader.height /= 2;
         bitmap.header.bitmapOffset = bitmap.bitmapHeader.headerSize + 4 * bitmap.bitmapHeader.usedColor;
@@ -753,7 +749,7 @@ Debug.println("skip: " + (bh.headerSize - 40));
 //b.bitmapHeader.print();
 //included mask
 //Debug.println("read: " + (b.header.bitmapSize - b.header.bitmapOffset));
-        bitmap.bitmap = readBitmap(in, bitmap.header.bitmapSize - bitmap.header.bitmapOffset);
+        bitmap.bitmap = readBitmap(lin, bitmap.header.bitmapSize - bitmap.header.bitmapOffset);
 
         return bitmap;
     }
