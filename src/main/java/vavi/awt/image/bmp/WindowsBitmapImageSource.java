@@ -15,8 +15,8 @@ import java.util.Hashtable;
 
 
 /**
- * ウインドウズビットマップを作成します．
- * 
+ * Windows ビットマップを作成します．
+ *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano refine <br>
@@ -62,7 +62,7 @@ public class WindowsBitmapImageSource implements ImageProducer {
     }
 
     /** WindowsIconSource 用 */
-    WindowsBitmapImageSource(WindowsBitmap bitmap) {
+    public WindowsBitmapImageSource(WindowsBitmap bitmap) {
         this.bitmap = bitmap;
     }
 

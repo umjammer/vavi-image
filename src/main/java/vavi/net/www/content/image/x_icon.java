@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.net.ContentHandler;
 import java.net.URLConnection;
 
-import vavi.awt.image.bmp.WindowsIconImageSource;
+import vavi.awt.image.ico.WindowsIconImageSource;
 
 
 /**

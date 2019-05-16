@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 
 import org.junit.jupiter.api.Test;
 
+import vavi.awt.image.gif.NonLzwGifImageSource;
 import vavi.swing.JImageComponent;
 
 

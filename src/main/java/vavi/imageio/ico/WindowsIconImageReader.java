@@ -22,7 +22,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
-import vavi.awt.image.bmp.WindowsIconImageSource;
+import vavi.awt.image.ico.WindowsIconImageSource;
 import vavi.imageio.ImageConverter;
 import vavi.imageio.WrappedImageInputStream;
 import vavi.util.Debug;
