@@ -9,11 +9,12 @@ package vavi.awt.image.gif;
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import vavi.io.LittleEndianDataInputStream;
 import vavi.util.Debug;
@@ -63,15 +64,24 @@ public class GifImage {
         /** 青成分 */
         byte blue;
         /** */
-        public static GifRGB readFrom(InputStream is) throws IOException {
+        static GifRGB readFrom(LittleEndianDataInputStream dis) throws IOException {
             GifRGB rgb = new GifRGB();
-            @SuppressWarnings("resource")
-            LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is);
             rgb.red = (byte) dis.read();
             rgb.green = (byte) dis.read();
             rgb.blue = (byte) dis.read();
             return rgb;
         }
+    }
+
+    private static GifRGB[] readColorTable(LittleEndianDataInputStream dis, int sizeOfColorTable) throws IOException {
+        int size = (int) Math.pow(2, sizeOfColorTable + 1);
+        GifRGB[] colorTable = new GifRGB[size];
+//Debug.println("colorTable: " + size);
+        for (int i = 0; i < size; i++) {
+            colorTable[i] = GifRGB.readFrom(dis);
+//Debug.println("gifRGB: " + StringUtil.paramString(gifImage.palette[i]));
+        }
+        return colorTable;
     }
 
     /**
@@ -110,22 +120,29 @@ public class GifImage {
         /** Pixel Aspect Ratio */
         @SuppressWarnings("unused")
         int pixelAspectRatio;
-        /** */
-        static GifHeader readFrom(InputStream is) throws IOException {
+        /**
+         * @throws IllegalArgumentException not a gif
+         */
+        static GifHeader readFrom(LittleEndianDataInputStream dis) throws IOException {
             GifHeader gh = new GifHeader();
-            @SuppressWarnings("resource")
-            LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is);
             dis.readFully(gh.signature);
             if (gh.signature[0] != 'G' || gh.signature[1] != 'I' || gh.signature[2] != 'F') {
                 throw new IllegalArgumentException("not gif file");
             }
             dis.readFully(gh.version);
+//System.err.println(new String(gh.signature) + new String(gh.version));
             gh.logicalScreenWidth = dis.readUnsignedShort();
             gh.logicalScreenHeight = dis.readUnsignedShort();
             gh.packedFields = dis.readUnsignedByte();
             gh.backgroundColorIndex = dis.readUnsignedByte();
             gh.pixelAspectRatio = dis.readUnsignedByte();
             return gh;
+        }
+        boolean hasGlobalColorTable() {
+            return (packedFields & 0x80) != 0;
+        }
+        int getSizeOfGlobalColorTable() {
+            return packedFields & 0x07;
         }
     }
 
@@ -157,10 +174,8 @@ public class GifImage {
          */
         int packedFields;
         /** */
-        static ImageDescriptor readFrom(InputStream is) throws IOException {
+        static ImageDescriptor readFrom(LittleEndianDataInputStream dis) throws IOException {
             ImageDescriptor id = new ImageDescriptor();
-            @SuppressWarnings("resource")
-            LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is);
             // gih.split = (byte) dis.read();
             id.left = dis.readUnsignedShort();
             id.top = dis.readUnsignedShort();
@@ -168,6 +183,44 @@ public class GifImage {
             id.height = dis.readUnsignedShort();
             id.packedFields = dis.readUnsignedByte();
             return id;
+        }
+        boolean isInteraced() {
+            return (packedFields & 0x40) != 0;
+        }
+        boolean hasLocalColorTable() {
+            return (packedFields & 0x80) != 0;
+        }
+        int getSizeOfColorTable() {
+            return packedFields & 0x07;
+        }
+    }
+
+    /** */
+    private class GraphicControlExtention {
+        /** */
+        int packedFields;
+        /** */
+        @SuppressWarnings("unused")
+        int delayTime;
+        /** */
+        int transparentColorIndex;
+        boolean hasTransparentColor() {
+            return (packedFields & 0x01) != 0;
+        }
+    }
+
+    /** */
+    private GraphicControlExtention getGraphicControlExtention() {
+        if (extentionBlocks.containsKey(0xf9)) {
+            ExtentionBlock extentionBlock = extentionBlocks.get(0xf9); 
+            GraphicControlExtention extention = new GraphicControlExtention();
+            byte[] data = extentionBlock.subBlocks.get(0);
+            extention.packedFields = data[0] & 0xff;
+            extention.delayTime = data[1] & 0xff | (data[2] << 8) & 0xff00;
+            extention.transparentColorIndex = data[3] & 0xff;
+            return extention;
+        } else {
+            return null;
         }
     }
 
@@ -181,6 +234,65 @@ public class GifImage {
         GifRGB[] localColorTable;
         /** */
         byte[] tableBasedImageData;
+
+        static InternalImage readFrom(LittleEndianDataInputStream dis, int sizeOfGlobalColorTable, GifRGB[] globalColorTable) throws IOException {
+            InternalImage image = new InternalImage();
+
+            // 一枚目のイメージ記述情報を取得
+            image.imageDescriptor = ImageDescriptor.readFrom(dis);
+
+            // インタレースフラグ
+            boolean interlaced = image.imageDescriptor.isInteraced();
+
+            // ローカルカラーマップがある場合の処理
+            if (image.imageDescriptor.hasLocalColorTable()) {
+                image.sizeOfColorTable = image.imageDescriptor.getSizeOfColorTable();
+                image.localColorTable = readColorTable(dis, image.sizeOfColorTable);
+            } else {
+                image.sizeOfColorTable = sizeOfGlobalColorTable;
+                image.localColorTable = globalColorTable;
+            }
+
+            int bytesParLine = image.imageDescriptor.width;
+            int dibColorDepth = -1;
+            // カラービット数をDIBで使用できる値に強制変換 (オーバーサンプル)
+            if (image.sizeOfColorTable == 0) {
+                bytesParLine = (((image.imageDescriptor.width + 7) >> 3) + 3) & ~3;
+                dibColorDepth = 1;
+            } else if (image.sizeOfColorTable < 4) {
+                bytesParLine = (((image.imageDescriptor.width + 1) >> 1) + 3) & ~3;
+                dibColorDepth = 4;
+            } else if (image.sizeOfColorTable < 8) {
+                bytesParLine = (image.imageDescriptor.width + 3) & ~3;
+                dibColorDepth = 8;
+            }
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int lzwMinimumCodeSize = dis.readUnsignedByte();
+            baos.write(lzwMinimumCodeSize);
+            while (true) {
+                int subBlockSize = dis.readUnsignedByte();
+                if (subBlockSize == 0) {
+                    break;
+                }
+                baos.write(subBlockSize);
+                byte[] subBlockData = new byte[subBlockSize];
+                dis.readFully(subBlockData, 0, subBlockSize);
+                baos.write(subBlockData);
+            }
+            byte[] data = baos.toByteArray();
+
+            // GIF 展開
+            image.tableBasedImageData = decoder.decode(data,
+                                                       image.imageDescriptor.width,
+                                                       image.imageDescriptor.height,
+                                                       bytesParLine,
+                                                       interlaced,
+                                                       dibColorDepth,
+                                                       data.length);
+
+            return image;
+        }
     }
 
     /** */
@@ -231,7 +343,12 @@ public class GifImage {
 //Debug.println("palette(" + i + "): " + StringUtil.paramString(palette[i]));
         }
 
-        return new IndexColorModel(bits, usedColor, reds, greens, blues);
+        GraphicControlExtention graphicControlExtention = getGraphicControlExtention();
+        if (graphicControlExtention != null && graphicControlExtention.hasTransparentColor()) {
+            return new IndexColorModel(bits, usedColor, reds, greens, blues, graphicControlExtention.transparentColorIndex);
+        } else {
+            return new IndexColorModel(bits, usedColor, reds, greens, blues);
+        }
     }
 
     /**
@@ -240,6 +357,32 @@ public class GifImage {
     public byte[] getPixels() {
 //Debug.println("image[" + index + "]: " + images.get(index).tableBasedImageData.length);
         return images.get(index).tableBasedImageData;
+    }
+
+    static class ExtentionBlock {
+        // 0xf9: Graphic Control Label
+        // 0xfe: Comment Label
+        // 0x01: Plain Text Label
+        // 0xff: Application Extension Label
+        //   byte[] applicationIdentifier = new byte[8];
+        //   byte[] applicationAuthenticationCode = new byte[3];
+        int extentionType;
+        List<byte[]> subBlocks = new ArrayList<>();
+        static ExtentionBlock readFrom(LittleEndianDataInputStream dis) throws IOException {
+            ExtentionBlock block = new ExtentionBlock();
+            block.extentionType = dis.readUnsignedByte();
+//Debug.printf("21: extentionType: %02x\n", extentionType);
+            while (true) {
+                int subBlockSize = dis.readUnsignedByte();
+                if (subBlockSize == 0) {
+                    break;
+                }
+                byte[] subBlockData = new byte[subBlockSize];
+                dis.readFully(subBlockData, 0, subBlockSize);
+                block.subBlocks.add(subBlockData);
+            }
+            return block;
+        }
     }
 
     /** */
@@ -252,250 +395,41 @@ public class GifImage {
     private List<InternalImage> images = new ArrayList<>();
 
     /** */
-    public static GifImage readFrom(InputStream is) throws IOException {
+    private Map<Integer, ExtentionBlock> extentionBlocks = new HashMap<>();
+
+    /** */
+    public static GifImage readFrom(InputStream _is) throws IOException {
+
+        LittleEndianDataInputStream dis = new LittleEndianDataInputStream(_is);
+
         GifImage gifImage = new GifImage();
         // グローバル画面記述情報を取得。
-        gifImage.header = GifHeader.readFrom(is);
-//Debug.println(StringUtil.paramString(gifImage.header));
+        gifImage.header = GifHeader.readFrom(dis);
         // 元の GIF のカラービット数 (8 ビット以下)
-        int sizeOfGlobalColorTable = gifImage.header.packedFields & 0x07;
-//Debug.println("sizeOfGlobalColorTable: " + sizeOfGlobalColorTable);
+        int sizeOfGlobalColorTable = gifImage.header.getSizeOfGlobalColorTable();
 
         // グローバルカラーマップの処理
-        if ((gifImage.header.packedFields & 0x80) != 0) {
-            int size = (int) Math.pow(2, sizeOfGlobalColorTable + 1);
-            gifImage.globalColorTable = new GifRGB[size];
-//Debug.println("globalColorTable: " + size);
-            for (int i = 0; i < size; i++) {
-                gifImage.globalColorTable[i] = GifRGB.readFrom(is);
-//Debug.println("gifRGB: " + StringUtil.paramString(gifImage.palette[i]));
-            }
+        if (gifImage.header.hasGlobalColorTable()) {
+            gifImage.globalColorTable = readColorTable(dis, sizeOfGlobalColorTable);
         }
 
         while (true) {
-            int blockType = is.read();
-//Debug.println(String.format("block type: %02x\n", blockType));
+            int blockType = dis.read();
             if (blockType == 0x2c) { // Image Separator
-
-//Debug.println("2c: image block");
-                InternalImage image = new InternalImage();
-
-                // 一枚目のイメージ記述情報を取得
-                image.imageDescriptor = ImageDescriptor.readFrom(is);
-//Debug.println("imageHeader: " + StringUtil.paramString(imageHeader));
-
-                // インタレースフラグ
-                boolean interlaced = (image.imageDescriptor.packedFields & 0x40) != 0;
-
-                // ローカルカラーマップがある場合の処理
-                if ((image.imageDescriptor.packedFields & 0x80) != 0) {
-                    image.sizeOfColorTable = image.imageDescriptor.packedFields & 0x07;
-//Debug.println("sizeOfLocalColorTable: " + image.sizeOfColorTable);
-                    image.localColorTable = new GifRGB[(int) Math.pow(2, image.sizeOfColorTable + 1)];
-                    for (int i = 0; i < (2 << image.sizeOfColorTable); i++) {
-                        image.localColorTable[i] = GifRGB.readFrom(is);
-                    }
-                } else {
-                    image.sizeOfColorTable = sizeOfGlobalColorTable;
-                    image.localColorTable = gifImage.globalColorTable;
-                }
-
-                int bytesParLine = image.imageDescriptor.width;
-                int dibColorDepth = -1;
-                // カラービット数をDIBで使用できる値に強制変換 (オーバーサンプル)
-                if (image.sizeOfColorTable == 0) {
-                    bytesParLine = (((image.imageDescriptor.width + 7) >> 3) + 3) & ~3;
-                    dibColorDepth = 1;
-                } else if (image.sizeOfColorTable < 4) {
-                    bytesParLine = (((image.imageDescriptor.width + 1) >> 1) + 3) & ~3;
-                    dibColorDepth = 4;
-                } else if (image.sizeOfColorTable < 8) {
-                    bytesParLine = (image.imageDescriptor.width + 3) & ~3;
-                    dibColorDepth = 8;
-                }
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                int lzwMinimumCodeSize = is.read();
-//Debug.println("2c: lzwMinimumCodeSize: " + lzwMinimumCodeSize);
-                if (lzwMinimumCodeSize < 0) {
-                    throw new EOFException("readFrom: 2c: lzwMinimumCodeSize");
-                }
-                baos.write(lzwMinimumCodeSize);
-                while (true) {
-                    int subBlockSize = is.read();
-                    if (subBlockSize < 0) {
-                        throw new EOFException("readFrom: 2c: subBlockSize");
-                    } else if (subBlockSize == 0) {
-//Debug.println("2c: terminator");
-                        break;
-                    }
-//Debug.println("2c: subBlockSize: " + subBlockSize);
-                    baos.write(subBlockSize);
-                    byte[] subBlockData = new byte[subBlockSize];
-                    int l = 0;
-                    while (l < subBlockSize) {
-                        int r = is.read(subBlockData, l, subBlockSize - l);
-                        if (r < 0) {
-                            throw new EOFException("readFrom: 2c: subBlockData");
-                        }
-                        l += r;
-                    }
-                    baos.write(subBlockData);
-                }
-                byte[] data = baos.toByteArray();
-//Debug.println("2c: data.length: " + data.length);
-
-                // GIF 展開
-                image.tableBasedImageData = decoder.decode(data, image.imageDescriptor.width, image.imageDescriptor.height, bytesParLine, interlaced, dibColorDepth, data.length);
-
+                InternalImage image = InternalImage.readFrom(dis, sizeOfGlobalColorTable, gifImage.globalColorTable);
                 gifImage.images.add(image);
-//Debug.println("2c: images: " + gifImage.images.size() + ", " + image.tableBasedImageData.length);
             } else if (blockType == 0x21) { // extention
                 // GIF 拡張ブロック
-                int extentionType = is.read();
-//Debug.println(String.format("21: extentionType: %02x", extentionType));
-                switch (extentionType) {
-                case 0xf9: { // 0xf9 Graphic Control Label
-                    int blockSize = is.read(); // always 4
-                    if (blockSize < 0) {
-                        throw new EOFException();
-                    }
-//Debug.println("21 f9: blockSize: " + blockSize);
-                    byte[] data = new byte[4];
-                    int l = 0;
-                    while (l < 4) {
-                        int r = is.read(data, l, 4 - l);
-                        if (r < 0) {
-                            throw new EOFException();
-                        }
-                        l += r;
-                    }
-//Debug.println("21 f9: Graphic Control:\n" + StringUtil.getDump(data));
-                    @SuppressWarnings("unused")
-                    int blockTerminator = is.read(); // should be 0
-//Debug.println("21 f9: terminator: " + blockTerminator);
-                }
-                    break;
-                case 0xfe: { // 0xfe Comment Label
-                    while (true) {
-                        int subBlockSize = is.read();
-                        if (subBlockSize < 0) {
-                            throw new EOFException();
-                        } else if (subBlockSize == 0) {
-//Debug.println("21 fe: terminator");
-                            break;
-                        }
-//Debug.println("21 fe: subBlockSize: " + subBlockSize);
-                        byte[] subBlockData = new byte[subBlockSize];
-                        int l = 0;
-                        while (l < subBlockSize) {
-                            int r = is.read(subBlockData, l, subBlockSize - l);
-                            if (r < 0) {
-                                throw new EOFException();
-                            }
-                            l += r;
-                        }
-//Debug.println("21 fe: subBlock:\n" + StringUtil.getDump(subBlockData));
-                    }
-                }
-                    break;
-                case 0x01: { // 0x01 Plain Text Label
-                    @SuppressWarnings("unused")
-                    int blockSize = is.read(); // always 12
-//Debug.println("21 01: size: " + blockSize);
-                    byte[] data = new byte[12];
-                    int l = 0;
-                    while (l < 12) {
-                        int r = is.read(data, l, 12 - l);
-                        if (r < 0) {
-                            throw new EOFException();
-                        }
-                        l += r;
-                    }
-//Debug.println("21 01: Plain Text:\n" + StringUtil.getDump(data));
-                    while (true) {
-                        int subBlockSize = is.read();
-//Debug.println("21 01: subBlockSize: " + subBlockSize);
-                        if (subBlockSize < 0) {
-                            throw new EOFException();
-                        } else if (subBlockSize == 0) {
-//Debug.println("21 01: terminator");
-                            break;
-                        }
-                        byte[] subBlockData = new byte[subBlockSize];
-                        l = 0;
-                        while (l < subBlockSize) {
-                            int r = is.read(subBlockData, l, subBlockSize - l);
-                            if (r < 0) {
-                                throw new EOFException();
-                            }
-                            l += r;
-                        }
-//Debug.println("21 01: subBlock:\n" + StringUtil.getDump(subBlockData));
-                    }
-                }
-                    break;
-                case 0xff: { // 0xff Application Extension Label
-                    @SuppressWarnings("unused")
-                    int blockSize = is.read(); // always 11
-//Debug.println("21 ff: size: " + blockSize);
-                    byte[] applicationIdentifier = new byte[8];
-                    byte[] applicationAuthenticationCode = new byte[3];
-                    int l = 0;
-                    while (l < 8) {
-                        int r = is.read(applicationIdentifier, l, 8 - l);
-                        if (r < 0) {
-                            throw new EOFException();
-                        }
-                        l += r;
-                    }
-//Debug.println("21 ff: applicationIdentifier:\n" + StringUtil.getDump(applicationIdentifier));
-                    l = 0;
-                    while (l < 3) {
-                        int r = is.read(applicationAuthenticationCode, l, 3 - l);
-                        if (r < 0) {
-                            throw new EOFException();
-                        }
-                        l += r;
-                    }
-//Debug.println("21 ff: applicationAuthenticationCode:\n" + StringUtil.getDump(applicationAuthenticationCode));
-                    while (true) {
-                        int subBlockSize = is.read();
-//Debug.println("21 ff: subBlockSize: " + subBlockSize);
-                        if (subBlockSize < 0) {
-                            throw new EOFException();
-                        } else if (subBlockSize == 0) {
-//Debug.println("21 ff: terminator");
-                            break;
-                        }
-                        byte[] subBlockData = new byte[subBlockSize];
-                        l = 0;
-                        while (l < subBlockSize) {
-                            int r = is.read(subBlockData, l, subBlockSize - l);
-                            if (r < 0) {
-                                throw new EOFException();
-                            }
-                            l += r;
-                        }
-//Debug.println("21 ff: subBlock:\n" + StringUtil.getDump(subBlockData));
-                    }
-                }
-                    break;
-                default:
-Debug.println(String.format("21 %02x unknown extention type", extentionType));
-                    int subBlockSize = is.read();
-                    is.skip(subBlockSize);
-                    break;
-                }
+                ExtentionBlock extentionBlock = ExtentionBlock.readFrom(dis);
+                gifImage.extentionBlocks.put(extentionBlock.extentionType, extentionBlock);
             } else if (blockType == 0x3b) {
 //Debug.println("3b: Trailer");
+                break;
             } else if (blockType == -1) {
-//Debug.println("unexpected eof");
+Debug.println("unexpected eof");
                 break;
             } else {
 Debug.println(String.format("%02x: unknown block type", blockType));
-                int blockSize = is.read();
-                is.skip(blockSize);
             }
         }
 
