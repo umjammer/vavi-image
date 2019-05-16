@@ -29,8 +29,6 @@ import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
 
-import vavi.imageio.gif.NonLzwGifImageReader;
-
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
 
@@ -93,14 +91,19 @@ public class TestGif {
         }
     }
 
-    /** */
+    /**
+     * @param type: gif, class: vavi.imageio.gif.NonLzwGifImageReader
+     */
     public static void main(final String[] args) throws IOException {
-System.err.println(args[0]);
+        String dir = args[0];
+        String type = args[1];
+        String clazz = args[2];
+System.err.println(dir);
         ImageReader tmpIr = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("gif");
+        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName(type);
         while (irs.hasNext()) {
             tmpIr = irs.next();
-            if (tmpIr.getClass().getName().equals(NonLzwGifImageReader.class.getName())) {
+            if (tmpIr.getClass().getName().equals(clazz)) {
 System.err.println("found ImageReader: " + tmpIr.getClass().getName());
                 break;
             }
@@ -110,13 +113,14 @@ System.err.println("found ImageReader: " + tmpIr.getClass().getName());
         List<BufferedImage> images = new ArrayList<>();
         List<Path> errors = new ArrayList<>();
 
-        Files.walkFileTree(Paths.get(args[0]), new RegexFileVisitor("\\.(gif|GIF)$", 1000, p -> {
+        Files.walkFileTree(Paths.get(dir), new RegexFileVisitor("\\.(" + type.toLowerCase() + "|" + type.toUpperCase() + ")$", 1000, p -> {
             try {
                 ir.setInput(new FileInputStream(p.toAbsolutePath().toString()));
                 BufferedImage image = ir.read(0);
                 images.add(image);
                 return true;
             } catch (IllegalArgumentException e) {
+System.err.println(e.getMessage() + ": " + p);
                 return false;
             } catch (Exception e) {
                 System.err.println(p);

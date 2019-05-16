@@ -3,10 +3,12 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <artifactId>libFfmpegResampleOpWrapper</artifactId>
   <version>1.0.3</version>
   <groupId>vavi</groupId>
   <packaging>dylib</packaging>
+
   <build>
     <plugins>
       <plugin>
@@ -14,18 +16,15 @@
         <artifactId>native-maven-plugin</artifactId>
         <extensions>true</extensions>
         <configuration>
-          <!-- trigger javah execution -->
           <javahClassNames>
             <javahClassName>vavi.awt.image.resample.FfmpegResampleOp</javahClassName>
           </javahClassNames>
-          <!-- enable additional javah interface in dependencies list -->
-          <javahSearchJNIFromDependencies>true</javahSearchJNIFromDependencies>
-          <!-- | Add jdk include directories to system include path | Override 
-            ${jkdIncludePath} If your jdk does not conform to Sun JDK layout -->
-          <javahOS>macosx</javahOS>
+          <javahSearchJNIFromDependencies>false</javahSearchJNIFromDependencies>
+          <javahOS>darwin</javahOS>
           <compilerProvider>generic-classic</compilerProvider>
           <compilerStartOptions>
-            <compilerStartOption> -g -Wall -O2 -fomit-frame-pointer -fPIC</compilerStartOption>
+            <compilerStartOption>-g -Wall -O2 -fomit-frame-pointer -fPIC</compilerStartOption>
+            <!-- unless locating jdk includes, cause error why??? -->
             <compilerStartOption>-arch x86_64
                   -I${java.home}/../include
                   -I${java.home}/../include/darwin
@@ -37,17 +36,15 @@
           </compilerStartOptions>
           <sources>
             <source>
-              <!-- relative to your project directory -->
               <directory>src/main/native</directory>
               <fileNames>
                 <fileName>FfmpegResampleOpWrapper.c</fileName>
               </fileNames>
             </source>
           </sources>
-          <!-- deploy the accompany .lib file as well -->
-          <linkerSecondaryOutputExtensions>lib</linkerSecondaryOutputExtensions>
+          <linkerSecondaryOutputExtensions>dylib</linkerSecondaryOutputExtensions>
           <linkerStartOptions>
-            <linkerStartOption> -dynamiclib -arch x86_64
+            <linkerStartOption>-dynamiclib -arch x86_64
               -L/usr/local/lib -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
           </linkerStartOptions>
         </configuration>
