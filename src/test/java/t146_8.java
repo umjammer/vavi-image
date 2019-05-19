@@ -12,10 +12,7 @@ import java.awt.image.BufferedImageOp;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Properties;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -33,8 +30,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import vavi.awt.image.blur.GaussianBlurOp;
+import vavi.imageio.IIOUtil;
 import vavi.imageio.ImageConverter;
 import vavi.swing.JImageComponent;
+import vavi.util.properties.annotation.Property;
+import vavi.util.properties.annotation.PropsEntity;
 
 
 /**
@@ -43,7 +43,19 @@ import vavi.swing.JImageComponent;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 061012 nsano initial version <br>
  */
+@PropsEntity(url = "file://${user.dir}/local.properties")
 public class t146_8 {
+
+    @Property(name = "image.writer.class", value = "com.sun.imageio.plugins.jpeg.JPEGImageWriter")
+    String className;
+
+    {
+        try {
+            PropsEntity.Util.bind(this);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         new t146_8(args);
@@ -63,11 +75,8 @@ public class t146_8 {
     };
 
     Image rightImage;
-
     JSlider qualitySlider;
-
     JImageComponent rightImageComponent;
-
     JLabel statusLabel;
 
     t146_8(String[] args) throws Exception {
@@ -87,34 +96,7 @@ System.err.println(w + ", " + h);
             ImageConverter converter = ImageConverter.getInstance();
             ImageWriter iw;
             {
-                Properties props = new Properties();
-                try {
-                    props.load(new FileInputStream("local.properties"));
-                } catch (Exception e) {
-e.printStackTrace(System.err);
-                }
-
-                String className = props.getProperty("image.writer.class", "com.sun.imageio.plugins.jpeg.JPEGImageWriter");
-                Class<?> clazz;
-                try {
-                    clazz = Class.forName(className);
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalArgumentException("no such ImageWriter: " + className);
-                }
-                Iterator<ImageWriter> iws = ImageIO.getImageWritersByFormatName("JPEG");
-                while (iws.hasNext()) {
-                    ImageWriter tmpIw = iws.next();
-                    // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
-                    if (clazz.isInstance(tmpIw)) {
-                        iw = tmpIw;
-System.err.println("ImageWriter: " + iw.getClass());
-                        break;
-                    }
-                }
-                if (iw == null) {
-                    throw new IllegalStateException("no suitable ImageWriter");
-                }
-
+                iw = IIOUtil.getImageWriter("JPEG", className);
                 //
                 converter.setColorModelType(BufferedImage.TYPE_3BYTE_BGR);
             }
@@ -141,7 +123,7 @@ System.err.println("ImageWriter: " + iw.getClass());
 //System.err.println(StringUtil.paramString(iwp.getCompressionTypes()));
 
                     //
-                    // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4957775
+                    // "http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4957775"
                     BufferedImage tmpImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
                     tmpImage.getGraphics().drawImage(image, 0, 0, null);
 

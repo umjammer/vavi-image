@@ -41,15 +41,10 @@ public class t146_9 {
     }
 
     BufferedImage rightImage;
-
     BufferedImage leftImage;
-
     JSlider slider;
-
     JImageComponent rightImageComponent;
-
     JImageComponent leftImageComponent;
-
     JLabel statusLabel;
 
     t146_9(String[] args) throws Exception {

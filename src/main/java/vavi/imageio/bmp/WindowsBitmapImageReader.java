@@ -44,12 +44,12 @@ public class WindowsBitmapImageReader extends ImageReader {
         super(originatingProvider);
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getNumImages(boolean allowSearch) throws IIOException {
         return 1;
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getWidth(int imageIndex) throws IIOException {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
@@ -57,7 +57,7 @@ public class WindowsBitmapImageReader extends ImageReader {
         return windowsBitmap.getWidth();
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getHeight(int imageIndex) throws IIOException {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
@@ -123,7 +123,7 @@ Debug.println(image.getType() + ", " + image.getColorModel());
         return image;
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public BufferedImage read(int imageIndex, ImageReadParam param)
         throws IIOException {
 
@@ -148,12 +148,12 @@ Debug.println(input);
         }
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public IIOMetadata getStreamMetadata() throws IIOException {
         return metadata;
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public IIOMetadata getImageMetadata(int imageIndex) throws IIOException {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
@@ -167,7 +167,7 @@ Debug.println(input);
 //        return metadata;
 //    }
 
-    /** */
+    /* */
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);

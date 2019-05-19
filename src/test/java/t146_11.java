@@ -13,10 +13,7 @@ import java.awt.image.BufferedImageOp;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Properties;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -36,7 +33,10 @@ import javax.swing.event.ChangeListener;
 import vavi.awt.image.AbstractBufferedImageOp;
 import vavi.awt.image.blur.GaussianBlurOp;
 import vavi.awt.image.resample.AwtResampleOp;
+import vavi.imageio.IIOUtil;
 import vavi.swing.JImageComponent;
+import vavi.util.properties.annotation.Property;
+import vavi.util.properties.annotation.PropsEntity;
 
 
 /**
@@ -52,17 +52,11 @@ public class t146_11 {
     }
 
     BufferedImage rightImage;
-
     BufferedImage leftImage;
-
     JSlider qualitySlider;
-
     JSlider blurSlider;
-
     JImageComponent rightImageComponent;
-
     JImageComponent leftImageComponent;
-
     JLabel statusLabel;
 
     t146_11(String[] args) throws Exception {
@@ -198,37 +192,22 @@ System.err.println("quality: " + quality + ", size: " + size + ", blur: " + blur
     }
 
     /** */
+    @PropsEntity(url = "file://${user.dir}/local.properties")
     static class JpegCompressOp extends AbstractBufferedImageOp {
-        static ImageWriter iw = null;
-        static {
-            Properties props = new Properties();
-            try {
-                props.load(new FileInputStream("local.properties"));
-            } catch (Exception e) {
-e.printStackTrace(System.err);
-            }
+        @Property(name = "image.writer.class", value = "com.sun.imageio.plugins.jpeg.JPEGImageWriter")
+        String className;
 
-            String className = props.getProperty("image.writer.class", "com.sun.imageio.plugins.jpeg.JPEGImageWriter");
-            Class<?> clazz;
+        ImageWriter iw = null;
+        {
             try {
-                clazz = Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException("no such ImageWriter: " + className);
-            }
-            Iterator<ImageWriter> iws = ImageIO.getImageWritersByFormatName("JPEG");
-            while (iws.hasNext()) {
-                ImageWriter tmpIw = iws.next();
+                PropsEntity.Util.bind(this);
                 // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
-                if (clazz.isInstance(tmpIw)) {
-                    iw = tmpIw;
-System.err.println("ImageWriter: " + iw.getClass());
-                    break;
-                }
-            }
-            if (iw == null) {
-                throw new IllegalStateException("no suitable ImageWriter");
+                iw = IIOUtil.getImageWriter("JPEG", className);
+            } catch (IOException e) {
+                throw new IllegalArgumentException(e);
             }
         }
+
         float quality;
         int size;
         JpegCompressOp(float quality) {

@@ -11,12 +11,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.io.File;
-import java.io.FileInputStream;
-import java.util.Iterator;
-import java.util.Properties;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -53,15 +49,10 @@ public class t146_12 {
     }
 
     BufferedImage rightImage;
-
     BufferedImage leftImage;
-
     JSlider slider;
-
     JImageComponent rightImageComponent;
-
     JImageComponent leftImageComponent;
-
     JLabel statusLabel;
 
     t146_12(String[] args) throws Exception {
@@ -81,36 +72,6 @@ System.err.println(w + ", " + h);
         slider.setMinimum(1);
         slider.setValue(100);
         slider.addChangeListener(new ChangeListener() {
-            ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ちょっと適当か？
-            {
-                Properties props = new Properties();
-                try {
-                    props.load(new FileInputStream("local.properties"));
-                } catch (Exception e) {
-e.printStackTrace(System.err);
-                }
-
-                String className = props.getProperty("image.writer.class", "com.sun.imageio.plugins.jpeg.JPEGImageWriter");
-                Class<?> clazz;
-                try {
-                    clazz = Class.forName(className);
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalArgumentException("no such ImageWriter: " + className);
-                }
-                Iterator<ImageWriter> iws = ImageIO.getImageWritersByFormatName("JPEG");
-                while (iws.hasNext()) {
-                    ImageWriter tmpIw = iws.next();
-                    // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
-                    if (clazz.isInstance(tmpIw)) {
-                        iw = tmpIw;
-System.err.println("ImageWriter: " + iw.getClass());
-                        break;
-                    }
-                }
-                if (iw == null) {
-                    throw new IllegalStateException("no suitable ImageWriter");
-                }
-            }
             public void stateChanged(ChangeEvent event) {
                 JSlider source = (JSlider) event.getSource();
                 if (source.getValueIsAdjusting()) {

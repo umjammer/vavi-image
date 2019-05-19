@@ -11,10 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Properties;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -31,8 +28,11 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import vavi.imageio.IIOUtil;
 import vavi.imageio.ImageConverter;
 import vavi.swing.JImageComponent;
+import vavi.util.properties.annotation.Property;
+import vavi.util.properties.annotation.PropsEntity;
 
 
 /**
@@ -41,7 +41,21 @@ import vavi.swing.JImageComponent;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 07xxxx nsano initial version <br>
  */
+@PropsEntity(url = "file://${user.dir}/local.properties")
 public class t146_14 {
+
+    @Property(name = "image.writer.class", value = "com.sun.imageio.plugins.jpeg.JPEGImageWriter")
+    String classNameL;
+    @Property(name = "image.writer.class2", value = "com.sun.imageio.plugins.jpeg.JPEGImageWriter")
+    String classNameR;
+
+    {
+        try {
+            PropsEntity.Util.bind(this);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         new t146_14(args);
@@ -61,15 +75,10 @@ public class t146_14 {
     };
 
     Image rightImage;
-
     Image leftImage;
-
     JSlider qualitySlider;
-
     JImageComponent rightImageComponent;
-
     JImageComponent leftImageComponent;
-
     JLabel statusLabel;
 
     t146_14(String[] args) throws Exception {
@@ -91,46 +100,9 @@ System.err.println(w + ", " + h);
             ImageWriter iwL;
             ImageWriter iwR;
             {
-                Properties props = new Properties();
-                try {
-                    props.load(new FileInputStream("local.properties"));
-                } catch (Exception e) {
-e.printStackTrace(System.err);
-                }
-
-                String classNameL = props.getProperty("image.writer.class", "com.sun.imageio.plugins.jpeg.JPEGImageWriter");
-                String classNameR = props.getProperty("image.writer.class2", "com.sun.imageio.plugins.jpeg.JPEGImageWriter");
-                Class<?> classL;
-                Class<?> classR;
-                try {
-                    classL = Class.forName(classNameL);
-                    classR = Class.forName(classNameR);
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalArgumentException("no such ImageWriter: " + classNameL + " or " + classNameR);
-                }
-                Iterator<ImageWriter> iws = ImageIO.getImageWritersByFormatName("JPEG");
-                while (iws.hasNext()) {
-                    ImageWriter tmpIw = iws.next();
-System.err.println("ImageWriter: " + tmpIw.getClass());
-                    // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
-                    if (classL.isInstance(tmpIw)) {
-                        iwL = tmpIw;
-System.err.println("ImageWriter L: " + iwL.getClass());
-                        break;
-                    }
-                }
-                iws = ImageIO.getImageWritersByFormatName("JPEG");
-                while (iws.hasNext()) {
-                    ImageWriter tmpIw = iws.next();
-                    if (classR.isInstance(tmpIw)) {
-                        iwR = tmpIw;
-System.err.println("ImageWriter R: " + iwR.getClass());
-                        break;
-                    }
-                }
-                if (iwL == null || iwR == null ) {
-                    throw new IllegalStateException("no suitable ImageWriter");
-                }
+                // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
+                iwL = IIOUtil.getImageWriter("JPEG", classNameL);
+                iwR = IIOUtil.getImageWriter("JPEG", classNameR);
 
                 //
                 converter.setColorModelType(BufferedImage.TYPE_INT_RGB);

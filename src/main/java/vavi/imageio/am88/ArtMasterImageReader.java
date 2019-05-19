@@ -48,22 +48,22 @@ public class ArtMasterImageReader extends ImageReader {
         super(originatingProvider);
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getNumImages(boolean allowSearch) throws IIOException {
         return 1;
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getWidth(int imageIndex) throws IIOException {
         return ArtMasterImage.W;
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getHeight(int imageIndex) throws IIOException {
         return ArtMasterImage.H;
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public BufferedImage read(int imageIndex, ImageReadParam param)
         throws IIOException {
 
@@ -88,17 +88,17 @@ Debug.println(input);
         }
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public IIOMetadata getStreamMetadata() throws IIOException {
         return metadata;
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public IIOMetadata getImageMetadata(int imageIndex) throws IIOException {
         return metadata;
     }
 
-    /** */
+    /* */
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
 Debug.println("here");
         ImageTypeSpecifier specifier = null;

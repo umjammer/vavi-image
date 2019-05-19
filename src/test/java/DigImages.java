@@ -17,29 +17,29 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
 
+import vavi.imageio.IIOUtil;
+
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
 
 
 /**
- * TestGif.
+ * DigImages.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (umjammer)
  * @version 0.00 2019/05/14 umjammer initial version <br>
  */
-public class TestGif {
+public class DigImages {
 
     @Test
     public void test() throws Exception {
@@ -99,16 +99,7 @@ public class TestGif {
         String type = args[1];
         String clazz = args[2];
 System.err.println(dir);
-        ImageReader tmpIr = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName(type);
-        while (irs.hasNext()) {
-            tmpIr = irs.next();
-            if (tmpIr.getClass().getName().equals(clazz)) {
-System.err.println("found ImageReader: " + tmpIr.getClass().getName());
-                break;
-            }
-        }
-        ImageReader ir = tmpIr;
+        ImageReader ir = IIOUtil.getImageReader(type, clazz);
 
         List<BufferedImage> images = new ArrayList<>();
         List<Path> errors = new ArrayList<>();
