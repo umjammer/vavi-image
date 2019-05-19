@@ -51,8 +51,7 @@ System.err.println(args[0]);
 System.err.println(args[count]);
                     Image image = Toolkit.getDefaultToolkit().createImage(new NonLzwGifImageSource(new FileInputStream(args[count])));
                     component.setImage(image);
-                    component.repaint();
-                    frame.setPreferredSize(new Dimension(image.getWidth(null) + frame.getInsets().left + frame.getInsets().right, image.getHeight(null) + frame.getInsets().top + frame.getInsets().bottom));
+                    component.setPreferredSize(new Dimension(image.getWidth(component), image.getHeight(component)));
                     frame.pack();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -65,8 +64,8 @@ System.err.println(args[count]);
         });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.setPreferredSize(new Dimension(image.getWidth(null) + frame.getInsets().left + frame.getInsets().right, image.getHeight(null) + frame.getInsets().top + frame.getInsets().bottom));
         component.setImage(image);
+        component.setPreferredSize(new Dimension(image.getWidth(component), image.getHeight(component)));
         frame.getContentPane().add(component);
         frame.pack();
     }

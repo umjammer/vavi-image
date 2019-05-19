@@ -32,7 +32,7 @@ public class NonLzwGifImageSource implements ImageProducer {
     public synchronized void addConsumer(ImageConsumer ic) {
         this.ic = ic;
         if (this.ic != null) {
-            loadPixel();
+            loadPixel(0); // TODO image index
         }
         this.ic = null;
     }
@@ -69,12 +69,12 @@ public class NonLzwGifImageSource implements ImageProducer {
     }
 
     /** ビットマップを作成します． */
-    private void loadPixel() {
+    private void loadPixel(int index) {
 
-        ColorModel cm = gifImage.getColorModel();
+        ColorModel cm = gifImage.getColorModel(index);
 
-        int width = gifImage.getWidth();
-        int height = gifImage.getHeight();
+        int width = gifImage.getWidth(index);
+        int height = gifImage.getHeight(index);
 
         ic.setDimensions(width, height);
         ic.setProperties(new Hashtable<>());
@@ -85,16 +85,16 @@ public class NonLzwGifImageSource implements ImageProducer {
         byte[] vram;
         switch (cm.getPixelSize()) {
         case 1:
-            vram = gifImage.loadMonoColor();
+            vram = gifImage.loadMonoColor(index);
             break;
         case 2:
         case 3:
         case 4:
-            vram = gifImage.load16Color();
+            vram = gifImage.load16Color(index);
             break;
         default:
         case 8:
-            vram = gifImage.load256Color();
+            vram = gifImage.load256Color(index);
             break;
         }
 

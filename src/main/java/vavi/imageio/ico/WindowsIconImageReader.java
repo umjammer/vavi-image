@@ -47,18 +47,18 @@ public class WindowsIconImageReader extends ImageReader {
         super(originatingProvider);
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getNumImages(boolean allowSearch) throws IIOException {
         return imageSource.getDeviceCount();
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getWidth(int imageIndex) throws IIOException {
         imageSource.changeDevice(imageIndex);
         return imageSource.getWindowsBitmap().getWidth();
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getHeight(int imageIndex) throws IIOException {
         imageSource.changeDevice(imageIndex);
         return imageSource.getWindowsBitmap().getHeight();
@@ -98,17 +98,17 @@ Debug.println(input);
         return ImageConverter.getInstance().toBufferedImage(image);
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public IIOMetadata getStreamMetadata() throws IIOException {
         return metadata;
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public IIOMetadata getImageMetadata(int imageIndex) throws IIOException {
         return metadata;
     }
 
-    /** */
+    /* */
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
 Debug.println("here");
         ImageTypeSpecifier specifier = null;

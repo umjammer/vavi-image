@@ -36,91 +36,62 @@
  * maintenance of any nuclear facility.
  */
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import vavi.awt.image.AbstractBufferedImageOp;
 
-public class Blur extends JPanel {
 
-    private BufferedImage bi;
+/**
+ * Blur.
+ *
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (umjammer)
+ * @version 0.00 2019/05/18 umjammer initial version <br>
+ */
+public class Blur {
 
-    float[] elements = {
+    public static void main(String s[]) throws IOException {
+        BufferedImage image = ImageIO.read(Blur.class.getResourceAsStream("erika.jpg"));
+        BufferedImage bluredImage = new BlurOp().filter(image, null);
+
+        JPanel panel = new JPanel() {
+            public void paint(Graphics g) {
+                int w = image.getWidth();
+
+                g.drawImage(image, 0, 0, this);
+                g.drawImage(bluredImage, w, 0, this);
+            }
+        };
+        panel.setPreferredSize(new Dimension(image.getWidth() * 2, image.getHeight()));
+
+        JFrame fame = new JFrame("Blur");
+        fame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        fame.getContentPane().add(panel);
+        fame.pack();
+        fame.setVisible(true);
+    }
+}
+
+class BlurOp extends AbstractBufferedImageOp {
+
+    private static final float[] elements = {
         .1111f, .1111f, .1111f,
         .1111f, .1111f, .1111f,
         .1111f, .1111f, .1111f
     };
 
-    public Blur() {
-
-        setBackground(Color.white);
-
-        Image img = getToolkit().getImage("tmp/erika.jpg");
-        try {
-            MediaTracker tracker = new MediaTracker(this);
-            tracker.addImage(img, 0);
-            tracker.waitForID(0);
-        } catch (Exception e) {
-        }
-
-        int iw = img.getWidth(this);
-        int ih = img.getHeight(this);
-        bi = new BufferedImage(iw, ih, BufferedImage.TYPE_INT_RGB);
-        Graphics2D big = bi.createGraphics();
-        big.drawImage(img, 0, 0, this);
-
-    }
-
-    public void paint(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        int w = getSize().width;
-        int h = getSize().height;
-        int bw = bi.getWidth(this);
-        int bh = bi.getHeight(this);
-
-        AffineTransform at = new AffineTransform();
-        at.scale(w / 2.0 / bw, h / 1.0 / bh);
-
-        BufferedImageOp biop = null;
-
-        BufferedImage bimg = new BufferedImage(bw, bh, BufferedImage.TYPE_INT_RGB);
-
+    /* */
+    public BufferedImage filter(BufferedImage src, BufferedImage dst) {
         Kernel kernel = new Kernel(3, 3, elements);
         ConvolveOp cop = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-        cop.filter(bi, bimg);
-        biop = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-
-        g2.drawImage(bi, biop, 0, 0);
-        g2.drawImage(bimg, biop, w / 2 + 3, 0);
-
-    }
-
-    public static void main(String s[]) {
-        WindowListener l = new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        };
-        JFrame f = new JFrame("Blur");
-        f.addWindowListener(l);
-        f.getContentPane().add("Center", new Blur());
-        f.pack();
-        f.setSize(new Dimension(600, 300));
-        f.setVisible(true);
+        return cop.filter(src, null);
     }
 }

@@ -16,6 +16,8 @@ import javax.imageio.spi.ImageReaderSpi;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import vavi.imageio.IIOUtil;
+
 
 /**
  * ImageIO display.
@@ -48,6 +50,10 @@ public class t146_3 {
         frame.setVisible(true);
     }
 
+    /**
+     * already in library
+     * @see {@link IIOUtil#deregister(Class, String)}
+     */
     public static <T> void deregister(Class<T> pt, String p0) {
         IIORegistry iioRegistry = IIORegistry.getDefaultInstance();
         T sp = null;

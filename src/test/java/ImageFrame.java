@@ -1,7 +1,5 @@
 /*
- * Copyright (c) 2006 by Naohide Sano, All rights reserved.
- *
- * Programmed by Naohide Sano
+ * "http://www.gurge.com/amd"
  */
 
 import java.awt.Graphics;
