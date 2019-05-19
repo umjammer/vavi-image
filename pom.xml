@@ -10,9 +10,14 @@
   <organization>
     <name></name>
   </organization>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <url>https://github.com/umjammer/vavi-image</url>
-  <description>1.0.5
+  <description>1.0.6
+
+    update IIOUtil
+    fix gif spi metadata
+
+1.0.5
 
     fix gif spi
     fix gif transparent
@@ -34,11 +39,7 @@
     initial version
 
 TODO
-
-    windows icon reader spi fails on sample ico
-    imageio ppm doesn't work
-    pom
-        jni  bcel 5 on java8 ???</description>
+</description>
   <scm>
     <url>https://github.com/umjammer/vavi-image</url>
   </scm>
@@ -56,6 +57,58 @@ TODO
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>native-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <javahClassNames>
+            <javahClassName>vavi.awt.image.resample.FfmpegResampleOp</javahClassName>
+          </javahClassNames>
+          <javahSearchJNIFromDependencies>false</javahSearchJNIFromDependencies>
+          <javahOS>darwin</javahOS>
+          <compilerProvider>generic-classic</compilerProvider>
+          <compilerStartOptions>
+            <compilerStartOption>-g -Wall -O2 -fomit-frame-pointer -fPIC</compilerStartOption>
+            <!-- unless locating jdk includes, cause error why??? -->
+            <compilerStartOption>-arch x86_64
+                  -I${java.home}/../include
+                  -I${java.home}/../include/darwin
+                  -I/usr/local/include/libavformat
+                  -I/usr/local/include/libavcodec
+                  -I/usr/local/include/libavutil
+                  -I/usr/local/include/libswscale
+            </compilerStartOption>
+          </compilerStartOptions>
+          <sources>
+            <source>
+              <directory>src/main/native</directory>
+              <fileNames>
+                <fileName>FfmpegResampleOpWrapper.c</fileName>
+              </fileNames>
+            </source>
+          </sources>
+          <linkerStartOptions>
+            <linkerStartOption>-dynamiclib -arch x86_64
+              -L/usr/local/lib -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
+          </linkerStartOptions>
+          <linkerFinalName></linkerFinalName>
+          <linkerEndOptions>
+            <linkerEndOption>-o ${project.build.directory}/libFfmpegResampleOpWrapper.dylib</linkerEndOption>
+          </linkerEndOptions>
+        </configuration>
+        <executions>
+          <execution>
+            <id>javah</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>javah</goal>
+              <goal>compile</goal>
+              <goal>link</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -70,7 +123,7 @@ TODO
     <dependency>
       <groupId>com.github.umjammer</groupId>
       <artifactId>vavi-commons</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.8</version>
     </dependency>
     <dependency>
       <groupId>com.github.umjammer</groupId>
