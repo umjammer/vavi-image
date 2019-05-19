@@ -11,9 +11,13 @@
   <organization>
     <name></name>
   </organization>
-  <version>1.0.7</version>
+  <version>1.0.8</version>
   <url>https://github.com/umjammer/vavi-image</url>
-  <description>1.0.7
+  <description>1.0.8
+
+   ${env.ENV_NAME} doesn't work on mac
+
+1.0.7
 
    add non jitpack profile for gitpack.io
 
@@ -51,15 +55,13 @@ TODO</description>
     <url>https://github.com/umjammer/vavi-image/issues</url>
   </issueManagement>
 
-  <properties>
-    <jitpack>${env.JITPACK}</jitpack>
-  </properties>
-
   <profiles>
     <profile>
+      <id>local (not on jitpack)</id>
       <activation>
         <property>
-          <name>!jitpack</name>
+          <name>env.JITPACK</name>
+          <value>!true</value>
         </property>
       </activation>
       <build>
