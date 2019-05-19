@@ -7,8 +7,14 @@
 package vavi.imageio;
 
 import java.util.Iterator;
+import java.util.logging.Level;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageWriter;
 import javax.imageio.spi.IIORegistry;
+
+import vavi.util.Debug;
 
 
 /**
@@ -22,8 +28,10 @@ public class IIOUtil {
     private IIOUtil() {
     }
 
+    /** */
     private static boolean ignoreErrors = true;
 
+    /** */
     public static void setIgnoreErrors(boolean ignoreErrors) {
         IIOUtil.ignoreErrors = ignoreErrors;
     }
@@ -44,18 +52,19 @@ public class IIOUtil {
         list(pt, p1, p2);
     }
 
+    /** */
     static <T> void list(Class<T> pt, String p1, String p2) {
         IIORegistry iioRegistry = IIORegistry.getDefaultInstance();
         Iterator<T> i = iioRegistry.getServiceProviders(pt, true);
-        System.err.println("---------");
+        System.out.println("---------");
         while (i.hasNext()) {
             T p = i.next();
             if (p1.equals(p.getClass().getName())) {
-                System.err.println(p.getClass().getName() + " (I)");
+                System.out.println(p.getClass().getName() + " (I)");
             } else if (p2.equals(p.getClass().getName())) {
-                System.err.println(p.getClass().getName() + " (II)");
+                System.out.println(p.getClass().getName() + " (II)");
 //            } else {
-//                System.err.println(p.getClass().getName());
+//                System.out.println(p.getClass().getName());
             }
         }
     }
@@ -93,7 +102,7 @@ public class IIOUtil {
             if (!ignoreErrors) {
                 throw new IllegalArgumentException(p1 + " or " + p2 + " not found");
             } else {
-                System.err.println("IIOUtil::setOrder: " + p1 + " or " + p2 + " not found");
+                Debug.println(p1 + " or " + p2 + " not found");
             }
         }
         iioRegistry.setOrdering(pt, sp1, sp2);
@@ -118,10 +127,56 @@ public class IIOUtil {
             if (!ignoreErrors) {
                 throw new IllegalArgumentException(p0 + " not found");
             } else {
-                System.err.println("IIOUtil::deregister: " + p0 + " not found");
+                Debug.println(p0 + " not found");
             }
         }
         iioRegistry.deregisterServiceProvider(sp, pt);
+    }
+
+    /**
+     * @param type
+     * @param className
+     */
+    public static ImageWriter getImageWriter(String type, String className) {
+        Class<?> clazz;
+        try {
+            clazz = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("no such ImageWriter: " + className);
+        }
+        Iterator<ImageWriter> iws = ImageIO.getImageWritersByFormatName(type);
+        while (iws.hasNext()) {
+            ImageWriter iw = iws.next();
+            if (clazz.isInstance(iw)) {
+Debug.println(Level.FINEST, "ImageWriter: " + iw.getClass());
+                return iw;
+            }
+        }
+
+        throw new IllegalStateException("no suitable ImageWriter: " + type);
+    }
+
+    /**
+     * @param type
+     * @param className
+     */
+    public static ImageReader getImageReader(String type, String className) {
+        Class<?> clazz;
+        try {
+            clazz = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("no such ImageReader: " + className);
+        }
+        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName(type);
+        while (irs.hasNext()) {
+            ImageReader ir = irs.next();
+            if (clazz.isInstance(ir)) {
+Debug.println(Level.FINEST, "ImageReader: " + ir.getClass().getName());
+                return ir;
+            }
+        }
+
+        throw new IllegalStateException("no suitable ImageReader: " + type);
     }
 }
 
