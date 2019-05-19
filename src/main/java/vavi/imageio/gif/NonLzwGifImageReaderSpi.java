@@ -28,7 +28,7 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
     private static final String VendorName = "http://www.vavisoft.com";
     private static final String Version = "1.00";
     private static final String ReaderClassName =
-        "vavi.imageio.NonLzwGifImageReader";
+        "vavi.imageio.gif.NonLzwGifImageReader";
     private static final String[] Names = {
         "GIF"
     };
@@ -47,7 +47,7 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
     private static final String[] ExtraStreamMetadataFormatNames = null;
     private static final String[] ExtraStreamMetadataFormatClassNames = null;
     private static final boolean SupportsStandardImageMetadataFormat = false;
-    private static final String NativeImageMetadataFormatName = "gif";
+    static final String NativeImageMetadataFormatName = "vavi_imageio_gif_image_1.0";
     private static final String NativeImageMetadataFormatClassName =
         /* "vavi.imageio.NonLzwGifMetaData" */ null;
     private static final String[] ExtraImageMetadataFormatNames = null;

@@ -19,9 +19,13 @@ import javax.imageio.IIOException;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.metadata.IIOInvalidTreeException;
 import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
+
+import org.w3c.dom.Node;
 
 import vavi.awt.image.gif.GifImage;
 import vavi.imageio.WrappedImageInputStream;
@@ -37,59 +41,50 @@ import vavi.util.Debug;
 public class NonLzwGifImageReader extends ImageReader {
     /** */
     private GifImage gifImage;
-    /** */
-    private IIOMetadata metadata;
 
     /** */
     public NonLzwGifImageReader(ImageReaderSpi originatingProvider) {
         super(originatingProvider);
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getNumImages(boolean allowSearch) throws IIOException {
-        return 1;
+        return gifImage.getNumImages();
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getWidth(int imageIndex) throws IIOException {
-        if (imageIndex != 0) {
-            throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
-        }
-        return gifImage.getWidth();
+        return gifImage.getWidth(imageIndex);
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public int getHeight(int imageIndex) throws IIOException {
-        if (imageIndex != 0) {
-            throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
-        }
-        return gifImage.getHeight();
+        return gifImage.getHeight(imageIndex);
     }
 
     /** */
-    public static BufferedImage readImage(InputStream is) throws IOException {
-        GifImage gifImage = GifImage.readFrom(is);
+    public BufferedImage readImage(int imageIndex, InputStream is) throws IOException {
+   
+        ColorModel cm = gifImage.getColorModel(imageIndex);
 
-        ColorModel cm = gifImage.getColorModel();
-
-        int width = gifImage.getWidth();
-        int height = gifImage.getHeight();
+        int width = gifImage.getWidth(imageIndex);
+        int height = gifImage.getHeight(imageIndex);
 
         int pixelSize = cm.getPixelSize();
 
         byte[] vram = null;
         switch (pixelSize) {
         case 1:
-            vram = gifImage.loadMonoColor();
+            vram = gifImage.loadMonoColor(imageIndex);
             break;
         case 2:
         case 3:
         case 4:
-            vram = gifImage.load16Color();
+            vram = gifImage.load16Color(imageIndex);
             break;
         default:
         case 8:
-            vram = gifImage.load256Color();
+            vram = gifImage.load256Color(imageIndex);
             break;
         }
 
@@ -99,13 +94,9 @@ public class NonLzwGifImageReader extends ImageReader {
         return image;
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public BufferedImage read(int imageIndex, ImageReadParam param)
         throws IIOException {
-
-        if (imageIndex != 0) {
-            throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
-        }
 
         InputStream is = null;
 
@@ -118,32 +109,66 @@ Debug.println("unsupported input: " + input);
         }
 
         try {
-            return readImage(is);
+            if (gifImage == null) {
+                gifImage = GifImage.readFrom(is);
+            }
+            return readImage(imageIndex, is);
         } catch (IOException e) {
             throw new IIOException(e.getMessage(), e);
         }
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public IIOMetadata getStreamMetadata() throws IIOException {
-        return metadata;
+        throw new UnsupportedOperationException();
     }
 
-    /** @see ImageReader */
+    /* @see ImageReader */
     public IIOMetadata getImageMetadata(int imageIndex) throws IIOException {
-        if (imageIndex != 0) {
-            throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
-        }
 
-        return metadata;
+        return new IIOMetadata() {
+            public void reset() {
+                throw new UnsupportedOperationException();
+            }
+            public void mergeTree(String formatName, Node root) throws IIOInvalidTreeException {
+                throw new UnsupportedOperationException();
+            }
+            public boolean isReadOnly() {
+                return true;
+            }
+            public Node getAsTree(String formatName) {
+                IIOMetadataNode rootNode = new IIOMetadataNode(NonLzwGifImageReaderSpi.NativeImageMetadataFormatName);
+                GifImage.ImageDescriptor imageDescriptor = gifImage.getImageDescriptor(imageIndex);
+                IIOMetadataNode imageDescriptorNode = new IIOMetadataNode("ImageDescriptor");
+                imageDescriptorNode.setAttribute("imageLeftPosition", String.valueOf(imageDescriptor.left));
+                imageDescriptorNode.setAttribute("imageTopPosition", String.valueOf(imageDescriptor.top));
+                imageDescriptorNode.setAttribute("imageWidth", String.valueOf(imageDescriptor.width));
+                imageDescriptorNode.setAttribute("imageHeight", String.valueOf(imageDescriptor.height));
+                GifImage.GraphicControlExtension graphicControlExtension = gifImage.getGraphicControlExtension(imageIndex);
+                IIOMetadataNode graphicControlExtensionNode = new IIOMetadataNode("GraphicControlExtension");
+                graphicControlExtensionNode.setAttribute("disposalMethod", getDisposalMethod(graphicControlExtension.getDisposalMethod()));
+                graphicControlExtensionNode.setAttribute("delayTime", String.valueOf(graphicControlExtension.delayTime));
+                rootNode.appendChild(imageDescriptorNode);
+                rootNode.appendChild(graphicControlExtensionNode);
+                return rootNode;
+            }
+            public String getNativeMetadataFormatName() {
+                return NonLzwGifImageReaderSpi.NativeImageMetadataFormatName;
+            }
+            String getDisposalMethod(int disposalMethod) {
+                switch (disposalMethod) {
+                case 0: return "none";
+                case 1: return "doNotDispose";
+                case 2: return "restoreToBackgroundColor";
+                case 3: return "restoreToPrevious";
+                default: return "notSpecified";
+                }
+            }
+        };
     }
 
-    /** */
+    /* */
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
-        if (imageIndex != 0) {
-            throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
-        }
-
         ImageTypeSpecifier specifier = null;
         List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);

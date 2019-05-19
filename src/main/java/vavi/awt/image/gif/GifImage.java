@@ -149,17 +149,15 @@ public class GifImage {
     /**
      * GIF のイメージ記述情報構造体 GIF 画像一枚についての情報を記述したもの。
      */
-    private static class ImageDescriptor {
+    public static class ImageDescriptor {
         /** 画面左上からの表示位置 (横 pixel 数) */
-        @SuppressWarnings("unused")
-        int left;
+        public int left;
         /** 画面左上からの表示位置 (縦 pixel 数) */
-        @SuppressWarnings("unused")
-        int top;
+        public int top;
         /** この画像の横 pixel 数 */
-        int width;
+        public int width;
         /** この画像の縦 pixel 数 */
-        int height;
+        public int height;
         /**
          * Packed Fields
          * <pre>
@@ -196,24 +194,28 @@ public class GifImage {
     }
 
     /** */
-    private class GraphicControlExtention {
+    public class GraphicControlExtension {
         /** */
         int packedFields;
         /** */
-        @SuppressWarnings("unused")
-        int delayTime;
+        public int delayTime;
         /** */
         int transparentColorIndex;
         boolean hasTransparentColor() {
             return (packedFields & 0x01) != 0;
         }
+        public int getDisposalMethod() {
+            return (packedFields >> 2) & 0x07;
+        }
     }
 
-    /** */
-    private GraphicControlExtention getGraphicControlExtention() {
-        if (extentionBlocks.containsKey(0xf9)) {
-            ExtentionBlock extentionBlock = extentionBlocks.get(0xf9); 
-            GraphicControlExtention extention = new GraphicControlExtention();
+    /**
+     * @return null when not exists
+     */
+    public GraphicControlExtension getGraphicControlExtension(int index) {
+        if (extentionBlocks.get(index).containsKey(0xf9)) {
+            ExtentionBlock extentionBlock = extentionBlocks.get(index).get(0xf9); 
+            GraphicControlExtension extention = new GraphicControlExtension();
             byte[] data = extentionBlock.subBlocks.get(0);
             extention.packedFields = data[0] & 0xff;
             extention.delayTime = data[1] & 0xff | (data[2] << 8) & 0xff00;
@@ -295,23 +297,10 @@ public class GifImage {
         }
     }
 
-    /** */
-    private int index;
-
-    /** */
-    public int getIndex() {
-        return index;
-    }
-
-    /** */
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
     /**
      * @return width
      */
-    public int getWidth() {
+    public int getWidth(int index) {
         return images.get(index).imageDescriptor.width;
 //        return header.logicalScreenWidth; // TODO
     }
@@ -319,13 +308,13 @@ public class GifImage {
     /**
      * @return height
      */
-    public int getHeight() {
+    public int getHeight(int index) {
         return images.get(index).imageDescriptor.height;
 //        return header.logicalScreenHeight; // TODO
     }
 
     /** パレットを作成します． */
-    public ColorModel getColorModel() {
+    public ColorModel getColorModel(int index) {
 
         InternalImage image = images.get(index);
 
@@ -343,7 +332,7 @@ public class GifImage {
 //Debug.println("palette(" + i + "): " + StringUtil.paramString(palette[i]));
         }
 
-        GraphicControlExtention graphicControlExtention = getGraphicControlExtention();
+        GraphicControlExtension graphicControlExtention = getGraphicControlExtension(index);
         if (graphicControlExtention != null && graphicControlExtention.hasTransparentColor()) {
             return new IndexColorModel(bits, usedColor, reds, greens, blues, graphicControlExtention.transparentColorIndex);
         } else {
@@ -354,7 +343,7 @@ public class GifImage {
     /**
      * @return pixels
      */
-    public byte[] getPixels() {
+    public byte[] getPixels(int index) {
 //Debug.println("image[" + index + "]: " + images.get(index).tableBasedImageData.length);
         return images.get(index).tableBasedImageData;
     }
@@ -371,7 +360,6 @@ public class GifImage {
         static ExtentionBlock readFrom(LittleEndianDataInputStream dis) throws IOException {
             ExtentionBlock block = new ExtentionBlock();
             block.extentionType = dis.readUnsignedByte();
-//Debug.printf("21: extentionType: %02x\n", extentionType);
             while (true) {
                 int subBlockSize = dis.readUnsignedByte();
                 if (subBlockSize == 0) {
@@ -382,6 +370,9 @@ public class GifImage {
                 block.subBlocks.add(subBlockData);
             }
             return block;
+        }
+        public String toString() {
+            return String.format("21: extentionType: %02x", extentionType);
         }
     }
 
@@ -395,12 +386,21 @@ public class GifImage {
     private List<InternalImage> images = new ArrayList<>();
 
     /** */
-    private Map<Integer, ExtentionBlock> extentionBlocks = new HashMap<>();
+    private List<Map<Integer, ExtentionBlock>> extentionBlocks = new ArrayList<>();
+
+    public ImageDescriptor getImageDescriptor(int index) {
+        return images.get(index).imageDescriptor;
+    }
 
     /** */
-    public static GifImage readFrom(InputStream _is) throws IOException {
+    public int getNumImages() {
+        return images.size();
+    }
 
-        LittleEndianDataInputStream dis = new LittleEndianDataInputStream(_is);
+    /** */
+    public static GifImage readFrom(InputStream is) throws IOException {
+
+        LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is);
 
         GifImage gifImage = new GifImage();
         // グローバル画面記述情報を取得。
@@ -418,10 +418,18 @@ public class GifImage {
             if (blockType == 0x2c) { // Image Separator
                 InternalImage image = InternalImage.readFrom(dis, sizeOfGlobalColorTable, gifImage.globalColorTable);
                 gifImage.images.add(image);
+//Debug.println("imageBlock: " + image);
             } else if (blockType == 0x21) { // extention
                 // GIF 拡張ブロック
                 ExtentionBlock extentionBlock = ExtentionBlock.readFrom(dis);
-                gifImage.extentionBlocks.put(extentionBlock.extentionType, extentionBlock);
+//Debug.println("extentionBlock: " + extentionBlock);
+                if (gifImage.extentionBlocks.size() == gifImage.images.size()) {
+                    Map<Integer, ExtentionBlock> extentionBlocks = new HashMap<>();
+                    extentionBlocks.put(extentionBlock.extentionType, extentionBlock);
+                    gifImage.extentionBlocks.add(extentionBlocks);
+                } else {
+                    gifImage.extentionBlocks.get(gifImage.images.size()).put(extentionBlock.extentionType, extentionBlock);
+                }
             } else if (blockType == 0x3b) {
 //Debug.println("3b: Trailer");
                 break;
@@ -441,11 +449,11 @@ Debug.println(String.format("%02x: unknown block type", blockType));
     }
 
     /** モノカラービットマップを作成します． */
-    public byte[] loadMonoColor() {
+    public byte[] loadMonoColor(int index) {
 
-        int width = getWidth();
-        int height = getHeight();
-        byte[] buffer = getPixels();
+        int width = getWidth(index);
+        int height = getHeight(index);
+        byte[] buffer = getPixels(index);
 
         byte[] vram = new byte[width * height];
 
@@ -478,11 +486,11 @@ Debug.println(String.format("%02x: unknown block type", blockType));
     }
 
     /** 16 色ビットマップを作成します． */
-    public byte[] load16Color() {
+    public byte[] load16Color(int index) {
 
-        int width = getWidth();
-        int height = getHeight();
-        byte[] buffer = getPixels();
+        int width = getWidth(index);
+        int height = getHeight(index);
+        byte[] buffer = getPixels(index);
 
         byte[] vram = new byte[width * height];
 
@@ -508,11 +516,11 @@ Debug.println(String.format("%02x: unknown block type", blockType));
     }
 
     /** 256 色ビットマップを作成します． */
-    public byte[] load256Color() {
+    public byte[] load256Color(int index) {
 
-        int width = getWidth();
-        int height = getHeight();
-        byte[] buffer = getPixels();
+        int width = getWidth(index);
+        int height = getHeight(index);
+        byte[] buffer = getPixels(index);
 
         byte[] vram = new byte[width * height];
 //Debug.println(width + ", " + height + ", " + width * height + ", " + buffer.length);

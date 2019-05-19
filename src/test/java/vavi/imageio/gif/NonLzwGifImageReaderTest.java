@@ -10,14 +10,14 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
 
-import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
+
+import vavi.imageio.IIOUtil;
 
 
 /**
@@ -38,17 +38,7 @@ public class NonLzwGifImageReaderTest {
     /** */
     public static void main(final String[] args) throws IOException {
 System.err.println(args[0]);
-        ImageReader ir = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("GIF");
-        while (irs.hasNext()) {
-            ImageReader tmpIr = irs.next();
-//System.err.println("ImageReader: " + tmpIr);
-            if (tmpIr.getClass().getName().equals(NonLzwGifImageReader.class.getName())) {
-                ir = tmpIr;
-System.err.println("found ImageReader: " + ir.getClass().getName());
-                break;
-            }
-        }
+        ImageReader ir = IIOUtil.getImageReader("GIF", NonLzwGifImageReader.class.getName());
 //System.err.println("provider: " + StringUtil.paramString(ir.getOriginatingProvider().getInputTypes()));
         ir.setInput(new FileInputStream(args[0]));
         final Image image = ir.read(0);
