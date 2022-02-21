@@ -20,7 +20,6 @@ import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import vavi.util.Debug;
 
 
@@ -32,9 +31,14 @@ import vavi.util.Debug;
  */
 class ArtMasterImageReaderTest {
 
+    static {
+        System.setProperty("vavi.util.logging.VaviFormatter.extraClassMethod",
+                           "sun\\.util\\.logging\\.[\\w\\$]+#\\w+");
+    }
+
     @Test
-    void test() {
-        fail("Not yet implemented");
+    void test() throws Exception {
+        main(new String[] { "src/test/resources/test.am88" });
     }
 
     //----

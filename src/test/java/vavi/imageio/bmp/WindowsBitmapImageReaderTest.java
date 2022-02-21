@@ -30,7 +30,7 @@ public class WindowsBitmapImageReaderTest {
 
     @Test
     public void test() throws Exception {
-        main(new String[] { "tmp/qr.bmp" });
+        main(new String[] { "src/test/resources/test.bmp" });
     }
 
     //----

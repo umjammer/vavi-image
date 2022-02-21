@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import vavi.awt.image.ico.ACON;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 
 /**
  * ACONTest.
@@ -26,8 +24,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class ACONTest {
 
     @Test
-    void test() {
-        fail("Not yet implemented");
+    void test() throws Exception {
+        InputStream is = new BufferedInputStream(ACON.class.getResourceAsStream("/test.ico"));
+        ACON ani = ACON.readFrom(is, ACON.class);
+System.err.println("ACON: " + ani);
     }
 
     // ----
@@ -35,7 +35,7 @@ class ACONTest {
     /** */
     public static void main(String[] args) throws Exception {
         InputStream is = new BufferedInputStream(new FileInputStream(args[0]));
-        ACON ani = (ACON) ACON.readFrom(is);
+        ACON ani = ACON.readFrom(is, ACON.class);
 System.err.println("ACON: " + ani);
     }
 }

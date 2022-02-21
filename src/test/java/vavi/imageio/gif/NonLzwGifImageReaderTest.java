@@ -30,7 +30,7 @@ public class NonLzwGifImageReaderTest {
 
     @Test
     public void test() throws Exception {
-        main(new String[] { "tmp/qr.gif" });
+        main(new String[] { "src/test/resources/test.gif" });
     }
 
     //----
