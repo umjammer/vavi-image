@@ -61,7 +61,7 @@ System.err.println(w + ", " + h);
         slider.setMinimum(1);
         slider.setValue(100);
         slider.addChangeListener(new ChangeListener() {
-            ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ちょっと適当か？
+            ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // slappy?
             {
                 Properties props = new Properties();
                 try {
@@ -80,7 +80,7 @@ e.printStackTrace(System.err);
                 Iterator<ImageWriter> iws = ImageIO.getImageWritersByFormatName("JPEG");
                 while (iws.hasNext()) {
                     ImageWriter tmpIw = iws.next();
-                    // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
+                    // BUG? ImageWriter for JPEG might not be Thread Safe
                     if (clazz.isInstance(tmpIw)) {
                         iw = tmpIw;
 System.err.println("ImageWriter: " + iw.getClass());

@@ -6,48 +6,14 @@
 
   <groupId>vavi</groupId>
   <artifactId>vavi-image</artifactId>
-  <name>Vavi Imaging API</name>
 
+  <name>Vavi Imaging API</name>
   <organization>
     <name></name>
   </organization>
   <version>1.0.8</version>
   <url>https://github.com/umjammer/vavi-image</url>
-  <description>1.0.8
-
-   ${env.ENV_NAME} doesn't work on mac
-
-1.0.7
-
-   add non jitpack profile for gitpack.io
-
-1.0.6
-
-    update IIOUtil
-    fix gif spi metadata
-
-1.0.5
-
-    fix gif spi
-    fix gif transparent
-
-1.0.4
-
-    refactoring bmp, gif
-
-1.0.3
-
-    fix non lzw gif
-
-1.0.2
-
-    fix windows icon reader spi
-
-1.0.1
-
-    initial version
-
-TODO</description>
+  <description></description>
   <scm>
     <url>https://github.com/umjammer/vavi-image</url>
   </scm>

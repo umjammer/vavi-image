@@ -30,7 +30,7 @@ class ACONTest {
         fail("Not yet implemented");
     }
 
-    // -------------------------------------------------------------------------
+    // ----
 
     /** */
     public static void main(String[] args) throws Exception {

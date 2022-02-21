@@ -64,7 +64,7 @@ public class NonLzwGifImageReader extends ImageReader {
 
     /** */
     public BufferedImage readImage(int imageIndex, InputStream is) throws IOException {
-   
+
         ColorModel cm = gifImage.getColorModel(imageIndex);
 
         int width = gifImage.getWidth(imageIndex);

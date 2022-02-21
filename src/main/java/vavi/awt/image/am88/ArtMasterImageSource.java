@@ -14,7 +14,7 @@ import java.util.Hashtable;
 
 
 /**
- * アートマスター形式のイメージを作成します．
+ * Represents ArtMaster88 formated image.
  *
  * TODO palette control
  *
@@ -62,7 +62,7 @@ public class ArtMasterImageSource implements ImageProducer {
     }
 
     /**
-     * ArtMaster88 形式のイメージを作成します．
+     * Creates ArtMaster88 formated image.
      * @throws IllegalArgumentException when header is wrong
      */
     public ArtMasterImageSource(InputStream in) throws IOException {
@@ -70,7 +70,7 @@ public class ArtMasterImageSource implements ImageProducer {
     }
 
     /**
-     * ピクセルをロードします．
+     * Loads pixels.
      */
     private void loadPixel() {
         ic.setDimensions(ArtMasterImage.W, ArtMasterImage.H);

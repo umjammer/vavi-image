@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import vavi.util.Debug;
 
 
 /**
@@ -40,15 +41,15 @@ class ArtMasterImageReaderTest {
 
     /** */
     public static void main(final String[] args) throws IOException {
-System.err.println(args[0]);
+Debug.println(args[0]);
         ImageReader ir = null;
         Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("AM88");
         while (irs.hasNext()) {
             ImageReader tmpIr = irs.next();
-System.err.println("ImageReader: " + tmpIr.getClass().getName());
+Debug.println("ImageReader: " + tmpIr.getClass().getName());
             if (tmpIr.getClass().getName().equals(ArtMasterImageReader.class.getName())) {
                 ir = tmpIr;
-System.err.println("found ImageReader: " + ir.getClass().getName());
+Debug.println("found ImageReader: " + ir.getClass().getName());
                 break;
             }
         }

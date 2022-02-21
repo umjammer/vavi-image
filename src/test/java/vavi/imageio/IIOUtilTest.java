@@ -13,8 +13,6 @@ import javax.imageio.spi.ImageReaderSpi;
 
 import org.junit.jupiter.api.Test;
 
-import vavi.imageio.IIOUtil;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 

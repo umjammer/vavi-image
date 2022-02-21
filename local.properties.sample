@@ -1,28 +1,3 @@
 ##
 # vavi-image
 #
-
-#
-# common
-#
-
-jvm=${env.JAVA_HOME}/bin/java
-javac.source=src/main/java
-javac.source.test=src/test/java
-javac.resource=src/main/resources
-javac.resource.test=src/test/resources
-javac.dest=target/classes
-javac.dest.test=target/test-classes
-
-##
-
-dir.windows=c:/WINDOWS
-windows.home=${dir.windows}/system32
-cygwin.home=c:/usr/local/cygwin
-mingw.include=${cygwin.home}/usr/include/mingw
-w32api.include=${cygwin.home}/usr/include/w32api
-mingw.lib=${cygwin.home}/lib/mingw
-ffmpeg.include=/usr/local/include
-ffmpeg.lib=/usr/local/lib
-
-##

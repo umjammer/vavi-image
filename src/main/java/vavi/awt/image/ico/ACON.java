@@ -61,9 +61,9 @@ public class ACON extends RIFF {
     /** */
     private int[] sequences;
 
-    // -------------------------------------------------------------------------
+    // ----
 
-    public class LIST extends vavi.util.win32.LIST {
+    public class LIST extends Chunk {
         /** */
         public class INAM extends Chunk {
         }
@@ -94,7 +94,6 @@ public class ACON extends RIFF {
         int frames;
 
         /** */
-        @SuppressWarnings("hiding")
         int steps;
 
         /** */
@@ -118,7 +117,6 @@ public class ACON extends RIFF {
         /** */
         public void setData(InputStream is) throws IOException {
 
-            @SuppressWarnings("resource")
             LittleEndianDataInputStream ledis = new LittleEndianDataInputStream(is);
 
             size = ledis.readInt();
@@ -154,7 +152,6 @@ public class ACON extends RIFF {
     public class rate extends Chunk {
         /** */
         public void setData(InputStream is) throws IOException {
-            @SuppressWarnings("resource")
             LittleEndianDataInputStream ledis = new LittleEndianDataInputStream(is);
             steps = new int[header.steps];
             for (int i = 0; i < steps.length; i++) {
@@ -167,7 +164,6 @@ public class ACON extends RIFF {
     public class seq extends Chunk {
         /** */
         public void setData(InputStream is) throws IOException {
-            @SuppressWarnings("resource")
             LittleEndianDataInputStream ledis = new LittleEndianDataInputStream(is);
             sequences = new int[header.steps];
             for (int i = 0; i < sequences.length; i++) {
