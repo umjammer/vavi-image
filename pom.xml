@@ -21,6 +21,14 @@
     <url>https://github.com/umjammer/vavi-image/issues</url>
   </issueManagement>
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub umjammer Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/umjammer/vavi-image-ffmpeg</url>
+    </repository>
+  </distributionManagement>
+
   <profiles>
     <profile>
       <id>local (not on jitpack)</id>
@@ -168,10 +176,9 @@
             <argument>-DgroupId=${project.groupId}</argument>
             <argument>-DartifactId=vavi-image-ffmpeg</argument>
             <argument>-Dversion=${project.version}</argument>
-            <argument>-Dpackaging=jar</argument>
+            <argument>-Dpackaging=dylib</argument>
             <argument>-Dfile=${project.build.directory}/vavi-image-ffmpeg-${project.version}.dylib</argument>
             <argument>-Durl=https://maven.pkg.github.com/umjammer/vavi-image-ffmpeg</argument>
-            <argument>-DgeneratePom=false</argument>
             <argument>-s</argument>
             <argument>${env.GITHUB_WORKSPACE}/settings.xml</argument>
           </arguments>

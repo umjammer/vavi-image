@@ -55,8 +55,8 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
       run: |
-        brew install ffmpeg
-        mvn -B install --file pom.xml
+        brew install https://github.com/Homebrew/homebrew-core/blob/addd616edc9134f057e33694c420f4900be59db8/Formula/ffmpeg.rb
+        mvn -B install --file pom.xml -DskipTest
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
