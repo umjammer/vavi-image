@@ -6,12 +6,12 @@
 
   <groupId>vavi</groupId>
   <artifactId>vavi-image</artifactId>
+  <version>1.0.9</version>
 
   <name>Vavi Imaging API</name>
   <organization>
     <name></name>
   </organization>
-  <version>1.0.8</version>
   <url>https://github.com/umjammer/vavi-image</url>
   <description></description>
   <scm>
