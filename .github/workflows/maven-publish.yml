@@ -20,7 +20,9 @@ jobs:
 
     - name: Build with Maven
       run: |
-        brew install https://github.com/Homebrew/homebrew-core/blob/addd616edc9134f057e33694c420f4900be59db8/Formula/ffmpeg.rb
+        brew tap-new umjammer/taps
+        brew extract ffmpeg umjammer/taps --version 4.4.1_5
+        brew install umjammer/taps/ffmpeg@4.4.1_5
         mvn -B package --file pom.xml
 
     - name: Publish to GitHub Packages Apache Maven

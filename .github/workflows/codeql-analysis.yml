@@ -38,7 +38,7 @@ jobs:
 
     # If this run was triggered by a pull request event, then checkout
     # the head of the pull request instead of the merge commit.
-    - run: git checkout HEAD^2
+    - run: git checkout HEAD
       if: ${{ github.event_name == 'pull_request' }}
 
     # Initializes the CodeQL tools for scanning.
@@ -55,7 +55,9 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
       run: |
-        brew install https://github.com/Homebrew/homebrew-core/blob/addd616edc9134f057e33694c420f4900be59db8/Formula/ffmpeg.rb
+        brew tap-new umjammer/taps
+        brew extract ffmpeg umjammer/taps --version 4.4.1_5
+        brew install umjammer/taps/ffmpeg@4.4.1_5
         mvn -B install --file pom.xml -DskipTest
 
     - name: Perform CodeQL Analysis
