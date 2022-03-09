@@ -2,6 +2,8 @@
 
 # vavi-image
 
+Imaging goodies.
+
 ## Formats
   * artmaster 88 (old japanese pc pc-88,98 image format)
   * windows bitmap
@@ -24,8 +26,55 @@
 |type|quality|comment|
 |---|---|---|
 |`ImageMagick`|||
-|`NeuralNet`|👑||
+|`NeuralNet`|👑|https://github.com/umjammer/vavi-image-sandbox/wiki/OctTree_vs_NeuralNet|
 |`OctTree`|||
+
+## Installation
+
+ * maven repo.
+```xml
+    <repository>
+      <id>github</id>
+      <name>GitHub umjammer Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/umjammer/*</url>
+    </repository>
+
+    <dependency>
+      <groupId>vavi</groupId>
+      <artifactId>vavi-image</artifactId>
+      <version>1.0.9</version>
+    </dependency>
+```
+ * if you want to use ffmpeg resizing, add below into your `pom.xml`
+   * exec jvm w/ `-Djava.library.path=/target/test-classes`
+```xml
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>vavi</groupId>
+                  <artifactId>vavi-image-ffmpeg</artifactId>
+                  <version>1.0.9-SNAPSHOT</version>
+                  <type>dylib</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+                  <destFileName>libFfmpegResampleOpWrapper.dylib</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+```
 
 ## TODO
 
