@@ -11,7 +11,7 @@
 #include "vavi_awt_image_resample_FfmpegResampleOp.h"
 
 /*
- * FfmpegResampleOp ラッパ
+ * FfmpegResampleOp Wrapper
  *
  * @author <a href="mailto:vavivavi@yahoo.co.jp">nsano</a>
  * @version 0.00 061030 nsano initial version <br>
@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 /**
- * 例外を投げます。
+ * Throws an exception.
  * @param exception "java/lang/Exception"
  */
 static void throwExceptionWithStringMessage(JNIEnv *env, char *exception, char *_message) {
@@ -106,13 +106,14 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
 #else
 
 #include "swscale.h"
+#include "imgutils.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * for ffmpeg trunk
+ * for ffmpeg 5
  *
  * Class:     vavi_awt_image_resample_FfmpegResampleOp
  * Method:    filterInternal2
@@ -142,6 +143,7 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
     } else {
         outBuf = (uint8_t *) (*env)->GetIntArrayElements(env, (jintArray) outBuffer, NULL); // TYPE_INT
     }
+
     enum AVPixelFormat outFormat;
     if (outPixelSize == 24) {
         outFormat = AV_PIX_FMT_BGR24; // TODO why ???
@@ -158,10 +160,18 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
 //#endif
 //fflush(stderr);
 
-    AVPicture inPic, outPic;
 //  uint8_t *outTemp __attribute__ ((aligned(16))) = (uint8_t *) malloc(avpicture_get_size(outFormat, outWidth, outHeight) + outWidth);
-    avpicture_fill(&inPic, inBuf, inFormat, inWidth, inHeight);
-    avpicture_fill(&outPic, outBuf, outFormat, outWidth, outHeight);
+    AVFrame* inPic = av_frame_alloc();
+    inPic->format = inFormat;
+    inPic->width = inWidth;
+    inPic->height = inHeight;
+    av_frame_get_buffer(inPic, 1);
+    av_image_fill_arrays(inPic->data, inPic->linesize, inBuf, inFormat, inWidth, inHeight, 1);
+    AVFrame* outPic = av_frame_alloc();
+    outPic->format = outFormat;
+    outPic->width = outWidth;
+    outPic->height = outHeight;
+    av_frame_get_buffer(outPic, 1);
 
 //fprintf(stderr, "pic: %d\n", sizeof(inPic));
 //fprintf(stderr, "in: %d, out: %d, 32: %d\n", inFormat, outFormat, AV_PIX_FMT_RGB32_1);
@@ -176,7 +186,10 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
 // fprintf(stderr, "%d: %d, %d\n", i, inPic.linesize[i], outPic.linesize[i]);
 //}
 //fflush(stderr);
-    sws_scale(swsContext, inPic.data, inPic.linesize, 0, inHeight, outPic.data, outPic.linesize);
+    sws_scale(swsContext, inPic->data, inPic->linesize, 0, inHeight, outPic->data, outPic->linesize);
+
+    size_t size = av_image_get_buffer_size(outFormat, outPic->width, outPic->height, 1);
+    av_image_copy_to_buffer(outBuf, size, outPic->data, outPic->linesize, outFormat, outWidth, outHeight, 1);
 
     sws_freeContext(swsContext);
 

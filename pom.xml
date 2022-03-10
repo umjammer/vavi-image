@@ -76,26 +76,105 @@
                 </source>
               </sources>
               <linkerStartOptions>
-                <linkerStartOption>-dynamiclib -arch x86_64
-                  -L/usr/local/lib -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
+                <linkerStartOption>-dynamiclib -arch x86_64 -v
+                  -L/usr/local/lib -lobjc -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
               </linkerStartOptions>
               <linkerFinalName></linkerFinalName>
-              <linkerEndOptions>
-                <linkerEndOption>-o ${project.build.directory}/vavi-image-ffmpeg-${project.version}.dylib</linkerEndOption>
-              </linkerEndOptions>
             </configuration>
             <executions>
               <execution>
-                <id>javah</id>
+                <id>test-dylib</id>
+                <phase>test-compile</phase>
+                <goals>
+                  <goal>javah</goal>
+                  <goal>compile</goal>
+                  <goal>link</goal>
+                </goals>
+                <configuration>
+                  <linkerEndOptions>
+                    <linkerEndOption>-o ${project.build.testOutputDirectory}/libFfmpegResampleOpWrapper.dylib</linkerEndOption>
+                  </linkerEndOptions>
+                </configuration>
+              </execution>
+              <execution>
+                <id>dylib</id>
                 <phase>compile</phase>
                 <goals>
                   <goal>javah</goal>
                   <goal>compile</goal>
                   <goal>link</goal>
                 </goals>
+                <configuration>
+                  <linkerEndOptions>
+                    <linkerEndOption>-o ${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</linkerEndOption>
+                  </linkerEndOptions>
+                </configuration>
               </execution>
             </executions>
           </plugin>
+
+
+          <plugin>
+            <artifactId>maven-install-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>install-library</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>install-file</goal>
+                </goals>
+                <configuration>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>vavi-image-ffmpeg</artifactId>
+                  <version>${project.version}</version>
+                  <packaging>dylib</packaging>
+                  <file>${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</file>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <!--
+              because of maven deploy-file uploads source, jar also
+              TODO maven-metadata.xml!/metadata/versioning/latest is not updated
+              TODO how about https://stackoverflow.com/a/37552776/6102938
+             -->
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <executions>
+              <execution>
+                <id>deploy-library</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <executable>mvn</executable>
+              <arguments>
+                <argument>deploy:deploy-file</argument>
+                <argument>-DgroupId=${project.groupId}</argument>
+                <argument>-DartifactId=vavi-image-ffmpeg</argument>
+                <argument>-Dversion=${project.version}</argument>
+                <argument>-Dpackaging=dylib</argument>
+                <argument>-Dfile=${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</argument>
+                <argument>-Durl=https://maven.pkg.github.com/umjammer/vavi-image-ffmpeg</argument>
+                <argument>-s</argument>
+                <argument>${env.GITHUB_WORKSPACE}/settings.xml</argument>
+              </arguments>
+            </configuration>
+          </plugin>
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
@@ -103,7 +182,7 @@
             <configuration>
               <forkMode>once</forkMode>
               <argLine>
-                -Djava.library.path=${project.build.directory}
+                -Djava.library.path=${project.build.testOutputDirectory}
                 -Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties
               </argLine>
             </configuration>
@@ -121,67 +200,6 @@
           <source>8</source>
           <target>8</target>
           <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-install-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>install-library</id>
-            <phase>install</phase>
-            <goals>
-              <goal>install-file</goal>
-            </goals>
-            <configuration>
-              <groupId>${project.groupId}</groupId>
-              <artifactId>vavi-image-ffmpeg</artifactId>
-              <version>${project.version}</version>
-              <packaging>dylib</packaging>
-              <file>${project.build.directory}/vavi-image-ffmpeg-${project.version}.dylib</file>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <!--
-          because of maven deploy-file uploads source, jar also
-          TODO maven-metadata.xml!/metadata/versioning/latest is not updated
-          TODO how about https://stackoverflow.com/a/37552776/6102938
-         -->
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <executions>
-          <execution>
-            <id>deploy-library</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <executable>mvn</executable>
-          <arguments>
-            <argument>deploy:deploy-file</argument>
-            <argument>-DgroupId=${project.groupId}</argument>
-            <argument>-DartifactId=vavi-image-ffmpeg</argument>
-            <argument>-Dversion=${project.version}</argument>
-            <argument>-Dpackaging=dylib</argument>
-            <argument>-Dfile=${project.build.directory}/vavi-image-ffmpeg-${project.version}.dylib</argument>
-            <argument>-Durl=https://maven.pkg.github.com/umjammer/vavi-image-ffmpeg</argument>
-            <argument>-s</argument>
-            <argument>${env.GITHUB_WORKSPACE}/settings.xml</argument>
-          </arguments>
         </configuration>
       </plugin>
     </plugins>

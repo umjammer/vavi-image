@@ -55,10 +55,8 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
       run: |
-        brew tap-new umjammer/taps
-        brew extract ffmpeg umjammer/taps --version 4.4.1_5
-        brew install umjammer/taps/ffmpeg@4.4.1_5
-        mvn -B install --file pom.xml -DskipTest
+        brew install umjammer
+        mvn -B install --file pom.xml
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
