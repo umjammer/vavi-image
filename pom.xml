@@ -168,6 +168,7 @@
                 <argument>-Dversion=${project.version}</argument>
                 <argument>-Dpackaging=dylib</argument>
                 <argument>-Dfile=${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</argument>
+                <argument>-DrepositoryId=github</argument>
                 <argument>-Durl=https://maven.pkg.github.com/umjammer/vavi-image</argument>
                 <argument>-s</argument>
                 <argument>${env.GITHUB_WORKSPACE}/settings.xml</argument>
