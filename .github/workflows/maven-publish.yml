@@ -1,4 +1,4 @@
-name: GitHub Packages (only instrumentals)
+name: GitHub Packages (only ffmpeg)
 
 on:
   release:
