@@ -8,7 +8,6 @@ package vavi.awt.image.resample;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
-import java.io.File;
 
 import javax.imageio.ImageIO;
 
@@ -23,12 +22,11 @@ import org.junit.jupiter.api.Test;
  */
 public class FfmpegResampleOpTest {
 
-    static String file = "tmp/erika.jpg";
-//    static String file = "tmp/qr.png";
+    static String file = "/erika.jpg";
 
     @Test
     public void test01() throws Exception {
-        BufferedImage image = ImageIO.read(new File(file));
+        BufferedImage image = ImageIO.read(FfmpegResampleOpTest.class.getResourceAsStream(file));
 System.err.println(image);
         for (float y = 1; y > 0; y -= 0.05) {
             for (float x = 1; x > 0; x -= 0.05) {
@@ -41,7 +39,7 @@ System.err.printf("%1.2f, %1.2f\n", x, y);
 
     @Test
     public void test02() throws Exception {
-        BufferedImage image = ImageIO.read(new File(file));
+        BufferedImage image = ImageIO.read(FfmpegResampleOpTest.class.getResourceAsStream(file));
 System.err.println(image);
         for (float y = 1; y < 2; y += 0.1) {
             for (float x = 1; x < 2; x += 0.1) {

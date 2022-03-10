@@ -47,7 +47,7 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
     private static final String[] ExtraStreamMetadataFormatNames = null;
     private static final String[] ExtraStreamMetadataFormatClassNames = null;
     private static final boolean SupportsStandardImageMetadataFormat = false;
-    static final String NativeImageMetadataFormatName = "vavi_imageio_gif_image_1.0";
+    static final String NativeImageMetadataFormatName = "javax_imageio_gif_image_1.0";
     private static final String NativeImageMetadataFormatClassName =
         /* "vavi.imageio.NonLzwGifMetaData" */ null;
     private static final String[] ExtraImageMetadataFormatNames = null;

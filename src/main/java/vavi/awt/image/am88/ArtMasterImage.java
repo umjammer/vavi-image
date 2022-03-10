@@ -11,6 +11,10 @@ import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
+import java.util.logging.Level;
+
+import vavi.util.Debug;
+import vavi.util.StringUtil;
 
 
 /**
@@ -21,7 +25,7 @@ import java.io.PushbackInputStream;
  */
 public class ArtMasterImage {
 
-    /** PC9801 の Digital Color Model */
+    /** Digital Color Model for PC9801 */
     private static final ColorModel defaultCm = new IndexColorModel(8, 8, new byte[] {
         (byte) 0x00, (byte) 0x00, (byte) 0xff, (byte) 0xff, (byte) 0x00, (byte) 0x00, (byte) 0xff, (byte) 0xff
     }, new byte[] {
@@ -33,31 +37,32 @@ public class ArtMasterImage {
     /** */
     public ColorModel cm = defaultCm;
 
-    /** 幅 */
+    /** width */
     public static final int W = 640;
 
-    /** 高さ */
+    /** height */
     public static final int H = 200;
 
-    /** Red バッファ */
+    /** Red buffer */
     private byte[] R = new byte[(W / 8) * H + 256];
 
-    /** Blue バッファ */
+    /** Blue buffer */
     private byte[] G = new byte[(W / 8) * H + 256];
 
-    /** Green バッファ */
+    /** Green buffer */
     private byte[] B = new byte[(W / 8) * H + 256];
 
+    private static final byte[] header = {
+        'S', 'S', '_', 'S', 'I', 'F', ' ', ' ', ' ', ' ', '0', '.', '0', '0', 0x1a, 0
+    };
+
     /**
-     * ArtMaster88 形式のイメージを作成します．
+     * Creates ArtMaster88 image. 
      * @throws IllegalArgumentException when header is wrong
      */
     public ArtMasterImage(InputStream in) throws IOException {
 
         byte[] buf = new byte[40];
-        final byte[] header = {
-            'S', 'S', '_', 'S', 'I', 'F', ' ', ' ', ' ', ' ', '0', '.', '0', '0', 0x1a, 0
-        };
 
         int l = 0;
         while (l < 40) {
@@ -68,7 +73,7 @@ public class ArtMasterImage {
 //Debug.dump(buf);
         for (int i = 0; i < 16; i++) {
             if (buf[i] != header[i]) {
-                throw new IllegalArgumentException("wrong header");
+                throw new IllegalArgumentException("wrong header: " + StringUtil.getDump(buf, 16));
             }
         }
 
@@ -76,15 +81,15 @@ public class ArtMasterImage {
         if (buf[16] == 'I') {
             while (l < 756) {
                 l += (int) in.skip(756 - l);
-//Debug.println(l);
             }
+Debug.println(Level.FINE, "skip I: " + l);
         }
         l = 0;
         if (buf[18] == 'B') {
             while (l < 2292) {
                 l += (int) in.skip(2292 - l);
-//Debug.println(l);
             }
+Debug.println(Level.FINE, "skip B: " + l);
         }
 
         PushbackInputStream pin = new PushbackInputStream(in, 2);

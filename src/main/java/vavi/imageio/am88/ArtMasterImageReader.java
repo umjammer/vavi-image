@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import javax.imageio.IIOException;
 import javax.imageio.ImageReadParam;
@@ -100,7 +101,7 @@ Debug.println(input);
 
     /* */
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
-Debug.println("here");
+Debug.println(Level.FINE, "here");
         ImageTypeSpecifier specifier = null;
         java.util.List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);

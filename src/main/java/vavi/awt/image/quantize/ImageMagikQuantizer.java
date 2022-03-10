@@ -14,32 +14,32 @@ package vavi.awt.image.quantize;
  * nodes in the reduced tree.<p>
  *
  * Here is the copyright notice from ImageMagick:
- * 
+ *
  * <pre>
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a    
- *  copy of this software and associated documentation files ("ImageMagick"),  
- *  to deal in ImageMagick without restriction, including without limitation   
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,   
- *  and/or sell copies of ImageMagick, and to permit persons to whom the       
- *  ImageMagick is furnished to do so, subject to the following conditions:    
- *                                                                             
- *  The above copyright notice and this permission notice shall be included in 
- *  all copies or substantial portions of ImageMagick.                         
- *                                                                             
- *  The software is provided "as is", without warranty of any kind, express or 
- *  implied, including but not limited to the warranties of merchantability,   
- *  fitness for a particular purpose and noninfringement.  In no event shall   
- *  E. I. du Pont de Nemours and Company be liable for any claim, damages or   
- *  other liability, whether in an action of contract, tort or otherwise,      
- *  arising from, out of or in connection with ImageMagick or the use or other 
- *  dealings in ImageMagick.                                                   
- *                                                                             
- *  Except as contained in this notice, the name of the E. I. du Pont de       
- *  Nemours and Company shall not be used in advertising or otherwise to       
- *  promote the sale, use or other dealings in ImageMagick without prior       
- *  written authorization from the E. I. du Pont de Nemours and Company.       
- *                                                                             
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files ("ImageMagick"),
+ *  to deal in ImageMagick without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of ImageMagick, and to permit persons to whom the
+ *  ImageMagick is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of ImageMagick.
+ *
+ *  The software is provided "as is", without warranty of any kind, express or
+ *  implied, including but not limited to the warranties of merchantability,
+ *  fitness for a particular purpose and noninfringement.  In no event shall
+ *  E. I. du Pont de Nemours and Company be liable for any claim, damages or
+ *  other liability, whether in an action of contract, tort or otherwise,
+ *  arising from, out of or in connection with ImageMagick or the use or other
+ *  dealings in ImageMagick.
+ *
+ *  Except as contained in this notice, the name of the E. I. du Pont de
+ *  Nemours and Company shall not be used in advertising or otherwise to
+ *  promote the sale, use or other dealings in ImageMagick without prior
+ *  written authorization from the E. I. du Pont de Nemours and Company.
+ *
  * </pre>
  *
  * @version 0.90 19 Sep 2000
@@ -49,48 +49,48 @@ public class ImageMagikQuantizer {
 
 /*
  * <pre>
- *                                                                             
- *           QQQ   U   U   AAA   N   N  TTTTT  IIIII   ZZZZZ  EEEEE            
- *          Q   Q  U   U  A   A  NN  N    T      I        ZZ  E                
- *          Q   Q  U   U  AAAAA  N N N    T      I      ZZZ   EEEEE            
- *          Q  QQ  U   U  A   A  N  NN    T      I     ZZ     E                
- *           QQQQ   UUU   A   A  N   N    T    IIIII   ZZZZZ  EEEEE            
- *                                                                             
- *                                                                             
- *              Reduce the Number of Unique Colors in an Image                 
- *                                                                             
- *                                                                             
- *                           Software Design                                   
- *                             John Cristy                                     
- *                              July 1992                                      
- *                                                                             
+ *
+ *           QQQ   U   U   AAA   N   N  TTTTT  IIIII   ZZZZZ  EEEEE
+ *          Q   Q  U   U  A   A  NN  N    T      I        ZZ  E
+ *          Q   Q  U   U  AAAAA  N N N    T      I      ZZZ   EEEEE
+ *          Q  QQ  U   U  A   A  N  NN    T      I     ZZ     E
+ *           QQQQ   UUU   A   A  N   N    T    IIIII   ZZZZZ  EEEEE
+ *
+ *
+ *              Reduce the Number of Unique Colors in an Image
+ *
+ *
+ *                           Software Design
+ *                             John Cristy
+ *                              July 1992
+ *
  * </pre>
- *                                                                             
- *  Copyright 1998 E. I. du Pont de Nemours and Company                        
- *                                                                             
- *  Permission is hereby granted, free of charge, to any person obtaining a    
- *  copy of this software and associated documentation files ("ImageMagick"),  
- *  to deal in ImageMagick without restriction, including without limitation   
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,   
- *  and/or sell copies of ImageMagick, and to permit persons to whom the       
- *  ImageMagick is furnished to do so, subject to the following conditions:    
- *                                                                             
- *  The above copyright notice and this permission notice shall be included in 
- *  all copies or substantial portions of ImageMagick.                         
- *                                                                             
- *  The software is provided "as is", without warranty of any kind, express or 
- *  implied, including but not limited to the warranties of merchantability,   
- *  fitness for a particular purpose and noninfringement.  In no event shall   
- *  E. I. du Pont de Nemours and Company be liable for any claim, damages or   
- *  other liability, whether in an action of contract, tort or otherwise,      
- *  arising from, out of or in connection with ImageMagick or the use or other 
- *  dealings in ImageMagick.                                                   
- *                                                                             
- *  Except as contained in this notice, the name of the E. I. du Pont de       
- *  Nemours and Company shall not be used in advertising or otherwise to       
- *  promote the sale, use or other dealings in ImageMagick without prior       
- *  written authorization from the E. I. du Pont de Nemours and Company.       
- *                                                                             
+ *
+ *  Copyright 1998 E. I. du Pont de Nemours and Company
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files ("ImageMagick"),
+ *  to deal in ImageMagick without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of ImageMagick, and to permit persons to whom the
+ *  ImageMagick is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of ImageMagick.
+ *
+ *  The software is provided "as is", without warranty of any kind, express or
+ *  implied, including but not limited to the warranties of merchantability,
+ *  fitness for a particular purpose and noninfringement.  In no event shall
+ *  E. I. du Pont de Nemours and Company be liable for any claim, damages or
+ *  other liability, whether in an action of contract, tort or otherwise,
+ *  arising from, out of or in connection with ImageMagick or the use or other
+ *  dealings in ImageMagick.
+ *
+ *  Except as contained in this notice, the name of the E. I. du Pont de
+ *  Nemours and Company shall not be used in advertising or otherwise to
+ *  promote the sale, use or other dealings in ImageMagick without prior
+ *  written authorization from the E. I. du Pont de Nemours and Company.
+ *
  *
  *
  *  Realism in computer graphics typically requires using 24 bits/pixel to
@@ -236,9 +236,9 @@ public class ImageMagikQuantizer {
  *  written permission from ISI.
  *
  */
-    
+
     private static final boolean QUICK = true;
-    
+
     private static final int MAX_RGB = 255;
     private static final int MAX_NODES = 266817;
     private static final int MAX_TREE_DEPTH = 8;
@@ -277,7 +277,7 @@ public class ImageMagikQuantizer {
         int pixels[][];
         int maxColors;
         int colorMap[];
-        
+
         Node root;
         int depth;
 
@@ -306,7 +306,7 @@ public class ImageMagikQuantizer {
             } else if (depth < 2) {
                 depth = 2;
             }
-            
+
             root = new Node(this);
         }
 
@@ -444,14 +444,14 @@ public class ImageMagikQuantizer {
 
             colors = 0;
             root.colormap();
-  
+
             int pixels[][] = this.pixels;
 
             int width = pixels.length;
             int height = pixels[0].length;
 
             Search search = new Search();
-            
+
             // convert to indexed color
             for (int x = width; x-- > 0; ) {
                 for (int y = height; y-- > 0; ) {
@@ -511,7 +511,7 @@ public class ImageMagikQuantizer {
 
             // the pixel count for this node and all children
             int number_pixels;
-            
+
             // the pixel count for this node
             int unique;
             // the sum of all pixels contained in this node
@@ -530,12 +530,12 @@ public class ImageMagikQuantizer {
                 this.level = 0;
 
                 this.number_pixels = Integer.MAX_VALUE;
-            
+
                 this.midRed   = (MAX_RGB + 1) >> 1;
                 this.midGreen = (MAX_RGB + 1) >> 1;
                 this.midBlue  = (MAX_RGB + 1) >> 1;
             }
-        
+
             Node(Node parent, int id, int level) {
                 this.cube = parent.cube;
                 this.parent = parent;

@@ -35,16 +35,16 @@ public class AwtResampleOp implements BufferedImageOp {
 
     /**
      * TODO hints
-     * @param sx 比率だよ！
-     * @param sy 比率だよ！
+     * @param sx scale x (ratio)
+     * @param sy scale y (ratio)
      */
     public AwtResampleOp(double sx, double sy) {
         this(sx, sy, Image.SCALE_AREA_AVERAGING);
     }
 
     /**
-     * @param sx 比率だよ！
-     * @param sy 比率だよ！
+     * @param sx scale x (ratio)
+     * @param sy scale y (ratio)
      */
     public AwtResampleOp(double sx, double sy, int hint) {
         this.sx = sx;
@@ -63,7 +63,7 @@ public class AwtResampleOp implements BufferedImageOp {
         }
         Graphics g = dst.createGraphics();
         g.drawImage(tmpImage, 0, 0, null);
-        
+
         return dst;
     }
 

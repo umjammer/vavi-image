@@ -30,7 +30,7 @@ public class PpmImageReaderTest {
 
     @Test
     public void test() throws Exception {
-        main(new String[] { "tmp/west_1.ppm" });
+        main(new String[] { "src/test/resources/test.ppm" });
     }
 
     //----

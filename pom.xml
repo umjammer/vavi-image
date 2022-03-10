@@ -6,48 +6,14 @@
 
   <groupId>vavi</groupId>
   <artifactId>vavi-image</artifactId>
-  <name>Vavi Imaging API</name>
+  <version>1.0.9</version>
 
+  <name>Vavi Imaging API</name>
   <organization>
     <name></name>
   </organization>
-  <version>1.0.8</version>
   <url>https://github.com/umjammer/vavi-image</url>
-  <description>1.0.8
-
-   ${env.ENV_NAME} doesn't work on mac
-
-1.0.7
-
-   add non jitpack profile for gitpack.io
-
-1.0.6
-
-    update IIOUtil
-    fix gif spi metadata
-
-1.0.5
-
-    fix gif spi
-    fix gif transparent
-
-1.0.4
-
-    refactoring bmp, gif
-
-1.0.3
-
-    fix non lzw gif
-
-1.0.2
-
-    fix windows icon reader spi
-
-1.0.1
-
-    initial version
-
-TODO</description>
+  <description></description>
   <scm>
     <url>https://github.com/umjammer/vavi-image</url>
   </scm>
@@ -55,10 +21,22 @@ TODO</description>
     <url>https://github.com/umjammer/vavi-image/issues</url>
   </issueManagement>
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub umjammer Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/umjammer/vavi-image-ffmpeg</url>
+    </repository>
+  </distributionManagement>
+
   <profiles>
     <profile>
       <id>local (not on jitpack)</id>
       <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
         <property>
           <name>env.JITPACK</name>
           <value>!true</value>
@@ -98,32 +76,115 @@ TODO</description>
                 </source>
               </sources>
               <linkerStartOptions>
-                <linkerStartOption>-dynamiclib -arch x86_64
-                  -L/usr/local/lib -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
+                <linkerStartOption>-dynamiclib -arch x86_64 -v
+                  -L/usr/local/lib -lobjc -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
               </linkerStartOptions>
               <linkerFinalName></linkerFinalName>
-              <linkerEndOptions>
-                <linkerEndOption>-o ${project.build.directory}/libFfmpegResampleOpWrapper.dylib</linkerEndOption>
-              </linkerEndOptions>
             </configuration>
             <executions>
               <execution>
-                <id>javah</id>
+                <id>test-dylib</id>
+                <phase>test-compile</phase>
+                <goals>
+                  <goal>javah</goal>
+                  <goal>compile</goal>
+                  <goal>link</goal>
+                </goals>
+                <configuration>
+                  <linkerEndOptions>
+                    <linkerEndOption>-o ${project.build.testOutputDirectory}/libFfmpegResampleOpWrapper.dylib</linkerEndOption>
+                  </linkerEndOptions>
+                </configuration>
+              </execution>
+              <execution>
+                <id>dylib</id>
                 <phase>compile</phase>
                 <goals>
                   <goal>javah</goal>
                   <goal>compile</goal>
                   <goal>link</goal>
                 </goals>
+                <configuration>
+                  <linkerEndOptions>
+                    <linkerEndOption>-o ${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</linkerEndOption>
+                  </linkerEndOptions>
+                </configuration>
               </execution>
             </executions>
           </plugin>
+
+
+          <plugin>
+            <artifactId>maven-install-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>install-library</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>install-file</goal>
+                </goals>
+                <configuration>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>vavi-image-ffmpeg</artifactId>
+                  <version>${project.version}</version>
+                  <packaging>dylib</packaging>
+                  <file>${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</file>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <!--
+              because of maven deploy-file uploads source, jar also
+              TODO maven-metadata.xml!/metadata/versioning/latest is not updated
+              TODO how about https://stackoverflow.com/a/37552776/6102938
+             -->
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <executions>
+              <execution>
+                <id>deploy-library</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <executable>mvn</executable>
+              <arguments>
+                <argument>deploy:deploy-file</argument>
+                <argument>-DgroupId=${project.groupId}</argument>
+                <argument>-DartifactId=vavi-image-ffmpeg</argument>
+                <argument>-Dversion=${project.version}</argument>
+                <argument>-Dpackaging=dylib</argument>
+                <argument>-Dfile=${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</argument>
+                <argument>-Durl=https://maven.pkg.github.com/umjammer/vavi-image-ffmpeg</argument>
+                <argument>-s</argument>
+                <argument>${env.GITHUB_WORKSPACE}/settings.xml</argument>
+              </arguments>
+            </configuration>
+          </plugin>
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
             <configuration>
               <forkMode>once</forkMode>
-              <argLine>-Djava.library.path=${project.build.directory}</argLine>
+              <argLine>
+                -Djava.library.path=${project.build.testOutputDirectory}
+                -Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties
+              </argLine>
             </configuration>
           </plugin>
         </plugins>
@@ -151,11 +212,23 @@ TODO</description>
     </repository>
   </repositories>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.8.1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>com.github.umjammer</groupId>
       <artifactId>vavi-commons</artifactId>
-      <version>1.0.8</version>
+      <version>1.1.6</version>
     </dependency>
     <dependency>
       <groupId>com.github.umjammer</groupId>
@@ -163,18 +236,6 @@ TODO</description>
       <version>0.14.3</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>5.3.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.3.0</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>com.github.umjammer</groupId>
       <artifactId>vavi-awt</artifactId>
@@ -193,6 +254,21 @@ TODO</description>
       <version>1.1</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
 
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-commons</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
