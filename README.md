@@ -1,4 +1,6 @@
 [![Release](https://jitpack.io/v/umjammer/vavi-image.svg)](https://jitpack.io/#umjammer/vavi-image)
+[![CodeQL](https://github.com/umjammer/vavi-image/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/umjammer/vavi-image/actions/workflows/codeql-analysis.yml)
+[![GitHub Packages (only ffmpeg)](https://github.com/umjammer/vavi-image/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/umjammer/vavi-image/actions/workflows/maven-publish.yml)
 
 # vavi-image
 

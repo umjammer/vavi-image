@@ -28,8 +28,8 @@ public class FfmpegResampleOpTest {
     public void test01() throws Exception {
         BufferedImage image = ImageIO.read(FfmpegResampleOpTest.class.getResourceAsStream(file));
 System.err.println(image);
-        for (float y = 1; y > 0; y -= 0.05) {
-            for (float x = 1; x > 0; x -= 0.05) {
+        for (float y = 1f; y > 0f; y -= 0.05f) {
+            for (float x = 1f; x > 0f; x -= 0.05f) {
 System.err.printf("%1.2f, %1.2f\n", x, y);
                 BufferedImageOp filter = new FfmpegResampleOp(x, y);
                 filter.filter(image, null);
@@ -41,8 +41,8 @@ System.err.printf("%1.2f, %1.2f\n", x, y);
     public void test02() throws Exception {
         BufferedImage image = ImageIO.read(FfmpegResampleOpTest.class.getResourceAsStream(file));
 System.err.println(image);
-        for (float y = 1; y < 2; y += 0.1) {
-            for (float x = 1; x < 2; x += 0.1) {
+        for (float y = 1f; y < 2f; y += 0.1f) {
+            for (float x = 1f; x < 2f; x += 0.1f) {
 System.err.printf("%1.2f, %1.2f\n", x, y);
                 BufferedImageOp filter = new FfmpegResampleOp(x, y);
                 filter.filter(image, null);
