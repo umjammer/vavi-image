@@ -7,6 +7,8 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
@@ -36,7 +38,7 @@ public class t146_3 {
 
         deregister(ImageReaderSpi.class, "com.sun.imageio.plugins.png.PNGImageReaderSpi");
 
-        final BufferedImage image = ImageIO.read(new FileInputStream(args[0]));
+        final BufferedImage image = ImageIO.read(Files.newInputStream(Paths.get(args[0])));
 
         JFrame frame = new JFrame();
         frame.setSize(image.getWidth(), image.getHeight());
@@ -52,7 +54,7 @@ public class t146_3 {
 
     /**
      * already in library
-     * @see {@link IIOUtil#deregister(Class, String)}
+     * @see IIOUtil#deregister(Class, String)
      */
     public static <T> void deregister(Class<T> pt, String p0) {
         IIORegistry iioRegistry = IIORegistry.getDefaultInstance();

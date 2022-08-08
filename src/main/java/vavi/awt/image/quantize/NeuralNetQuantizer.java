@@ -242,7 +242,7 @@ public class NeuralNetQuantizer {
         PixelGrabber pg = new PixelGrabber(image, 0, 0, w, h, pixels, 0, w);
         try {
             pg.grabPixels();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
         if ((pg.getStatus() & java.awt.image.ImageObserver.ABORT) != 0) {
             throw new IOException("Image pixel grab aborted or errored");

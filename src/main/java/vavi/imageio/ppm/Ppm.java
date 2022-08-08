@@ -49,7 +49,7 @@ public class Ppm {
         if (gotHeader)
             return;
 
-        byte signature[] = new byte[2];
+        byte[] signature = new byte[2];
         is.read(signature, 0, 2);
 
         if (signature[0] == 80) {

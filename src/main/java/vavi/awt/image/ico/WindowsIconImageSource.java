@@ -36,7 +36,7 @@ public class WindowsIconImageSource implements ImageProducer {
     private WindowsBitmapImageSource bitmap;
 
     /** アイコンファイルには複数の大きさのアイコンが入っている */
-    private WindowsIcon icons[];
+    private WindowsIcon[] icons;
 
     /** それぞれの大きさをデバイスと呼びそれを管理する数値 */
     private int deviceId = 0;

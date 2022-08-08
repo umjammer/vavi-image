@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
@@ -26,7 +27,7 @@ public class Quantizer {
      *
      * @param args 0 in_file, 1: out_file, 2: colors
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
         String inFile = args[0];
         String outFile = args[1];
         String type = outFile.substring(outFile.indexOf('.') + 1);
@@ -37,6 +38,6 @@ public class Quantizer {
         BufferedImageOp filter = new NeuralNetQuantizeOp(colors);
         BufferedImage filteredImage = filter.filter(image, null);
 
-        ImageIO.write(filteredImage, type, new FileOutputStream(new File(outFile)));
+        ImageIO.write(filteredImage, type, Files.newOutputStream(new File(outFile).toPath()));
     }
 }

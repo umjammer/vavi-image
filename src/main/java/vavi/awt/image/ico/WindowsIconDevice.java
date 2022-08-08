@@ -118,7 +118,7 @@ public class WindowsIconDevice {
      */
     public static WindowsIconDevice[] readFrom(LittleEndianDataInputStream lin, int number) throws IOException {
 
-        WindowsIconDevice iconDevices[] = new WindowsIconDevice[number];
+        WindowsIconDevice[] iconDevices = new WindowsIconDevice[number];
 
         for (int i = 0; i < number; i++) {
             iconDevices[i] = new WindowsIconDevice();

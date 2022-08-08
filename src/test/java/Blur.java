@@ -42,6 +42,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -59,7 +60,7 @@ import vavi.awt.image.AbstractBufferedImageOp;
 public class Blur {
 
     public static void main(String s[]) throws IOException {
-        BufferedImage image = ImageIO.read(Blur.class.getResourceAsStream("erika.jpg"));
+        BufferedImage image = ImageIO.read(Objects.requireNonNull(Blur.class.getResourceAsStream("erika.jpg")));
         BufferedImage bluredImage = new BlurOp().filter(image, null);
 
         JPanel panel = new JPanel() {

@@ -127,8 +127,8 @@ System.err.println(w + ", " + h);
                     iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
                     iwp.setCompressionQuality(quality);
 //System.err.println(iwp.getClass().getName());
-                    if (JPEGImageWriteParam.class.isInstance(iwp)) {
-                        JPEGImageWriteParam.class.cast(iwp).setOptimizeHuffmanTables(true);
+                    if (iwp instanceof JPEGImageWriteParam) {
+                        ((JPEGImageWriteParam) iwp).setOptimizeHuffmanTables(true);
                     }
 //System.err.println(StringUtil.paramString(iwp.getCompressionTypes()));
 
@@ -157,8 +157,8 @@ System.err.println(w + ", " + h);
                     iwp = iwR.getDefaultWriteParam();
                     iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
                     iwp.setCompressionQuality(quality);
-                    if (JPEGImageWriteParam.class.isInstance(iwp)) {
-                        JPEGImageWriteParam.class.cast(iwp).setOptimizeHuffmanTables(true);
+                    if (iwp instanceof JPEGImageWriteParam) {
+                        ((JPEGImageWriteParam) iwp).setOptimizeHuffmanTables(true);
                     }
 //System.err.println(StringUtil.paramString(iwp));
 

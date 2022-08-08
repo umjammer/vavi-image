@@ -84,7 +84,7 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
     public boolean canDecodeInput(Object source) throws IOException {
         if (source instanceof ImageInputStream) {
             ImageInputStream is = (ImageInputStream) source;
-            byte bytes[] = new byte[4];
+            byte[] bytes = new byte[4];
             try {
                 is.mark();
                 is.readFully(bytes);

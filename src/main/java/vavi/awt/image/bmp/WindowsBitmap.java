@@ -54,7 +54,7 @@ public class WindowsBitmap {
         RLE4,
         /** */
         BITFIELDS
-    };
+    }
 
     /** ファイルのヘッダ */
     private Header header;
@@ -235,7 +235,7 @@ Debug.println(Level.SEVERE, e);
          * ビットマップファイルのヘッダを読み込みます．
          * @throws IllegalArgumentException not a windows bitmap
          */
-        static final Header readFrom(LittleEndianDataInputStream lin) throws IOException {
+        static Header readFrom(LittleEndianDataInputStream lin) throws IOException {
 
             Header header = new Header();
 
@@ -256,7 +256,7 @@ Debug.println(Level.SEVERE, e);
         }
 
         @SuppressWarnings("unused")
-        final static int size() {
+        static int size() {
             return 14;
         }
 
@@ -336,7 +336,7 @@ Debug.println(Level.SEVERE, e);
         /**
          * ストリームからビットマップヘッダのインスタンスを作成します．
          */
-        static final WindowsBitmapHeader readFrom(LittleEndianDataInputStream lin) throws IOException {
+        static WindowsBitmapHeader readFrom(LittleEndianDataInputStream lin) throws IOException {
 
             WindowsBitmapHeader bh = new WindowsBitmapHeader();
 
@@ -404,19 +404,19 @@ Debug.println("unknown bits: " + bh.bits);
                  } else {
 Debug.println("unknown bits: " + bh.bits);
                  }
-             }
+            }
 
             if (bh.palette == null) { // IndexColorModel
                  switch (bh.usedColor) {
                  case 2:
 //Debug.println("use default bw");
-                    bh.palette = systemBWIndexColorModel;
+                     bh.palette = systemBWIndexColorModel;
                  case 16:
 //Debug.println("use default 16 color");
-                    bh.palette = system16IndexColorModel;
+                     bh.palette = system16IndexColorModel;
                  case 256:
 //Debug.println("use system 256 color ");
-                    bh.palette = system256IndexColorModel;
+                     bh.palette = system256IndexColorModel;
                  default:
 Debug.println("unknown color size: " + bh.usedColor);
                  }
@@ -468,7 +468,7 @@ if (bh.headerSize - 40 > 0) {
         int[] ivram = new int[width * height];
 
         int count = 0;
-        int skip = width * 4 % 4 != 0 ? 4 - (width * 4 % 4) : 0;
+        int skip = (width * 4) % 4 != 0 ? 4 - (width * 4 % 4) : 0;
 
         for (int j = 0; j < height; j++) {
             int ofs = (height - 1 - j) * width;

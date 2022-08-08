@@ -84,7 +84,7 @@ public class WindowsBitmapImageReaderSpi extends ImageReaderSpi {
         throws IOException {
         if (obj instanceof ImageInputStream) {
             ImageInputStream is = (ImageInputStream) obj;
-            byte bytes[] = new byte[2];
+            byte[] bytes = new byte[2];
             try {
                 is.mark();
                 is.readFully(bytes);

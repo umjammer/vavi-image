@@ -84,15 +84,15 @@ public class PpmImageReaderSpi extends ImageReaderSpi {
         throws IOException {
         if (obj instanceof ImageInputStream) {
             ImageInputStream imageinputstream = (ImageInputStream) obj;
-            byte abyte0[] = new byte[4];
+            byte[] bytes = new byte[4];
             try {
                 imageinputstream.mark();
-                imageinputstream.readFully(abyte0);
+                imageinputstream.readFully(bytes);
                 imageinputstream.reset();
             } catch (IOException e) {
                 return false;
             }
-            return abyte0[0] == 80 && abyte0[1] == 54 && abyte0[2] == 10;
+            return bytes[0] == 80 && bytes[1] == 54 && bytes[2] == 10;
         } else {
             return false;
         }

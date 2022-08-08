@@ -29,7 +29,7 @@ public class TestQuantize3 {
     /**
      * @param args in out colors...
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ちょっと適当か？
         float quality = 0.75f;

@@ -27,7 +27,7 @@ import vavi.awt.image.quantize.QuantizeOp;
 public class TestQuantize2 {
 
     /** */
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ちょっと適当か？
         float quality = 0.75f;

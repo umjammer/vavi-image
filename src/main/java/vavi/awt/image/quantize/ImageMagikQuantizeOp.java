@@ -35,14 +35,14 @@ public class ImageMagikQuantizeOp extends BasicBufferedImageOp {
 
     /** */
     protected int[] filterPixels(int width, int height, int[] inPixels) {
-        int pixels2D[][] = new int[width][height];
+        int[][] pixels2D = new int[width][height];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 pixels2D[x][y] = inPixels[y * width + x];
             }
         }
 
-        int palette[] = ImageMagikQuantizer.quantizeImage(pixels2D, colors);
+        int[] palette = ImageMagikQuantizer.quantizeImage(pixels2D, colors);
 
         int[] outPixels = new int[width * height];
         for (int y = 0; y < height; y++) {

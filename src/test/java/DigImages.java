@@ -106,7 +106,7 @@ System.err.println(dir);
 
         Files.walkFileTree(Paths.get(dir), new RegexFileVisitor("\\.(" + type.toLowerCase() + "|" + type.toUpperCase() + ")$", 1000, p -> {
             try {
-                ir.setInput(new FileInputStream(p.toAbsolutePath().toString()));
+                ir.setInput(Files.newInputStream(Paths.get(p.toAbsolutePath().toString())));
                 BufferedImage image = ir.read(0);
                 images.add(image);
                 return true;

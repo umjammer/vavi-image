@@ -244,8 +244,8 @@ public class ImageMagikQuantizer {
     private static final int MAX_TREE_DEPTH = 8;
 
     // these are precomputed in advance
-    private static int SQUARES[];
-    private static int SHIFT[];
+    private static int[] SQUARES;
+    private static int[] SHIFT;
 
     static {
         SQUARES = new int[MAX_RGB + MAX_RGB + 1];
@@ -264,7 +264,7 @@ public class ImageMagikQuantizer {
      * reduced in place.
      * @return The new color palette.
      */
-    public static int[] quantizeImage(int pixels[][], int maxColors) {
+    public static int[] quantizeImage(int[][] pixels, int maxColors) {
         Cube cube = new Cube(pixels, maxColors);
         cube.classification();
         cube.reduction();
@@ -274,9 +274,9 @@ public class ImageMagikQuantizer {
 
     /** */
     private static class Cube {
-        int pixels[][];
+        int[][] pixels;
         int maxColors;
-        int colorMap[];
+        int[] colorMap;
 
         Node root;
         int depth;
@@ -288,7 +288,7 @@ public class ImageMagikQuantizer {
         // counter for the number of nodes in the tree
         int nodes;
 
-        Cube(int pixels[][], int maxColors) {
+        Cube(int[][] pixels, int maxColors) {
             this.pixels = pixels;
             this.maxColors = maxColors;
 
@@ -349,7 +349,7 @@ public class ImageMagikQuantizer {
          *   represented by this node.
          */
         void classification() {
-            int pixels[][] = this.pixels;
+            int[][] pixels = this.pixels;
 
             int width = pixels.length;
             int height = pixels[0].length;
@@ -445,7 +445,7 @@ public class ImageMagikQuantizer {
             colors = 0;
             root.colormap();
 
-            int pixels[][] = this.pixels;
+            int[][] pixels = this.pixels;
 
             int width = pixels.length;
             int height = pixels[0].length;
@@ -672,7 +672,7 @@ public class ImageMagikQuantizer {
             /**
              * Figure out the distance between this node and som color.
              */
-            final static int distance(int color, int r, int g, int b) {
+            static int distance(int color, int r, int g, int b) {
                 return (SQUARES[((color >> 16) & 0xff) - r + MAX_RGB] +
                         SQUARES[((color >>  8) & 0xff) - g + MAX_RGB] +
                         SQUARES[((color >>  0) & 0xff) - b + MAX_RGB]);

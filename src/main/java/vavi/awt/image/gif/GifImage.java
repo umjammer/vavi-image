@@ -1,7 +1,5 @@
 /*
- * Copyright (c) 2004 by Naohide Sano, All rights reserved.
- *
- * Programmed by Naohide Sano
+ * https://web.archive.org/web/20161106215528/http://homepage1.nifty.com/uchi/software.htm
  */
 
 package vavi.awt.image.gif;
@@ -25,12 +23,12 @@ import vavi.util.Debug;
  *
  * <pre>
  *
- *  機能＼バージョン  | GIF87  | GIF87a | GIF89a
- *  ------------------+--------+--------+-------
- *  通常画像          |   ○   |   ○   |  ○
- *  インタレース GIF  |   ×   |   ○   |  ○
- *  透過 GIF          |   ×   |   ×   |  ○
- *  GIF アニメーション|   ×   |   ×   |  ○
+ *  function \ version | GIF87  | GIF87a | GIF89a
+ *  -------------------+--------+--------+-------
+ *  normal image       |   ✓    |   ✓    |   ✓
+ *  interlace GIF      |   -    |   ✓    |   ✓
+ *  transparent GIF    |   -    |   -    |   ✓
+ *  GIF animation      |   -    |   -    |   ✓
  *
  * </pre>
  * <pre>
@@ -194,7 +192,7 @@ public class GifImage {
     }
 
     /** */
-    public class GraphicControlExtension {
+    public static class GraphicControlExtension {
         /** */
         int packedFields;
         /** */
@@ -240,13 +238,13 @@ public class GifImage {
         static InternalImage readFrom(LittleEndianDataInputStream dis, int sizeOfGlobalColorTable, GifRGB[] globalColorTable) throws IOException {
             InternalImage image = new InternalImage();
 
-            // 一枚目のイメージ記述情報を取得
+            // first image descriptor
             image.imageDescriptor = ImageDescriptor.readFrom(dis);
 
-            // インタレースフラグ
+            // interlace flag
             boolean interlaced = image.imageDescriptor.isInteraced();
 
-            // ローカルカラーマップがある場合の処理
+            // has local color table or not
             if (image.imageDescriptor.hasLocalColorTable()) {
                 image.sizeOfColorTable = image.imageDescriptor.getSizeOfColorTable();
                 image.localColorTable = readColorTable(dis, image.sizeOfColorTable);
@@ -321,9 +319,9 @@ public class GifImage {
         int bits = image.sizeOfColorTable + 1;
         int usedColor = (int) Math.pow(2, bits);
 
-        byte reds[] = new byte[usedColor];
-        byte greens[] = new byte[usedColor];
-        byte blues[] = new byte[usedColor];
+        byte[] reds = new byte[usedColor];
+        byte[] greens = new byte[usedColor];
+        byte[] blues = new byte[usedColor];
 
         for (int i = 0; i < usedColor; i++) {
             blues[i] = image.localColorTable[i].blue;

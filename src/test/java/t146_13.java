@@ -49,7 +49,7 @@ System.err.println(image);
 
         float stroke = point / (float) ratio;
 
-        Graphics2D graphics = Graphics2D.class.cast(image.getGraphics());
+        Graphics2D graphics = (Graphics2D) image.getGraphics();
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         FontRenderContext frc = graphics.getFontRenderContext();
@@ -68,7 +68,7 @@ System.err.println(image);
             float sw = (float) tl.getBounds().getWidth();
 //          float sh = (float) tl.getBounds().getHeight();
             y += tl.getAscent();
-            Shape shape = tl.getOutline(AffineTransform.getTranslateInstance(image.getWidth() / 2 - sw / 2, y));
+            Shape shape = tl.getOutline(AffineTransform.getTranslateInstance(image.getWidth() / 2f - sw / 2, y));
             graphics.setColor(Color.black);
             graphics.setStroke(new BasicStroke(stroke));
             graphics.draw(shape);

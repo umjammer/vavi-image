@@ -22,7 +22,7 @@ import vavi.awt.image.quantize.NeuralNetQuantizeOp;
 public class TestQuantize5 {
 
     /** */
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         ImageFrame originalFrame = new ImageFrame();
         File file = new File(args[0]);

@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -61,11 +63,11 @@ System.err.println(w + ", " + h);
         slider.setMinimum(1);
         slider.setValue(100);
         slider.addChangeListener(new ChangeListener() {
-            ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // slappy?
+            ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // sloppy?
             {
                 Properties props = new Properties();
                 try {
-                    props.load(new FileInputStream("local.properties"));
+                    props.load(Files.newInputStream(Paths.get("local.properties")));
                 } catch (Exception e) {
 e.printStackTrace(System.err);
                 }

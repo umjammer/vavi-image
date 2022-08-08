@@ -1,7 +1,5 @@
 /*
- * Copyright (c) 2004  by Naohide Sano, All rights reserved.
- *
- * Programmed by Naohide Sano
+ * https://web.archive.org/web/20161106215528/http://homepage1.nifty.com/uchi/software.htm
  */
 
 package vavi.awt.image.gif;
@@ -58,7 +56,7 @@ public class NonLzwGifImageSource implements ImageProducer {
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 
-    /** ビットマップを作成します． */
+    /** Creates a bitmap. */
     public NonLzwGifImageSource(InputStream in) throws IOException {
         gifImage = GifImage.readFrom(in);
     }
@@ -68,7 +66,7 @@ public class NonLzwGifImageSource implements ImageProducer {
         return gifImage;
     }
 
-    /** ビットマップを作成します． */
+    /** Creates a bitmap. */
     private void loadPixel(int index) {
 
         ColorModel cm = gifImage.getColorModel(index);

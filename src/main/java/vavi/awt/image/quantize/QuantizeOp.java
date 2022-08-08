@@ -46,7 +46,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
     };
 
     /** */
-    private int sum = 3 + 5 + 7 + 1;
+    private final int sum = 3 + 5 + 7 + 1;
     /** */
     private boolean dither;
     /** */
@@ -208,7 +208,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
     /**
      * Clamp a value to the range 0..255
      */
-    private static final int clamp(int c) {
+    private static int clamp(int c) {
         if (c < 0) {
             return 0;
         }
