@@ -411,12 +411,15 @@ Debug.println("unknown bits: " + bh.bits);
                  case 2:
 //Debug.println("use default bw");
                      bh.palette = systemBWIndexColorModel;
+                     break;
                  case 16:
 //Debug.println("use default 16 color");
                      bh.palette = system16IndexColorModel;
+                     break;
                  case 256:
 //Debug.println("use system 256 color ");
                      bh.palette = system256IndexColorModel;
+                     break;
                  default:
 Debug.println("unknown color size: " + bh.usedColor);
                  }
