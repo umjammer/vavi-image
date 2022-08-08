@@ -54,7 +54,7 @@ public class Ppm {
 
         if (signature[0] == 80) {
             imageType = signature[1] - 48;
-            if (imageType < BINARY_PBM && imageType > BINARY_PPM) {
+            if (imageType < BINARY_PBM || imageType > BINARY_PPM) {
                 throw new IOException("Bad PBM/PGM/PPM signature!");
             }
         } else {
