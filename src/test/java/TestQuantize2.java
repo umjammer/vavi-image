@@ -26,7 +26,9 @@ import vavi.awt.image.quantize.QuantizeOp;
  */
 public class TestQuantize2 {
 
-    /** */
+    /**
+     * @param args 0: jpeg
+     */
     public static void main(String[] args) throws Exception {
 
         ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ちょっと適当か？

@@ -10,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
@@ -18,6 +20,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
@@ -30,6 +35,13 @@ public class PpmImageReaderTest {
 
     @Test
     public void test() throws Exception {
+        Image image = ImageIO.read(Files.newInputStream(Paths.get("src/test/resources/test.ppm")));
+        assertNotNull(image);
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
+    public void test0() throws Exception {
         main(new String[] { "src/test/resources/test.ppm" });
     }
 
@@ -50,7 +62,7 @@ System.err.println("found ImageReader: " + ir.getClass().getName());
         }
 //        ir.setInput(new FileInputStream(args[0]));
 //        final Image image = ir.read(0);
-        final Image image = ImageIO.read(new FileInputStream(args[0]));
+        Image image = ImageIO.read(Files.newInputStream(Paths.get(args[0])));
 
         JFrame frame = new JFrame();
         frame.setSize(800, 600);

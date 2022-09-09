@@ -31,10 +31,10 @@ import vavi.swing.JImageComponent;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 061012 nsano initial version <br>
  */
-public class t146_10 {
+public class JpegBlur_java2d {
 
     public static void main(String[] args) throws Exception {
-        new t146_10(args);
+        new JpegBlur_java2d(args);
     }
 
     BufferedImage rightImage;
@@ -45,7 +45,10 @@ public class t146_10 {
     JImageComponent leftImageComponent;
     JLabel statusLabel;
 
-    t146_10(String[] args) throws Exception {
+    /**
+     * @param args 0: image
+     */
+    JpegBlur_java2d(String[] args) throws Exception {
 System.err.println(args[0]);
         BufferedImage image = ImageIO.read(new File(args[0]));
         int w = image.getWidth();
@@ -60,25 +63,23 @@ System.err.println(w + ", " + h);
         slider.setMaximum(100);
         slider.setMinimum(1);
         slider.setValue(10);
-        slider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent event) {
-                JSlider source = (JSlider) event.getSource();
-                if (source.getValueIsAdjusting()) {
-                    return;
-                }
-                float radius = source.getValue() / 10f;
-
-                // right
-                BufferedImage image = rightImage;
-                BufferedImageOp filter = new GaussianBlurOp(radius);
-long t = System.currentTimeMillis();
-                BufferedImage filteredImage = filter.filter(image, null); 
-System.err.println("right: " + (System.currentTimeMillis() - t) + "ms");
-                rightImageComponent.setImage(filteredImage);
-                rightImageComponent.repaint();
-
-                statusLabel.setText("radius: " + radius);
+        slider.addChangeListener(event -> {
+            JSlider source = (JSlider) event.getSource();
+            if (source.getValueIsAdjusting()) {
+                return;
             }
+            float radius = source.getValue() / 10f;
+
+            // right
+            BufferedImage image1 = rightImage;
+            BufferedImageOp filter1 = new GaussianBlurOp(radius);
+long t = System.currentTimeMillis();
+            BufferedImage filteredImage = filter1.filter(image1, null);
+System.err.println("right: " + (System.currentTimeMillis() - t) + "ms");
+            rightImageComponent.setImage(filteredImage);
+            rightImageComponent.repaint();
+
+            statusLabel.setText("radius: " + radius);
         });
 
         JPanel basePanel = new JPanel();

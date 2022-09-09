@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.imageio.IIOUtil;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
@@ -42,6 +43,7 @@ import static java.nio.file.FileVisitResult.TERMINATE;
 public class DigImages {
 
     @Test
+    @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     public void test() throws Exception {
         main(new String[] { "src/test/resources" });
     }
@@ -92,7 +94,7 @@ public class DigImages {
     }
 
     /**
-     * @param type: gif, class: vavi.imageio.gif.NonLzwGifImageReader
+     * @param args 0: dir, 1: type e.g gif, 2: class e.g vavi.imageio.gif.NonLzwGifImageReader
      */
     public static void main(final String[] args) throws IOException {
         String dir = args[0];

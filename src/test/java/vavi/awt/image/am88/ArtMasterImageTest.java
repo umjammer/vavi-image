@@ -10,14 +10,19 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.util.Debug;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
@@ -29,8 +34,22 @@ import vavi.util.Debug;
 class ArtMasterImageTest {
 
     @Test
+    void test1() throws Exception {
+        Image image = Toolkit.getDefaultToolkit().createImage(new ArtMasterImageSource(ArtMasterImageTest.class.getResourceAsStream("/test.am88")));
+        assertNotNull(image);
+    }
+
+    @Test
+    void test2() throws Exception {
+        BufferedImage image = ImageIO.read(ArtMasterImageTest.class.getResourceAsStream("/test.am88"));
+        assertNotNull(image);
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test() throws Exception {
         main(new String[] { "src/test/resources/test.am88" });
+        while (true) Thread.yield();
     }
 
     //----

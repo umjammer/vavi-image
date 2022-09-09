@@ -35,7 +35,7 @@ import vavi.swing.JImageComponent;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 061012 nsano initial version <br>
  */
-public class t146_12 {
+public class Scaling_awt_ffmpeg {
 
     static {
         UIManager.getDefaults().put("SplitPane.border", BorderFactory.createEmptyBorder());
@@ -45,7 +45,7 @@ public class t146_12 {
     }
 
     public static void main(String[] args) throws Exception {
-        new t146_12(args);
+        new Scaling_awt_ffmpeg(args);
     }
 
     BufferedImage rightImage;
@@ -55,7 +55,7 @@ public class t146_12 {
     JImageComponent leftImageComponent;
     JLabel statusLabel;
 
-    t146_12(String[] args) throws Exception {
+    Scaling_awt_ffmpeg(String[] args) throws Exception {
 System.err.println(args[0]);
         BufferedImage image = ImageIO.read(new File(args[0]));
         int w = image.getWidth();

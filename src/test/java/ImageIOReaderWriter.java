@@ -19,7 +19,7 @@ import vavi.swing.JImageComponent;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 021117 nsano initial version <br>
  */
-public class t146_1 {
+public class ImageIOReaderWriter {
 
     public static void main(String[] args) throws Exception {
         String[] rs = ImageIO.getReaderFormatNames();

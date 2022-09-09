@@ -32,8 +32,11 @@ import javax.swing.JPanel;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 070523 nsano initial version <br>
  */
-public class t146_13 {
+public class FontOnImage {
 
+    /**
+     * @param args 0: image, 1: text, 2: font
+     */
     public static void main(String[] args) throws Exception {
         String imageFilename = args[0];
 System.err.println("image: " + args[0]);

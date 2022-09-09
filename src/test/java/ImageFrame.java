@@ -21,11 +21,12 @@ import javax.swing.JFrame;
  * @author <a href="http://www.gurge.com/amd/">Adam Doppelt</a>
  */
 public class ImageFrame extends JFrame {
-    int left = -1;
-    int top;
-    Image image;
 
-    ImageFrame() {
+    private int left = -1;
+    private int top;
+    private Image image;
+
+    public ImageFrame() {
         setLayout(null);
         setSize(100, 100);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

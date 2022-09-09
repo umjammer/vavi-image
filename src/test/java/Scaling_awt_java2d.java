@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.io.File;
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
@@ -36,10 +35,10 @@ import vavi.swing.JImageComponent;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 061012 nsano initial version <br>
  */
-public class t146_9 {
+public class Scaling_awt_java2d {
 
     public static void main(String[] args) throws Exception {
-        new t146_9(args);
+        new Scaling_awt_java2d(args);
     }
 
     BufferedImage rightImage;
@@ -49,7 +48,7 @@ public class t146_9 {
     JImageComponent leftImageComponent;
     JLabel statusLabel;
 
-    t146_9(String[] args) throws Exception {
+    Scaling_awt_java2d(String[] args) throws Exception {
 System.err.println(args[0]);
         BufferedImage image = ImageIO.read(new File(args[0]));
         int w = image.getWidth();

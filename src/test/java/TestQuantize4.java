@@ -26,7 +26,9 @@ import vavi.awt.image.quantize.NeuralNetQuantizeOp;
  */
 public class TestQuantize4 {
 
-    /** */
+    /**
+     * @param args 0: gif
+     */
     public static void main(String[] args) throws Exception {
 
         ImageWriter iw = ImageIO.getImageWritersByFormatName("GIF").next(); // sloppy?

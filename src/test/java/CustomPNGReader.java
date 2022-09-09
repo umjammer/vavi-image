@@ -6,7 +6,6 @@
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
@@ -27,7 +26,7 @@ import vavi.imageio.IIOUtil;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 021117 nsano initial version <br>
  */
-public class t146_3 {
+public class CustomPNGReader {
 
     public static void main(String[] args) throws Exception {
         Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("PNG");

@@ -48,6 +48,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import net.sourceforge.jiu.apps.Strings;
 import vavi.awt.image.AbstractBufferedImageOp;
 
 
@@ -59,7 +60,7 @@ import vavi.awt.image.AbstractBufferedImageOp;
  */
 public class Blur {
 
-    public static void main(String s[]) throws IOException {
+    public static void main(String[] args) throws IOException {
         BufferedImage image = ImageIO.read(Objects.requireNonNull(Blur.class.getResourceAsStream("erika.jpg")));
         BufferedImage bluredImage = new BlurOp().filter(image, null);
 

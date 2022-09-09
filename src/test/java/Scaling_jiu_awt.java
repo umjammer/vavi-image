@@ -23,7 +23,7 @@ import net.sourceforge.jiu.gui.awt.RGBA;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 061010 nsano initial version <br>
  */
-public class t146_7 {
+public class Scaling_jiu_awt {
 
     public static void main(String[] args) throws Exception {
 

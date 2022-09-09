@@ -22,7 +22,7 @@ import vavi.util.Debug;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 021117 nsano initial version <br>
  */
-public class t146_2 {
+public class ImageIOConvesion {
 
     /**
      * java t2 type from to

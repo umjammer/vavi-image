@@ -16,8 +16,6 @@ import javax.imageio.spi.ImageReaderSpi;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.junit.jupiter.api.Disabled;
-
 import vavi.imageio.IIOUtil;
 
 import vavix.util.grep.FileDigger;
@@ -25,13 +23,12 @@ import vavix.util.grep.RegexFileDigger;
 
 
 /**
- * Test10. gif in directory
+ * GifUnderDirectory. gif in directory
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (umjammer)
  * @version 0.00 2011/02/09 umjammer initial version <br>
  */
-@Disabled
-public class Test10 {
+public class GifUnderDirectory {
 
     static {
         IIOUtil.setOrder(ImageReaderSpi.class, "vavi.imageio.gif.NonLzwGifImageReaderSpi", "com.sun.imageio.plugins.gif.GIFImageReaderSpi");
@@ -40,7 +37,7 @@ public class Test10 {
     static BufferedImage image;
 
     /**
-     * @param args
+     * @param args 0: dir
      */
     public static void main(String[] args) throws Exception {
         final JPanel panel = new JPanel() {

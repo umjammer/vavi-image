@@ -21,7 +21,9 @@ import vavi.awt.image.quantize.NeuralNetQuantizeOp;
  */
 public class TestQuantize5 {
 
-    /** */
+    /**
+     * @param args 0: gif, 1: colors
+     */
     public static void main(String[] args) throws Exception {
 
         ImageFrame originalFrame = new ImageFrame();

@@ -45,10 +45,13 @@ import vavi.util.properties.annotation.PropsEntity;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 061013 nsano initial version <br>
  */
-public class t146_11 {
+public class JpegBlur {
 
+    /**
+     * @param args 0: image
+     */
     public static void main(String[] args) throws Exception {
-        new t146_11(args);
+        new JpegBlur(args);
     }
 
     BufferedImage rightImage;
@@ -59,7 +62,10 @@ public class t146_11 {
     JImageComponent leftImageComponent;
     JLabel statusLabel;
 
-    t146_11(String[] args) throws Exception {
+    /**
+     * @param args 0: image
+     */
+    JpegBlur(String[] args) throws Exception {
 System.err.println(args[0]);
         BufferedImage image = ImageIO.read(new File(args[0]));
 
@@ -74,32 +80,28 @@ System.err.println(args[0]);
         qualitySlider.setMaximum(95);
         qualitySlider.setMinimum(5);
         qualitySlider.setValue(75);
-        qualitySlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent event) {
-                JSlider source = (JSlider) event.getSource();
-                if (source.getValueIsAdjusting()) {
-                    return;
-                }
-
-                updateLeftImage();
-                updateRightImage();
+        qualitySlider.addChangeListener(event -> {
+            JSlider source = (JSlider) event.getSource();
+            if (source.getValueIsAdjusting()) {
+                return;
             }
+
+            updateLeftImage();
+            updateRightImage();
         });
 
         blurSlider = new JSlider();
         blurSlider.setMaximum(300);
         blurSlider.setMinimum(80);
         blurSlider.setValue(100);
-        blurSlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent event) {
-                JSlider source = (JSlider) event.getSource();
-                if (source.getValueIsAdjusting()) {
-                    return;
-                }
-
-                updateLeftImage();
-                updateRightImage();
+        blurSlider.addChangeListener(event -> {
+            JSlider source = (JSlider) event.getSource();
+            if (source.getValueIsAdjusting()) {
+                return;
             }
+
+            updateLeftImage();
+            updateRightImage();
         });
 
         upperPanel.add(qualitySlider, BorderLayout.NORTH);

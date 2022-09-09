@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 by Naohide Sano, All rights reserved.
+ * Copyright (c) 2007 by Naohide Sano, All rights reserved.
  *
  * Programmed by Naohide Sano
  */
@@ -8,7 +8,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,7 +28,6 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import vavi.awt.image.blur.GaussianBlurOp;
 import vavi.imageio.IIOUtil;
 import vavi.imageio.ImageConverter;
 import vavi.swing.JImageComponent;
@@ -38,16 +36,18 @@ import vavi.util.properties.annotation.PropsEntity;
 
 
 /**
- * Jpeg quality, blur.
+ * Jpeg quality, .
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 0.00 061012 nsano initial version <br>
+ * @version 0.00 07xxxx nsano initial version <br>
  */
 @PropsEntity(url = "file://${user.dir}/local.properties")
-public class t146_8 {
+public class JpegQuality {
 
     @Property(name = "image.writer.class", value = "com.sun.imageio.plugins.jpeg.JPEGImageWriter")
-    String className;
+    String classNameL;
+    @Property(name = "image.writer.class2", value = "com.sun.imageio.plugins.jpeg.JPEGImageWriter")
+    String classNameR;
 
     {
         try {
@@ -58,7 +58,7 @@ public class t146_8 {
     }
 
     public static void main(String[] args) throws Exception {
-        new t146_8(args);
+        new JpegQuality(args);
     }
 
     static final float[] elements;
@@ -75,30 +75,37 @@ public class t146_8 {
     };
 
     Image rightImage;
+    Image leftImage;
     JSlider qualitySlider;
     JImageComponent rightImageComponent;
+    JImageComponent leftImageComponent;
     JLabel statusLabel;
 
-    t146_8(String[] args) throws Exception {
+    JpegQuality(String[] args) throws Exception {
 System.err.println(args[0]);
         BufferedImage image = ImageIO.read(new File(args[0]));
         int w = image.getWidth();
         int h = image.getHeight();
 System.err.println(w + ", " + h);
 
-        Image leftImage = image.getScaledInstance(w / 6, h / 6, Image.SCALE_AREA_AVERAGING);
-        rightImage = image.getScaledInstance(w / 6, h / 6, Image.SCALE_AREA_AVERAGING);
+        final int S = 3;
+        leftImage = image.getScaledInstance(w / S, h / S, Image.SCALE_AREA_AVERAGING);
+        rightImage = image.getScaledInstance(w / S, h / S, Image.SCALE_AREA_AVERAGING);
         qualitySlider = new JSlider();
         qualitySlider.setMaximum(95);
         qualitySlider.setMinimum(5);
         qualitySlider.setValue(75);
         qualitySlider.addChangeListener(new ChangeListener() {
             ImageConverter converter = ImageConverter.getInstance();
-            ImageWriter iw;
+            ImageWriter iwL;
+            ImageWriter iwR;
             {
-                iw = IIOUtil.getImageWriter("JPEG", className);
+                // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
+                iwL = IIOUtil.getImageWriter("JPEG", classNameL);
+                iwR = IIOUtil.getImageWriter("JPEG", classNameR);
+
                 //
-                converter.setColorModelType(BufferedImage.TYPE_3BYTE_BGR);
+                converter.setColorModelType(BufferedImage.TYPE_INT_RGB);
             }
             public void stateChanged(ChangeEvent event) {
                 JSlider source = (JSlider) event.getSource();
@@ -108,41 +115,70 @@ System.err.println(w + ", " + h);
                 float quality = source.getValue() / 100f;
 
                 try {
-                    //
-                    BufferedImage image = converter.toBufferedImage(rightImage);
+                    // L
+                    BufferedImage image = converter.toBufferedImage(leftImage);
 
                     //
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
-                    iw.setOutput(ios);
+                    iwL.setOutput(ios);
 
-                    ImageWriteParam iwp = iw.getDefaultWriteParam();
+                    ImageWriteParam iwp = iwL.getDefaultWriteParam();
                     iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                    ((JPEGImageWriteParam) iwp).setOptimizeHuffmanTables(true);
                     iwp.setCompressionQuality(quality);
+//System.err.println(iwp.getClass().getName());
+                    if (iwp instanceof JPEGImageWriteParam) {
+                        ((JPEGImageWriteParam) iwp).setOptimizeHuffmanTables(true);
+                    }
 //System.err.println(StringUtil.paramString(iwp.getCompressionTypes()));
 
                     //
-                    // "http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4957775"
-                    BufferedImage tmpImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-                    tmpImage.getGraphics().drawImage(image, 0, 0, null);
-
-//                    BufferedImageOp filter = new ConvolveOp(new Kernel(3, 3, elements), ConvolveOp.EDGE_NO_OP, null);
-                    BufferedImageOp filter = new GaussianBlurOp(1.3f);
-                    BufferedImage bluredImage = filter.filter(tmpImage, null);
-
-                    //
-                    iw.write(null, new IIOImage(bluredImage, null, null), iwp);
+                    iwL.write(null, new IIOImage(image, null, null), iwp);
+                    ios.flush();
+                    ios.close();
 
                     //
                     BufferedImage processedImage = ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
 
                     //
+                    leftImageComponent.setImage(processedImage);
+                    leftImageComponent.repaint();
+
+                    int sizeL = baos.size();
+
+                    // R
+                    image = converter.toBufferedImage(rightImage);
+
+                    //
+                    baos = new ByteArrayOutputStream();
+                    ios = ImageIO.createImageOutputStream(baos);
+                    iwR.setOutput(ios);
+
+                    iwp = iwR.getDefaultWriteParam();
+                    iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+                    iwp.setCompressionQuality(quality);
+                    if (iwp instanceof JPEGImageWriteParam) {
+                        ((JPEGImageWriteParam) iwp).setOptimizeHuffmanTables(true);
+                    }
+//System.err.println(StringUtil.paramString(iwp));
+
+                    //
+//iwR.write(image);
+                    iwR.write(null, new IIOImage(image, null, null), iwp);
+                    ios.flush();
+                    ios.close();
+//System.err.println("quality: " + quality + ", size: " + baos.size());
+
+                    //
+                    processedImage = ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
+
+                    //
                     rightImageComponent.setImage(processedImage);
                     rightImageComponent.repaint();
 
-System.err.println("quality: " + quality + ", size: " + baos.size());
-                    statusLabel.setText("quality: " + quality + ", size: " + baos.size());
+                    int sizeR = baos.size();
+System.err.println("quality: " + quality + ", L size: " + sizeL + ", R size: " + sizeR + " " + iwL + ", " + iwR);
+                    statusLabel.setText("quality: " + quality + ", L size: " + sizeL + ", R size: " + sizeR);
                 } catch (IOException e) {
                     e.printStackTrace(System.err);
                 }
@@ -153,7 +189,7 @@ System.err.println("quality: " + quality + ", size: " + baos.size());
         basePanel.setLayout(new BorderLayout());
         basePanel.add(qualitySlider, BorderLayout.NORTH);
 
-        JImageComponent leftImageComponent = new JImageComponent();
+        leftImageComponent = new JImageComponent();
         leftImageComponent.setImage(leftImage);
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());

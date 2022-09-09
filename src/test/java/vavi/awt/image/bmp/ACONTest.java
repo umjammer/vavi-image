@@ -9,6 +9,8 @@ package vavi.awt.image.bmp;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +36,7 @@ System.err.println("ACON: " + ani);
 
     /** */
     public static void main(String[] args) throws Exception {
-        InputStream is = new BufferedInputStream(new FileInputStream(args[0]));
+        InputStream is = new BufferedInputStream(Files.newInputStream(Paths.get(args[0])));
         ACON ani = ACON.readFrom(is, ACON.class);
 System.err.println("ACON: " + ani);
     }
