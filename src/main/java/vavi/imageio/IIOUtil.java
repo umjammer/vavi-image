@@ -134,8 +134,8 @@ public class IIOUtil {
     }
 
     /**
-     * @param type
-     * @param className
+     * @param type interface
+     * @param className implementation
      */
     public static ImageWriter getImageWriter(String type, String className) {
         Class<?> clazz;
@@ -157,8 +157,8 @@ Debug.println(Level.FINEST, "ImageWriter: " + iw.getClass());
     }
 
     /**
-     * @param type
-     * @param className
+     * @param type interface
+     * @param className implementation
      */
     public static ImageReader getImageReader(String type, String className) {
         Class<?> clazz;

@@ -54,15 +54,12 @@ public class ImageConverter {
     }
 
     /** */
-    private ImageObserver imageObserver = new ImageObserver() {
-        public boolean imageUpdate(Image img, int infoflags,
-                                   int x, int y, int width, int height) {
+    private ImageObserver imageObserver = (img, infoflags, x, y, width, height) -> {
 //Debug.println(infoflags);
-            if ((infoflags & ImageObserver.ALLBITS) == ImageObserver.ALLBITS) {
-                return false;
-            } else {
-                return true;
-            }
+        if ((infoflags & ImageObserver.ALLBITS) == ImageObserver.ALLBITS) {
+            return false;
+        } else {
+            return true;
         }
     };
 }

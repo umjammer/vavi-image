@@ -69,9 +69,9 @@ System.err.println(image);
 
             TextLayout tl = new TextLayout(aci, frc);
             float sw = (float) tl.getBounds().getWidth();
-//          float sh = (float) tl.getBounds().getHeight();
+            float sh = (float) tl.getBounds().getHeight();
             y += tl.getAscent();
-            Shape shape = tl.getOutline(AffineTransform.getTranslateInstance(image.getWidth() / 2f - sw / 2, y));
+            Shape shape = tl.getOutline(AffineTransform.getTranslateInstance((image.getWidth() - sw) / 2, (image.getHeight() - sh) / 2));
             graphics.setColor(Color.black);
             graphics.setStroke(new BasicStroke(stroke));
             graphics.draw(shape);
