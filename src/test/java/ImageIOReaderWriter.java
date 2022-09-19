@@ -6,11 +6,10 @@
 
 import java.awt.Image;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import vavi.swing.JImageComponent;
+import vavi.awt.ImageComponent;
 
 
 /**
@@ -21,9 +20,17 @@ import vavi.swing.JImageComponent;
  */
 public class ImageIOReaderWriter {
 
+    /**
+     * @param args image
+     */
     public static void main(String[] args) throws Exception {
         String[] rs = ImageIO.getReaderFormatNames();
         System.err.println("-- reader --");
+        for (String r : rs) {
+            System.err.println(r);
+        }
+        rs = ImageIO.getReaderFileSuffixes();
+        System.err.println("-- reader suffixes --");
         for (String r : rs) {
             System.err.println(r);
         }
@@ -39,7 +46,7 @@ System.err.println(image);
         JFrame frame = new JFrame();
         frame.setSize(320, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JImageComponent component = new JImageComponent();
+        ImageComponent component = new ImageComponent();
         component.setImage(image);
         frame.getContentPane().add(component);
         frame.setVisible(true);

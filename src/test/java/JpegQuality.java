@@ -28,6 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import vavi.awt.ImageComponent;
 import vavi.imageio.IIOUtil;
 import vavi.imageio.ImageConverter;
 import vavi.swing.JImageComponent;
@@ -77,8 +78,8 @@ public class JpegQuality {
     Image rightImage;
     Image leftImage;
     JSlider qualitySlider;
-    JImageComponent rightImageComponent;
-    JImageComponent leftImageComponent;
+    ImageComponent rightImageComponent;
+    ImageComponent leftImageComponent;
     JLabel statusLabel;
 
     JpegQuality(String[] args) throws Exception {
@@ -189,14 +190,14 @@ System.err.println("quality: " + quality + ", L size: " + sizeL + ", R size: " +
         basePanel.setLayout(new BorderLayout());
         basePanel.add(qualitySlider, BorderLayout.NORTH);
 
-        leftImageComponent = new JImageComponent();
+        leftImageComponent = new ImageComponent();
         leftImageComponent.setImage(leftImage);
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());
         leftPanel.setPreferredSize(new Dimension(w, h));
         leftPanel.add(leftImageComponent, BorderLayout.CENTER);
 
-        rightImageComponent = new JImageComponent();
+        rightImageComponent = new ImageComponent();
         rightImageComponent.setImage(rightImage);
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());

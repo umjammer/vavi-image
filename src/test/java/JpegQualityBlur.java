@@ -29,6 +29,7 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import vavi.awt.ImageComponent;
 import vavi.awt.image.blur.GaussianBlurOp;
 import vavi.imageio.IIOUtil;
 import vavi.imageio.ImageConverter;
@@ -76,7 +77,7 @@ public class JpegQualityBlur {
 
     Image rightImage;
     JSlider qualitySlider;
-    JImageComponent rightImageComponent;
+    ImageComponent rightImageComponent;
     JLabel statusLabel;
 
     JpegQualityBlur(String[] args) throws Exception {
@@ -153,23 +154,15 @@ System.err.println("quality: " + quality + ", size: " + baos.size());
         basePanel.setLayout(new BorderLayout());
         basePanel.add(qualitySlider, BorderLayout.NORTH);
 
-        JImageComponent leftImageComponent = new JImageComponent();
+        ImageComponent leftImageComponent = new ImageComponent();
         leftImageComponent.setImage(leftImage);
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BorderLayout());
-        leftPanel.setPreferredSize(new Dimension(w, h));
-        leftPanel.add(leftImageComponent, BorderLayout.CENTER);
 
-        rightImageComponent = new JImageComponent();
+        rightImageComponent = new ImageComponent();
         rightImageComponent.setImage(rightImage);
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BorderLayout());
-        rightPanel.setPreferredSize(new Dimension(w, h));
-        rightPanel.add(rightImageComponent, BorderLayout.CENTER);
 
         JSplitPane split = new JSplitPane();
-        split.setLeftComponent(leftPanel);
-        split.setRightComponent(rightPanel);
+        split.setLeftComponent(leftImageComponent);
+        split.setRightComponent(rightImageComponent);
         split.setPreferredSize(new Dimension(800, 600));
 
         basePanel.add(split, BorderLayout.CENTER);

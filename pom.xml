@@ -245,9 +245,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.github.umjammer</groupId>
+      <groupId>vavi</groupId>
       <artifactId>vavi-awt</artifactId>
-      <version>1.0.5</version>
+      <version>1.0.6-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
