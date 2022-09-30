@@ -17,6 +17,9 @@ import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.awt.image.IndexColorModel;
+import java.util.logging.Level;
+
+import vavi.util.Debug;
 
 
 /**
@@ -77,7 +80,8 @@ public class FfmpegResampleOp implements BufferedImageOp {
     /**
      * JNI.
      * @param inBuffer src pixels, int[] or byte[]
-     * @param inType {@link DataBuffer#TYPE_INT} or {@link DataBuffer#TYPE_BYTE} 
+     * @param inType {@link DataBuffer#TYPE_INT} or {@link DataBuffer#TYPE_BYTE}
+     * @param inPixelFormat src {@link BufferedImage#getType()}
      * @param inPixelSize 24 or 32 bits
      * @param inWidth src width
      * @param inHeight src height
@@ -85,15 +89,16 @@ public class FfmpegResampleOp implements BufferedImageOp {
      * @param outWidth scaled width
      * @param outHeight scaled width
      * @param outType {@link DataBuffer#TYPE_INT} or {@link DataBuffer#TYPE_BYTE}
+     * @param outPixelFormat dest {@link BufferedImage#getType()}
      * @param outPixelSize 24 or 32 bits
      * @param hint scaling hint, see {@link #hint}
      */
-    private native void filterInternal(Object inBuffer, int inType, int inPixelSize, int inWidth, int inHeight, Object outBuffer, int outType, int outPixelSize, int outWidth, int outHeight, int hint);
+    private native void filterInternal(Object inBuffer, int inType, int inPixelFormat, int inPixelSize, int inWidth, int inHeight, Object outBuffer, int outType, int outPixelFormat, int outPixelSize, int outWidth, int outHeight, int hint);
 
     /* */
     public BufferedImage filter(BufferedImage src, BufferedImage dest) {
 
-        if (IndexColorModel.class.isInstance(src.getColorModel())) {
+        if (src.getColorModel() instanceof IndexColorModel) {
             throw new IllegalArgumentException("Resampling cannot be performed on an indexed image");
         }
 
@@ -101,10 +106,15 @@ public class FfmpegResampleOp implements BufferedImageOp {
             dest = createCompatibleDestImage(src, src.getColorModel());
         }
 
-//System.err.println("src CM: " + src.getColorModel());
-//System.err.println("dest CM: " + dest.getColorModel());
+        int srcPxelFormat = src.getType();
+        int destPxelFormat = dest.getType();
+Debug.println(Level.FINE, "src pixel format: " + src.getType());
+Debug.println(Level.FINE, "dest pixel format: " + dest.getType());
+
         int srcPixelSize = src.getColorModel().getPixelSize();
         int destPixelSize = dest.getColorModel().getPixelSize();
+Debug.println(Level.FINE, "src pixel size: " + src.getColorModel().getPixelSize());
+Debug.println(Level.FINE, "dest pixel size: " + dest.getColorModel().getPixelSize());
 
         int srcWidth = src.getWidth();
         int srcHeight = src.getHeight();
@@ -114,6 +124,8 @@ public class FfmpegResampleOp implements BufferedImageOp {
 
         int srcDataType = src.getRaster().getDataBuffer().getDataType();
         int destDataType = dest.getRaster().getDataBuffer().getDataType();
+Debug.println(Level.FINE, "src data type: " + src.getRaster().getDataBuffer().getDataType());
+Debug.println(Level.FINE, "dest data type: " + dest.getRaster().getDataBuffer().getDataType());
 
         Object srcBuffer;
         if (srcDataType == DataBuffer.TYPE_BYTE) {
@@ -130,7 +142,7 @@ public class FfmpegResampleOp implements BufferedImageOp {
             destPixelSize = 32;
         }
 
-        filterInternal(srcBuffer, srcDataType, srcPixelSize, srcWidth, srcHeight, destBuffer, destDataType, destPixelSize, resizedWidth, resizedHeight, hint.value);
+        filterInternal(srcBuffer, srcDataType, srcPxelFormat, srcPixelSize, srcWidth, srcHeight, destBuffer, destDataType, destPxelFormat, destPixelSize, resizedWidth, resizedHeight, hint.value);
 
         return dest;
     }
