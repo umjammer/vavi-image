@@ -9,13 +9,14 @@
 🎨 Imaging the world!
 
 ## Formats
+
   * artmaster 88 (old japanese pc pc-88,98 image format)
   * windows bitmap
   * gif (non lzw)
   * windows icon
   * ppm
 
-## Resizing Evaluation
+## Resizing
 
 |type|quality|speed|comment|
 |---|---|---|---|
@@ -25,13 +26,13 @@
 |`G2dResample`|2|△|`Graphics2d#drawImage` with rendering hints (`VALUE_INTERPOLATION_NEAREST_NEIGHBOR`)| 
 |`AffineTransformOp`|2| |`TYPE_NEAREST_NEIGHBOR`|
 
-## Quantizing Evaluation
+## Quantization
 
-|type|quality|comment|
-|---|---|---|
-|`ImageMagick`|||
-|`NeuralNet`|👑|https://github.com/umjammer/vavi-image-sandbox/wiki/OctTree_vs_NeuralNet|
-|`OctTree`|||
+| type                                                                             |quality|comment|
+|----------------------------------------------------------------------------------|---|---|
+| [`ImageMagick`](src/main/java/vavi/awt/image/quantization/ImageMagikQuantizeOp.java) |||
+| `NeuralNet`                                                                      |👑|https://github.com/umjammer/vavi-image-sandbox/wiki/OctTree_vs_NeuralNet|
+| `OctTree`                                                                        |||
 
 ## Installation
 

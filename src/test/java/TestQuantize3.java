@@ -15,7 +15,7 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
-import vavi.awt.image.quantize.ImageMagikQuantizeOp;
+import vavi.awt.image.quantization.ImageMagickQuantizeOp;
 
 
 /**
@@ -48,7 +48,7 @@ System.err.println("original size: " + file.length());
         for (int i = 2; i < args.length; ++i) {
             x += 20;
             y += 20;
-            BufferedImageOp filter = new ImageMagikQuantizeOp(Integer.parseInt(args[i]));
+            BufferedImageOp filter = new ImageMagickQuantizeOp(Integer.parseInt(args[i]));
 System.err.println(image.getType());
 long tm = System.currentTimeMillis();
             BufferedImage filteredImage = filter.filter(image, null);

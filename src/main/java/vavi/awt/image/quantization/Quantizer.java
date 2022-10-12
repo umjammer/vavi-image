@@ -2,7 +2,7 @@
  * Copyright (C) Jerry Huxtable 1998-2001. All rights reserved.
  */
 
-package vavi.awt.image.quantize;
+package vavi.awt.image.quantization;
 
 
 /**

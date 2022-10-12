@@ -17,7 +17,7 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
-import vavi.awt.image.quantize.ImageMagikQuantizer;
+import vavi.awt.image.quantization.ImageMagickQuantizer;
 import vavi.imageio.ImageConverter;
 
 
@@ -88,9 +88,9 @@ public class TestQuantize {
             long tm = System.currentTimeMillis();
 
             // quant
-            int[] palette = ImageMagikQuantizer.quantizeImage(pixels, Integer.parseInt(args[i]));
+            int[] palette = ImageMagickQuantizer.quantizeImage(pixels, Integer.parseInt(args[i]));
             tm = System.currentTimeMillis() - tm;
-System.out.println("reduced to " + args[i] + " in " + tm + "ms using ImageMagikQuantizer direct");
+System.out.println("reduced to " + args[i] + " in " + tm + "ms using ImageMagickQuantizer direct");
             ImageFrame filteredFrame = new ImageFrame();
             filteredFrame.setImage(palette, pixels);
 

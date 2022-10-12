@@ -15,7 +15,7 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
-import vavi.awt.image.quantize.QuantizeOp;
+import vavi.awt.image.quantization.QuantizeOp;
 
 
 /**

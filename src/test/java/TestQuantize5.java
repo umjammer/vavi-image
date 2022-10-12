@@ -10,7 +10,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import vavi.awt.image.quantize.NeuralNetQuantizeOp;
+import vavi.awt.image.quantization.NeuralNetQuantizeOp;
 
 
 /**

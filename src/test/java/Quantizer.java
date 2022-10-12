@@ -7,12 +7,11 @@
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
-import vavi.awt.image.quantize.NeuralNetQuantizeOp;
+import vavi.awt.image.quantization.NeuralNetQuantizeOp;
 
 
 /**
