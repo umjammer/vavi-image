@@ -76,12 +76,13 @@ public class ArtMasterImageReaderSpi extends ImageReaderSpi {
               ExtraImageMetadataFormatClassNames);
     }
 
-    /* */
+    @Override
     public String getDescription(Locale locale) {
         return "Art Master 88 Image";
     }
 
     /* TODO InputStream */
+    @Override
     public boolean canDecodeInput(Object obj) throws IOException {
 
         final byte[] header = {
@@ -107,7 +108,7 @@ Debug.println(obj);
         }
     }
 
-    /* */
+    @Override
     public ImageReader createReaderInstance(Object obj) {
         return new ArtMasterImageReader(this);
     }

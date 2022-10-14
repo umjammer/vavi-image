@@ -74,12 +74,13 @@ public class PpmImageReaderSpi extends ImageReaderSpi {
               ExtraImageMetadataFormatClassNames);
     }
 
-    /* */
+    @Override
     public String getDescription(Locale locale) {
         return "PPM Image";
     }
 
     /* TODO InputStream */
+    @Override
     public boolean canDecodeInput(Object obj)
         throws IOException {
         if (obj instanceof ImageInputStream) {
@@ -98,7 +99,7 @@ public class PpmImageReaderSpi extends ImageReaderSpi {
         }
     }
 
-    /* */
+    @Override
     public ImageReader createReaderInstance(Object obj) {
         return new PpmImageReader(this);
     }

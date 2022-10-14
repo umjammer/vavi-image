@@ -47,17 +47,17 @@ public class NonLzwGifImageReader extends ImageReader {
         super(originatingProvider);
     }
 
-    /* @see ImageReader */
+    @Override
     public int getNumImages(boolean allowSearch) throws IIOException {
         return gifImage.getNumImages();
     }
 
-    /* @see ImageReader */
+    @Override
     public int getWidth(int imageIndex) throws IIOException {
         return gifImage.getWidth(imageIndex);
     }
 
-    /* @see ImageReader */
+    @Override
     public int getHeight(int imageIndex) throws IIOException {
         return gifImage.getHeight(imageIndex);
     }
@@ -94,7 +94,7 @@ public class NonLzwGifImageReader extends ImageReader {
         return image;
     }
 
-    /* @see ImageReader */
+    @Override
     public BufferedImage read(int imageIndex, ImageReadParam param)
         throws IIOException {
 
@@ -118,25 +118,25 @@ Debug.println("unsupported input: " + input);
         }
     }
 
-    /* @see ImageReader */
+    @Override
     public IIOMetadata getStreamMetadata() throws IIOException {
         throw new UnsupportedOperationException();
     }
 
-    /* @see ImageReader */
+    @Override
     public IIOMetadata getImageMetadata(int imageIndex) throws IIOException {
 
         return new IIOMetadata() {
-            public void reset() {
+            @Override public void reset() {
                 throw new UnsupportedOperationException();
             }
-            public void mergeTree(String formatName, Node root) throws IIOInvalidTreeException {
+            @Override public void mergeTree(String formatName, Node root) throws IIOInvalidTreeException {
                 throw new UnsupportedOperationException();
             }
-            public boolean isReadOnly() {
+            @Override public boolean isReadOnly() {
                 return true;
             }
-            public Node getAsTree(String formatName) {
+            @Override public Node getAsTree(String formatName) {
                 IIOMetadataNode rootNode = new IIOMetadataNode(NonLzwGifImageReaderSpi.NativeImageMetadataFormatName);
                 GifImage.ImageDescriptor imageDescriptor = gifImage.getImageDescriptor(imageIndex);
                 IIOMetadataNode imageDescriptorNode = new IIOMetadataNode("ImageDescriptor");
@@ -152,7 +152,7 @@ Debug.println("unsupported input: " + input);
                 rootNode.appendChild(graphicControlExtensionNode);
                 return rootNode;
             }
-            public String getNativeMetadataFormatName() {
+            @Override public String getNativeMetadataFormatName() {
                 return NonLzwGifImageReaderSpi.NativeImageMetadataFormatName;
             }
             String getDisposalMethod(int disposalMethod) {
@@ -167,7 +167,7 @@ Debug.println("unsupported input: " + input);
         };
     }
 
-    /* */
+    @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
         ImageTypeSpecifier specifier = null;
         List<ImageTypeSpecifier> l = new ArrayList<>();

@@ -31,6 +31,7 @@ import java.io.Serializable;
 public abstract class BasicBufferedImageOp extends AbstractBufferedImageOp implements Serializable {
 
     /** */
+    @Override
     public BufferedImage filter(BufferedImage src, BufferedImage dst) {
         int width = src.getWidth();
         int height = src.getHeight();
@@ -49,6 +50,7 @@ public abstract class BasicBufferedImageOp extends AbstractBufferedImageOp imple
     /**
      * @param destCM when null, used src color model
      */
+    @Override
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
         Rectangle2D destBounds = getBounds2D(src);
         if (destCM != null) {
@@ -59,6 +61,7 @@ public abstract class BasicBufferedImageOp extends AbstractBufferedImageOp imple
     }
 
     /** */
+    @Override
     public abstract Rectangle2D getBounds2D(BufferedImage src);
 
     /**

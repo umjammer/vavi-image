@@ -46,7 +46,7 @@ public class NeuralNetQuantizeOp implements BufferedImageOp {
         this.colors = colors;
     }
 
-    /* */
+    @Override
     public BufferedImage filter(BufferedImage src, BufferedImage dest) {
         try {
             NeuralNetQuantizer quantizer = new NeuralNetQuantizer(src, src.getWidth(), src.getHeight(), colors);
@@ -70,12 +70,12 @@ public class NeuralNetQuantizeOp implements BufferedImageOp {
         }
     }
 
-    /* */
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return src.getRaster().getBounds();
     }
 
-    /* */
+    @Override
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
 
         if (destCM == null) {
@@ -88,7 +88,7 @@ public class NeuralNetQuantizeOp implements BufferedImageOp {
         return new BufferedImage(destCM, destCM.createCompatibleWritableRaster(width, height), destCM.isAlphaPremultiplied(), null);
     }
 
-    /* */
+    @Override
     public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
         if (dstPt == null) {
             dstPt = new Point2D.Float();
@@ -97,7 +97,7 @@ public class NeuralNetQuantizeOp implements BufferedImageOp {
         return dstPt;
     }
 
-    /* */
+    @Override
     public RenderingHints getRenderingHints() {
         return null;
     }

@@ -23,12 +23,11 @@ import vavi.awt.image.am88.ArtMasterImageSource;
  */
 public class x_art88 extends ContentHandler {
 
+    @Override
     public Object getContent(URLConnection connection) throws IOException {
         InputStream in = connection.getInputStream();
         return new ArtMasterImageSource(in);
     }
-
-//    public x_art88() {}
 }
 
 /* */

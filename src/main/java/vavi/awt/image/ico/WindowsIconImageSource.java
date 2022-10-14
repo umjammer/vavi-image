@@ -47,7 +47,7 @@ public class WindowsIconImageSource implements ImageProducer {
     /** @see ImageConsumer */
     private ImageConsumer ic;
 
-    /** @see ImageProducer */
+    @Override
     public synchronized void addConsumer(ImageConsumer ic) {
         if (bitmap != null) {
             bitmap.addConsumer(ic);
@@ -71,7 +71,7 @@ public class WindowsIconImageSource implements ImageProducer {
         }
     }
 
-    /** @see ImageProducer */
+    @Override
     public void startProduction(ImageConsumer ic) {
         if (bitmap != null) {
             bitmap.addConsumer(ic);
@@ -80,7 +80,7 @@ public class WindowsIconImageSource implements ImageProducer {
         }
     }
 
-    /** @see ImageProducer */
+    @Override
     public synchronized boolean isConsumer(ImageConsumer ic) {
         if (bitmap != null) {
             return bitmap.isConsumer(ic);
@@ -89,7 +89,7 @@ public class WindowsIconImageSource implements ImageProducer {
         }
     }
 
-    /** @see ImageProducer */
+    @Override
     public synchronized void removeConsumer(ImageConsumer ic) {
         if (bitmap != null) {
             bitmap.removeConsumer(ic);
@@ -100,7 +100,7 @@ public class WindowsIconImageSource implements ImageProducer {
         }
     }
 
-    /** @see ImageProducer */
+    @Override
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 

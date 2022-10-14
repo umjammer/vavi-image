@@ -76,12 +76,13 @@ public class WindowsIconImageReaderSpi extends ImageReaderSpi {
               ExtraImageMetadataFormatClassNames);
     }
 
-    /* */
+    @Override
     public String getDescription(Locale locale) {
         return "Windows Icon Image";
     }
 
     /* TODO InputStream */
+    @Override
     public boolean canDecodeInput(Object obj) throws IOException {
 
         if (obj instanceof ImageInputStream) {
@@ -109,7 +110,7 @@ Debug.println(obj);
         }
     }
 
-    /* */
+    @Override
     public ImageReader createReaderInstance(Object obj) {
         return new WindowsIconImageReader(this);
     }

@@ -191,7 +191,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
         }
     }
 
-    /** */
+    @Override
     protected int[] filterPixels(int width, int height, int[] inPixels) {
         int[] outPixels = new int[width * height];
 
@@ -200,7 +200,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
         return outPixels;
     }
 
-    /** */
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return new Rectangle(0, 0, src.getWidth(), src.getHeight());
     }

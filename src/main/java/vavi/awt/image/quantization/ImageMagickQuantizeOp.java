@@ -33,7 +33,7 @@ public class ImageMagickQuantizeOp extends BasicBufferedImageOp {
         this.colors = colors;
     }
 
-    /** */
+    @Override
     protected int[] filterPixels(int width, int height, int[] inPixels) {
         int[][] pixels2D = new int[width][height];
         for (int y = 0; y < height; y++) {
@@ -54,7 +54,7 @@ public class ImageMagickQuantizeOp extends BasicBufferedImageOp {
         return outPixels;
     }
 
-    /** */
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return new Rectangle(0, 0, src.getWidth(), src.getHeight());
     }

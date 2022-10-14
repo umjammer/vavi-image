@@ -32,7 +32,7 @@ public class ArtMasterImageSource implements ImageProducer {
     /** */
     private ImageConsumer ic;
 
-    /** @see ImageProducer */
+    @Override
     public synchronized void addConsumer(ImageConsumer ic) {
         this.ic = ic;
         if (this.ic != null) {
@@ -41,23 +41,23 @@ public class ArtMasterImageSource implements ImageProducer {
         this.ic = null;
     }
 
-    /** @see ImageProducer */
+    @Override
     public void startProduction(ImageConsumer ic) {
         addConsumer(ic);
     }
 
-    /** @see ImageProducer */
+    @Override
     public synchronized boolean isConsumer(ImageConsumer ic) {
         return ic == this.ic;
     }
 
-    /** @see ImageProducer */
+    @Override
     public synchronized void removeConsumer(ImageConsumer ic) {
         if (this.ic == ic)
             this.ic = null;
     }
 
-    /** @see ImageProducer */
+    @Override
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 

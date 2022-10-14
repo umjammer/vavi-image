@@ -36,6 +36,7 @@ public abstract class AbstractBufferedImageOp implements BufferedImageOp, Clonea
     /**
      * @return same size as src
      */
+    @Override
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel dstCM) {
         if (dstCM == null) {
             dstCM = src.getColorModel();
@@ -44,11 +45,13 @@ public abstract class AbstractBufferedImageOp implements BufferedImageOp, Clonea
     }
 
     /** @return just src bounds */
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return new Rectangle(0, 0, src.getWidth(), src.getHeight());
     }
 
     /** @return no conversion */
+    @Override
     public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
         if (dstPt == null) {
             dstPt = new Point2D.Double();
@@ -58,6 +61,7 @@ public abstract class AbstractBufferedImageOp implements BufferedImageOp, Clonea
     }
 
     /** @return null */
+    @Override
     public RenderingHints getRenderingHints() {
         return null;
     }
@@ -91,6 +95,7 @@ public abstract class AbstractBufferedImageOp implements BufferedImageOp, Clonea
     }
 
     /* TODO hide CloneNotSupportedException */
+    @Override
     public Object clone() {
         try {
             return super.clone();
