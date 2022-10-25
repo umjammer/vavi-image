@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
@@ -58,9 +59,17 @@ class ArtMasterImageReaderTest {
     }
 
     @Test
+    void test1() throws Exception {
+        URL url = ArtMasterImageReaderTest.class.getResource("/test.am88");
+        Image image = ImageIO.read(url);
+        assertNotNull(image);
+    }
+
+    @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test0() throws Exception {
         main(new String[] { "src/test/resources/test.am88" });
+        while (true) Thread.yield();
     }
 
     //----

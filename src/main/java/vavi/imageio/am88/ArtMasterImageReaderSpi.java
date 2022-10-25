@@ -26,8 +26,8 @@ import vavi.util.Debug;
  */
 public class ArtMasterImageReaderSpi extends ImageReaderSpi {
 
-    private static final String VendorName = "http://www.vavisoft.com";
-    private static final String Version = "0.00";
+    private static final String VendorName = "http://www.vavi.com";
+    private static final String Version = "1.0.10";
     private static final String ReaderClassName =
         "vavi.imageio.am88.ArtMasterImageReader";
     private static final String[] Names = {
