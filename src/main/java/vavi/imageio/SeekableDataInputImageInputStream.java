@@ -4,7 +4,7 @@
  * Programmed by Naohide Sano
  */
 
-package vavi.imageio.mag;
+package vavi.imageio;
 
 import java.io.EOFException;
 import java.io.IOException;

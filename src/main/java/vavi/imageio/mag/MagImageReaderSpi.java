@@ -22,7 +22,7 @@ import vavi.util.Debug;
  * MagImageReaderSpi.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 0.00 021116 nsano initial version <br>
+ * @version 0.00 221025 nsano initial version <br>
  */
 public class MagImageReaderSpi extends ImageReaderSpi {
 
@@ -40,7 +40,7 @@ public class MagImageReaderSpi extends ImageReaderSpi {
         "image/x-mag"
     };
     static final String[] WriterSpiNames = {
-        /*"vavi.imageio.ico.MagMasterWriterSpi"*/
+        /*"vavi.imageio.mag.MagMasterWriterSpi"*/
     };
     private static final boolean SupportsStandardStreamMetadataFormat = false;
     private static final String NativeStreamMetadataFormatName = null;

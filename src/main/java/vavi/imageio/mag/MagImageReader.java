@@ -10,9 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteOrder;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -27,11 +24,7 @@ import javax.imageio.stream.ImageInputStream;
 
 import vavi.awt.image.am88.ArtMasterImage;
 import vavi.awt.image.mag.Mag;
-import vavi.imageio.ImageConverter;
-import vavi.imageio.WrappedImageInputStream;
-import vavi.io.LittleEndianSeekableDataInputStream;
-import vavi.io.SeekableDataInput;
-import vavi.io.SeekableDataInputStream;
+import vavi.imageio.SeekableDataInputImageInputStream;
 import vavi.util.Debug;
 
 
@@ -39,7 +32,7 @@ import vavi.util.Debug;
  * MagImageReader.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 0.00 021116 nsano initial version <br>
+ * @version 0.00 221025 nsano initial version <br>
  */
 public class MagImageReader extends ImageReader {
 
@@ -61,12 +54,12 @@ public class MagImageReader extends ImageReader {
 
     @Override
     public int getWidth(int imageIndex) throws IIOException {
-        return ArtMasterImage.W;
+        return image.getWidth();
     }
 
     @Override
     public int getHeight(int imageIndex) throws IIOException {
-        return ArtMasterImage.H;
+        return image.getHeight();
     }
 
     @Override

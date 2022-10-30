@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+import vavi.io.LittleEndianSeekableDataInputStream;
 import vavi.io.SeekableDataInput;
+import vavi.io.SeekableDataInputStream;
 import vavi.util.Debug;
 
 
@@ -31,10 +33,12 @@ public class Mag {
         return 0xff << 24 | g << 16 | r << 8 | b;
     }
 
-    /** */
-    public static BufferedImage load(SeekableDataInput<?> dataFile) throws IOException {
+    /**
+     * @param sdi little endian
+     */
+    public static BufferedImage load(SeekableDataInput<?> sdi) throws IOException {
         byte[] maki02 = new byte[8];
-        dataFile.readFully(maki02);
+        sdi.readFully(maki02);
         if (!Arrays.equals(maki02, "MAKI02  ".getBytes())) {
             // not MAG image
             throw new IllegalArgumentException(" is Not MAG Format.");
@@ -42,12 +46,12 @@ public class Mag {
 
         // skip until the header
         int headerOffset = 30;
-        dataFile.position(headerOffset);
-        while (0x1A != dataFile.readByte()) ++headerOffset;
+        sdi.position(headerOffset);
+        while (0x1A != sdi.readByte()) ++headerOffset;
 
         headerOffset++;
 Debug.println(Level.FINE, "headerOffset: " + headerOffset);
-        dataFile.position(headerOffset);
+        sdi.position(headerOffset);
 
         class mag_info_t {
             // heading 32byte is fixed order.
@@ -110,19 +114,19 @@ Debug.println(Level.FINE, "headerOffset: " + headerOffset);
 
         mag_info_t mag = new mag_info_t();
 
-        mag.top = dataFile.readUnsignedByte();
-        mag.machine = dataFile.readUnsignedByte();
-        mag.flags = dataFile.readUnsignedByte();
-        mag.mode = dataFile.readUnsignedByte();
-        mag.sx = dataFile.readUnsignedShort();
-        mag.sy = dataFile.readUnsignedShort();
-        mag.ex = dataFile.readUnsignedShort();
-        mag.ey = dataFile.readUnsignedShort();
-        mag.flagAOffset = dataFile.readInt();
-        mag.flagBOffset = dataFile.readInt();
-        mag.flagBSize = dataFile.readInt();
-        mag.pixelOffset = dataFile.readInt();
-        mag.pixelSize = dataFile.readInt();
+        mag.top = sdi.readUnsignedByte();
+        mag.machine = sdi.readUnsignedByte();
+        mag.flags = sdi.readUnsignedByte();
+        mag.mode = sdi.readUnsignedByte();
+        mag.sx = sdi.readUnsignedShort();
+        mag.sy = sdi.readUnsignedShort();
+        mag.ex = sdi.readUnsignedShort();
+        mag.ey = sdi.readUnsignedShort();
+        mag.flagAOffset = sdi.readInt();
+        mag.flagBOffset = sdi.readInt();
+        mag.flagBSize = sdi.readInt();
+        mag.pixelOffset = sdi.readInt();
+        mag.pixelSize = sdi.readInt();
         mag.init();
 Debug.println(Level.FINE, mag);
 
@@ -132,25 +136,25 @@ Debug.println(Level.FINE, mag);
         // color palette extraction buffer
         // (r0,g0,b0),(r1,g1,b1),...
         byte[] palette = new byte[mag.colors * 3];
-        dataFile.readFully(palette, 0, mag.colors * 3);
+        sdi.readFully(palette, 0, mag.colors * 3);
 
         byte[] flagABuf = new byte[mag.flagASize];
-        dataFile.position(headerOffset + mag.flagAOffset);
-        dataFile.readFully(flagABuf, 0, mag.flagASize);
+        sdi.position(headerOffset + mag.flagAOffset);
+        sdi.readFully(flagABuf, 0, mag.flagASize);
 
         byte[] flagBBuf = new byte[mag.flagBSize];
-        dataFile.position(headerOffset + mag.flagBOffset);
-        dataFile.readFully(flagBBuf, 0, mag.flagBSize);
+        sdi.position(headerOffset + mag.flagBOffset);
+        sdi.readFully(flagBBuf, 0, mag.flagBSize);
 
         byte[] flagBuf = new byte[mag.flagSize];
 
         final int pixelBufSize = 4096;
         final int halfBufSize = pixelBufSize >> 1;
         byte[] pixel = new byte[pixelBufSize];
-        dataFile.position(headerOffset + mag.pixelOffset);
+        sdi.position(headerOffset + mag.pixelOffset);
 
         int src = 0; // (headerOffset + mag.pixelOffset) % (pixelBufSize);
-        dataFile.readFully(pixel, src, pixelBufSize - src);
+        sdi.readFully(pixel, src, pixelBufSize - src);
 
         int flagAPos = 0;
         int flagBPos = 0;
@@ -219,7 +223,7 @@ Debug.printf(Level.FINE, "width=%d:height=%d", mag.width, mag.height);
 
                 if (v == 0) {
                     if (src == pixelBufSize) {
-                        dataFile.readFully(pixel, 0, pixelBufSize);
+                        sdi.readFully(pixel, 0, pixelBufSize);
                         src = 0;
                     }
                     // if 0, read one pixel (2 byte)
