@@ -4,3 +4,4 @@ vavi.imageio.bmp.WindowsBitmapImageReaderSpi
 vavi.imageio.ico.WindowsIconImageReaderSpi
 vavi.imageio.am88.ArtMasterImageReaderSpi
 vavi.imageio.mag.MagImageReaderSpi
+vavi.imageio.zim.ZimImageReaderSpi

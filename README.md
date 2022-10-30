@@ -12,6 +12,7 @@
 
   * [artmaster 88](http://fileformats.archiveteam.org/wiki/ArtMaster88) (old school japanese pc-8801,9801 image format)
   * [mag](https://ja.wikipedia.org/wiki/MAG%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88) (maki-chan graphic loader: old school japanese pc-8801,9801 image format)
+  * [zim](https://ja.wikipedia.org/wiki/%E3%83%84%E3%82%A1%E3%82%A4%E3%83%88#Z's_STAFF) (z's staff kid: old school japanese 9801 image format)
   * [windows bitmap](https://www.google.co.jp/books/edition/Windows3_1%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9/YEYsAgAACAAJ?hl=ja)
   * gif ([non lzw](https://web.archive.org/web/20161106215528/http://homepage1.nifty.com/uchi/software.htm))
   * windows icon
