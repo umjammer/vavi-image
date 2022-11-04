@@ -38,19 +38,7 @@
 
 ## Installation
 
- * maven repo.
-```xml
-    <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/umjammer/*</url>
-    </repository>
-
-    <dependency>
-      <groupId>vavi</groupId>
-      <artifactId>vavi-image</artifactId>
-      <version>1.0.9</version>
-    </dependency>
-```
+ * maven: https://jitpack.io/#umjammer/vavi-image
  * if you want to use ffmpeg resizing
    * [pom.xml](https://github.com/umjammer/vavi-image/wiki/Install-ffmpeg-native-library)
    * exec jvm w/ `java.library.path` system property e.g `-Djava.library.path=/target/test-classes`
@@ -68,6 +56,10 @@
 
  * Mac Open JDK's JNI library extension is `.dylib`
  * `libsescale` has MMX bug, this causes segmentation fault when resizing image.
+
+## References
+
+ * https://sourceforge.net/projects/recoil/
 
 ## License
 
