@@ -8,8 +8,10 @@ package vavi.awt.image.ico;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
 
 import vavi.io.LittleEndianDataInputStream;
+import vavi.util.Debug;
 import vavi.util.win32.Chunk;
 import vavi.util.win32.RIFF;
 
@@ -33,11 +35,6 @@ public class ACON extends RIFF {
     /** Gets extention. */
     public static String getExtention() {
         return "ani";
-    }
-
-    /** for debug */
-    protected void printData() {
-        System.err.println("---- data ----");
     }
 
     /** */
@@ -87,30 +84,23 @@ public class ACON extends RIFF {
 
     /** */
     public class anih extends Chunk {
+
         /** */
         int size;
-
         /** */
         int frames;
-
         /** */
         int steps;
-
         /** */
         int x;
-
         /** */
         int y;
-
         /** */
         int bits;
-
         /** */
         int plains;
-
         /** */
         int jifrate;
-
         /** */
         int flags;
 
@@ -128,23 +118,23 @@ public class ACON extends RIFF {
             plains = ledis.readInt();
             jifrate = ledis.readInt();
             flags = ledis.readInt();
-            printData();
+Debug.println(Level.FINE, this);
             icons = new WindowsIcon[frames];
             count = 0;
 
             header = this;
         }
 
-        protected void printData() {
-            System.err.println("size: " + size);
-            System.err.println("frames: " + frames);
-            System.err.println("steps: " + steps);
-            System.err.println("x: " + x);
-            System.err.println("y: " + y);
-            System.err.println("bits: " + bits);
-            System.err.println("plains: " + plains);
-            System.err.println("jifrate: " + jifrate);
-            System.err.println("flags: " + flags);
+        @Override public String toString() {
+            return "size: " + size
+                    + "frames: " + frames
+                    + "steps: " + steps
+                    + "x: " + x
+                    + "y: " + y
+                    + "bits: " + bits
+                    + "plains: " + plains
+                    + "jifrate: " + jifrate
+                    + "flags: " + flags;
         }
     }
 

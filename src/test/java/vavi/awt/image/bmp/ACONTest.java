@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 
 import vavi.awt.image.ico.ACON;
+import vavi.util.Debug;
 
 
 /**
@@ -29,7 +30,7 @@ class ACONTest {
     void test() throws Exception {
         InputStream is = new BufferedInputStream(ACON.class.getResourceAsStream("/test.ico"));
         ACON ani = ACON.readFrom(is, ACON.class);
-System.err.println("ACON: " + ani);
+Debug.println("ACON: " + ani);
     }
 
     // ----
@@ -38,7 +39,7 @@ System.err.println("ACON: " + ani);
     public static void main(String[] args) throws Exception {
         InputStream is = new BufferedInputStream(Files.newInputStream(Paths.get(args[0])));
         ACON ani = ACON.readFrom(is, ACON.class);
-System.err.println("ACON: " + ani);
+Debug.println("ACON: " + ani);
     }
 }
 
