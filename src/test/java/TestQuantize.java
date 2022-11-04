@@ -17,7 +17,7 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
-import vavi.awt.image.quantize.ImageMagikQuantizer;
+import vavi.awt.image.quantization.ImageMagickQuantizer;
 import vavi.imageio.ImageConverter;
 
 
@@ -36,6 +36,7 @@ import vavi.imageio.ImageConverter;
  * @author <a href="http://www.gurge.com/amd/">Adam Doppelt</a>
  */
 public class TestQuantize {
+
     /**
      * Snag the pixels from an image.
      */
@@ -46,7 +47,7 @@ public class TestQuantize {
         PixelGrabber grabber = new PixelGrabber(image, 0, 0, w, h, pix, 0, w);
 
         try {
-            if (grabber.grabPixels() != true) {
+            if (!grabber.grabPixels()) {
                 throw new IOException("Grabber returned false: " +
                                       grabber.status());
             }
@@ -54,7 +55,7 @@ public class TestQuantize {
             e.printStackTrace();
         }
 
-        int pixels[][] = new int[w][h];
+        int[][] pixels = new int[w][h];
         for (int x = w; x-- > 0; ) {
             for (int y = h; y-- > 0; ) {
                 pixels[x][y] = pix[y * w + x];
@@ -64,9 +65,12 @@ public class TestQuantize {
         return pixels;
     }
 
-    public static void main(String args[]) throws IOException {
+    /**
+     * @param args 0: jpeg
+     */
+    public static void main(String[] args) throws IOException {
         ImageConverter converter = ImageConverter.getInstance();
-        ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ちょっと適当か？
+        ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // sloppy?
         float quality = 0.75f;
 
         ImageFrame originalFrame = new ImageFrame();
@@ -80,13 +84,13 @@ public class TestQuantize {
         for (int i = 1; i < args.length; ++i) {
             x += 20;
             y += 20;
-            int pixels[][] = getPixels(originalFrame.getImage());
+            int[][] pixels = getPixels(originalFrame.getImage());
             long tm = System.currentTimeMillis();
 
             // quant
-            int palette[] = ImageMagikQuantizer.quantizeImage(pixels, Integer.parseInt(args[i]));
+            int[] palette = ImageMagickQuantizer.quantizeImage(pixels, Integer.parseInt(args[i]));
             tm = System.currentTimeMillis() - tm;
-System.out.println("reduced to " + args[i] + " in " + tm + "ms using ImageMagikQuantizer direct");
+System.out.println("reduced to " + args[i] + " in " + tm + "ms using ImageMagickQuantizer direct");
             ImageFrame filteredFrame = new ImageFrame();
             filteredFrame.setImage(palette, pixels);
 
@@ -95,7 +99,7 @@ System.out.println("reduced to " + args[i] + " in " + tm + "ms using ImageMagikQ
 
             //
             converter.setColorModelType(BufferedImage.TYPE_3BYTE_BGR);
-            Image image = converter.toBufferedImage(filteredFrame.getImage());
+            BufferedImage image = converter.toBufferedImage(filteredFrame.getImage());
 
             //
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -105,7 +109,7 @@ System.out.println("reduced to " + args[i] + " in " + tm + "ms using ImageMagikQ
             ImageWriteParam iwp = iw.getDefaultWriteParam();
             iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
             iwp.setCompressionQuality(quality);
-            iw.write(null, new IIOImage((BufferedImage) image, null, null), iwp);
+            iw.write(null, new IIOImage(image, null, null), iwp);
 System.out.println("size: " + baos.size());
         }
 

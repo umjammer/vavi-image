@@ -34,35 +34,34 @@ import vavi.util.Debug;
  *          0.01 021116 nsano refine <br>
  */
 public class WindowsBitmapImageReader extends ImageReader {
+
     /** */
-    private WindowsBitmap windowsBitmap;
-    /** */
-    private IIOMetadata metadata;
+    private BufferedImage image;
 
     /** */
     public WindowsBitmapImageReader(ImageReaderSpi originatingProvider) {
         super(originatingProvider);
     }
 
-    /* @see ImageReader */
+    @Override
     public int getNumImages(boolean allowSearch) throws IIOException {
         return 1;
     }
 
-    /* @see ImageReader */
+    @Override
     public int getWidth(int imageIndex) throws IIOException {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
-        return windowsBitmap.getWidth();
+        return image.getWidth();
     }
 
-    /* @see ImageReader */
+    @Override
     public int getHeight(int imageIndex) throws IIOException {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
-        return windowsBitmap.getHeight();
+        return image.getHeight();
     }
 
     /** */
@@ -105,7 +104,7 @@ public class WindowsBitmapImageReader extends ImageReader {
             break;
         }
 
-        BufferedImage image = null;
+        BufferedImage image;
         if (bits == 24) {
             image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
 //Debug.println(image.getType() + ", " + image.getColorModel());
@@ -123,7 +122,7 @@ Debug.println(image.getType() + ", " + image.getColorModel());
         return image;
     }
 
-    /* @see ImageReader */
+    @Override
     public BufferedImage read(int imageIndex, ImageReadParam param)
         throws IIOException {
 
@@ -142,38 +141,34 @@ Debug.println(input);
         }
 
         try {
-            return readImage(is);
+            image = readImage(is);
+            return image;
         } catch (IOException e) {
             throw new IIOException(e.getMessage(), e);
         }
     }
 
-    /* @see ImageReader */
+    @Override
     public IIOMetadata getStreamMetadata() throws IIOException {
-        return metadata;
+        return null;
     }
 
-    /* @see ImageReader */
+    @Override
     public IIOMetadata getImageMetadata(int imageIndex) throws IIOException {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
 
-        return metadata;
+        return null;
     }
 
-    /** */
-//    private IIOMetadata readMetadata() throws IIOException {
-//        return metadata;
-//    }
-
-    /* */
+    @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
         }
 
-        ImageTypeSpecifier specifier = null;
+        ImageTypeSpecifier specifier = new ImageTypeSpecifier(image);
         java.util.List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);
         return l.iterator();

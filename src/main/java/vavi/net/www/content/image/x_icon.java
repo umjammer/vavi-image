@@ -23,13 +23,11 @@ import vavi.awt.image.ico.WindowsIconImageSource;
  */
 public class x_icon extends ContentHandler {
 
+    @Override
     public Object getContent(URLConnection connection) throws IOException {
-
         InputStream in = connection.getInputStream();
         return new WindowsIconImageSource(in);
     }
-
-//    public x_icon() {}
 }
 
 /* */

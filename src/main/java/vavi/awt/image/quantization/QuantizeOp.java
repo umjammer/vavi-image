@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package vavi.awt.image.quantize;
+package vavi.awt.image.quantization;
 
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
@@ -46,7 +46,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
     };
 
     /** */
-    private int sum = 3 + 5 + 7 + 1;
+    private final int sum = 3 + 5 + 7 + 1;
     /** */
     private boolean dither;
     /** */
@@ -191,7 +191,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
         }
     }
 
-    /** */
+    @Override
     protected int[] filterPixels(int width, int height, int[] inPixels) {
         int[] outPixels = new int[width * height];
 
@@ -200,7 +200,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
         return outPixels;
     }
 
-    /** */
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return new Rectangle(0, 0, src.getWidth(), src.getHeight());
     }
@@ -208,7 +208,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
     /**
      * Clamp a value to the range 0..255
      */
-    private static final int clamp(int c) {
+    private static int clamp(int c) {
         if (c < 0) {
             return 0;
         }

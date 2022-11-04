@@ -23,13 +23,11 @@ import vavi.awt.image.bmp.WindowsBitmapImageSource;
  */
 public class x_bmp extends ContentHandler {
 
+    @Override
     public Object getContent(URLConnection connection) throws IOException {
-//System.err.println("x_bmp::getContent: here");
         InputStream in = connection.getInputStream();
         return new WindowsBitmapImageSource(in);
     }
-
-//    public x_bmp() {}
 }
 
 /* */

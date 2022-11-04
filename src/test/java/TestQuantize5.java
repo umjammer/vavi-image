@@ -10,7 +10,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import vavi.awt.image.quantize.NeuralNetQuantizeOp;
+import vavi.awt.image.quantization.NeuralNetQuantizeOp;
 
 
 /**
@@ -21,8 +21,10 @@ import vavi.awt.image.quantize.NeuralNetQuantizeOp;
  */
 public class TestQuantize5 {
 
-    /** */
-    public static void main(String args[]) throws Exception {
+    /**
+     * @param args 0: gif, 1: colors
+     */
+    public static void main(String[] args) throws Exception {
 
         ImageFrame originalFrame = new ImageFrame();
         File file = new File(args[0]);

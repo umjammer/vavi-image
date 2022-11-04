@@ -120,13 +120,13 @@ extern "C" {
  * Signature: (Ljava/lang/Object;IILjava/lang/Object;II)V
  */
 JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInternal
-(JNIEnv *env, jobject obj, jintArray inBuffer, jint inType, jint inPixelSize, jint inWidth, jint inHeight, jobject outBuffer, jint outType, jint outPixelSize, jint outWidth, jint outHeight, jint hint) {
+(JNIEnv *env, jobject obj, jintArray inBuffer, jint inType, jint inPixelFormat, jint inPixelSize, jint inWidth, jint inHeight, jobject outBuffer, jint outType, jint outPixelFormat, jint outPixelSize, jint outWidth, jint outHeight, jint hint) {
 
 //fprintf(stderr, "here 0: %d, %d, %d, %d\n", (int) inType, (int) outType, (int) inPixelSize, (int) outPixelSize);
 //fflush(stderr);
     // 1. initialize
     uint8_t *inBuf __attribute__ ((aligned(16)));
-    if (inType == 0) {
+    if (inType == 0) { // TYPE_BYTE
         inBuf = (uint8_t *) (*env)->GetByteArrayElements(env, (jbyteArray) inBuffer, NULL); // TYPE_BYTE
     } else {
         inBuf = (uint8_t *) (*env)->GetIntArrayElements(env, (jintArray) inBuffer, NULL); // TYPE_INT
@@ -135,10 +135,26 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
     if (inPixelSize == 24) {
         inFormat = AV_PIX_FMT_RGB24;
     } else {
-        inFormat = AV_PIX_FMT_RGB32_1;
+        switch (inPixelFormat) {
+        case 10: // TYPE_BYTE_GRAY
+            inFormat = AV_PIX_FMT_GRAYF32;
+            break;
+        case 2: // TYPE_4BYTE_ABGR
+            inFormat = AV_PIX_FMT_BGR32_1;
+            break;
+        case 6: // TYPE_INT_ARGB
+            inFormat = AV_PIX_FMT_RGB32_1;
+            break;
+        default:
+            inFormat = AV_PIX_FMT_BGR32_1;
+            break;
+        }
     }
+//fprintf(stderr, "in format: %d\n", (int) inFormat);
+//fflush(stderr);
+
     uint8_t *outBuf __attribute__ ((aligned(16)));
-    if (outType == 0) {
+    if (outType == 0) { // TYPE_BYTE
         outBuf = (uint8_t *) (*env)->GetByteArrayElements(env, (jbyteArray) outBuffer, NULL); // TYPE_BYTE
     } else {
         outBuf = (uint8_t *) (*env)->GetIntArrayElements(env, (jintArray) outBuffer, NULL); // TYPE_INT
@@ -148,8 +164,23 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
     if (outPixelSize == 24) {
         outFormat = AV_PIX_FMT_BGR24; // TODO why ???
     } else {
-        outFormat = AV_PIX_FMT_RGB32_1;
+        switch (inPixelFormat) {
+        case 10: // TYPE_BYTE_GRAY
+            outFormat = AV_PIX_FMT_GRAYF32;
+            break;
+        case 2: // TYPE_4BYTE_ABGR
+            outFormat = AV_PIX_FMT_BGR32_1;
+            break;
+        case 6: // TYPE_INT_ARGB
+            outFormat = AV_PIX_FMT_RGB32_1;
+            break;
+        default:
+            outFormat = AV_PIX_FMT_BGR32_1;
+            break;
+        }
     }
+//fprintf(stderr, "out format: %d\n", (int) outFormat);
+//fflush(stderr);
 
     // 2. rescale
     struct SwsContext *swsContext = sws_getContext(inWidth, inHeight, inFormat, outWidth, outHeight, outFormat, hint | SWS_ACCURATE_RND, NULL, NULL, NULL);

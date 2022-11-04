@@ -75,16 +75,16 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
               ExtraImageMetadataFormatClassNames);
     }
 
-    /** @see javax.imageio.spi.IIOServiceProvider#getDescription(java.util.Locale) */
+    @Override
     public String getDescription(Locale locale) {
         return "Non LZW GIF Decoder";
     }
 
-    /** @see javax.imageio.spi.ImageReaderSpi#canDecodeInput(java.lang.Object) */
+    @Override
     public boolean canDecodeInput(Object source) throws IOException {
         if (source instanceof ImageInputStream) {
             ImageInputStream is = (ImageInputStream) source;
-            byte bytes[] = new byte[4];
+            byte[] bytes = new byte[4];
             try {
                 is.mark();
                 is.readFully(bytes);
@@ -103,7 +103,7 @@ Debug.println("unsupported input: " + source);
         }
     }
 
-    /** @see javax.imageio.spi.ImageReaderSpi#createReaderInstance(java.lang.Object) */
+    @Override
     public ImageReader createReaderInstance(Object extension) throws IOException {
         return new NonLzwGifImageReader(this);
     }

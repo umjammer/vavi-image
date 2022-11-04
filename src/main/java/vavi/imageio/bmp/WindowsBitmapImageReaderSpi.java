@@ -74,17 +74,18 @@ public class WindowsBitmapImageReaderSpi extends ImageReaderSpi {
               ExtraImageMetadataFormatClassNames);
     }
 
-    /* */
+    @Override
     public String getDescription(Locale locale) {
         return "Windows Bitmap Image";
     }
 
     /* TODO InputStream */
+    @Override
     public boolean canDecodeInput(Object obj)
         throws IOException {
         if (obj instanceof ImageInputStream) {
             ImageInputStream is = (ImageInputStream) obj;
-            byte bytes[] = new byte[2];
+            byte[] bytes = new byte[2];
             try {
                 is.mark();
                 is.readFully(bytes);
@@ -98,7 +99,7 @@ public class WindowsBitmapImageReaderSpi extends ImageReaderSpi {
         }
     }
 
-    /* */
+    @Override
     public ImageReader createReaderInstance(Object obj) {
         return new WindowsBitmapImageReader(this);
     }

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-
+import java.util.logging.Level;
 import javax.imageio.IIOException;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -47,18 +47,18 @@ public class WindowsIconImageReader extends ImageReader {
         super(originatingProvider);
     }
 
-    /* @see ImageReader */
+    @Override
     public int getNumImages(boolean allowSearch) throws IIOException {
         return imageSource.getDeviceCount();
     }
 
-    /* @see ImageReader */
+    @Override
     public int getWidth(int imageIndex) throws IIOException {
         imageSource.changeDevice(imageIndex);
         return imageSource.getWindowsBitmap().getWidth();
     }
 
-    /* @see ImageReader */
+    @Override
     public int getHeight(int imageIndex) throws IIOException {
         imageSource.changeDevice(imageIndex);
         return imageSource.getWindowsBitmap().getHeight();
@@ -79,7 +79,7 @@ Debug.println(input);
         return new WindowsIconImageSource(is);
     }
 
-    /** @see ImageReader */
+    @Override
     public BufferedImage read(int imageIndex, ImageReadParam param)
         throws IIOException {
 
@@ -95,22 +95,22 @@ Debug.println(input);
         Toolkit t = Toolkit.getDefaultToolkit();
         Image image = t.createImage(imageSource);
 //Debug.println(w + ", " + h + ": " + image.getClass().getName() + "[" + imageIndex + "]");
-        return ImageConverter.getInstance().toBufferedImage(image);
+        return ImageConverter.getInstance().toBufferedImage(image); // TODO implement properly
     }
 
-    /* @see ImageReader */
+    @Override
     public IIOMetadata getStreamMetadata() throws IIOException {
         return metadata;
     }
 
-    /* @see ImageReader */
+    @Override
     public IIOMetadata getImageMetadata(int imageIndex) throws IIOException {
         return metadata;
     }
 
-    /* */
+    @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
-Debug.println("here");
+Debug.println(Level.FINE, "here");
         ImageTypeSpecifier specifier = null;
         java.util.List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);

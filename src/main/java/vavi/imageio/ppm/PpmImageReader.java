@@ -46,7 +46,7 @@ public class PpmImageReader extends ImageReader {
         metadata = null;
     }
 
-    /** @see ImageReader */
+    @Override
     public int getNumImages(boolean allowSearch) throws IIOException {
         return 1;
     }
@@ -58,21 +58,21 @@ public class PpmImageReader extends ImageReader {
         }
     }
 
-    /** @see ImageReader */
+    @Override
     public int getWidth(int imageIndex) throws IIOException {
         checkIndex(imageIndex);
         readHeader();
         return ppm.getWidth();
     }
 
-    /** @see ImageReader */
+    @Override
     public int getHeight(int imageIndex) throws IIOException {
         checkIndex(imageIndex);
         readHeader();
         return ppm.getHeight();
     }
 
-    /** @see ImageReader */
+    @Override
     public BufferedImage read(int imageIndex, ImageReadParam param)
         throws IIOException {
 
@@ -80,8 +80,8 @@ public class PpmImageReader extends ImageReader {
 
         int sourceXSubsampling = 1;
         int sourceYSubsampling = 1;
-        int sourceBands[] = null;
-        int destinationBands[] = null;
+        int[] sourceBands = null;
+        int[] destinationBands = null;
         Point destinationOffset = new Point(0, 0);
         Rectangle sourceRegion =
             new Rectangle(0, 0, ppm.getWidth(), ppm.getHeight());
@@ -103,7 +103,7 @@ public class PpmImageReader extends ImageReader {
         ImageReader.checkReadParamBandSettings(param,
                                            inputBands,
                                            dst.getSampleModel().getNumBands());
-        int bandOffsets[] = new int[inputBands];
+        int[] bandOffsets = new int[inputBands];
         for (int i = 0; i < inputBands; i++)
             bandOffsets[i] = i;
 
@@ -129,8 +129,8 @@ public class PpmImageReader extends ImageReader {
                                                new Point(0, 0));
         }
 
-        byte rowBuf[] = rowDB.getData();
-        int pixel[] = rowRas.getPixel(0, 0, (int[])null);
+        byte[] rowBuf = rowDB.getData();
+        int[] pixel = rowRas.getPixel(0, 0, (int[])null);
         WritableRaster imRas = dst.getWritableTile(0, 0);
         int dstMinX = imRas.getMinX();
         int dstMaxX = (dstMinX + imRas.getWidth()) - 1;
@@ -158,7 +158,7 @@ public class PpmImageReader extends ImageReader {
 
         for (int srcY = 0; srcY < ppm.getHeight(); srcY++) {
             try {
-                ImageInputStream.class.cast(input).readFully(rowBuf);
+                ((ImageInputStream) input).readFully(rowBuf);
             } catch (IOException e) {
                 throw new IIOException("Error reading line " + srcY, e);
             }
@@ -199,12 +199,12 @@ public class PpmImageReader extends ImageReader {
         return dst;
     }
 
-    /** @see ImageReader */
+    @Override
     public IIOMetadata getStreamMetadata() throws IIOException {
         return null;
     }
 
-    /** @see ImageReader */
+    @Override
     public IIOMetadata getImageMetadata(int imageIndex) throws IIOException {
         checkIndex(imageIndex);
         readMetadata();
@@ -231,13 +231,13 @@ public class PpmImageReader extends ImageReader {
             if (ppm == null) {
                 ppm = new Ppm();
             }
-            ppm.readHeader(new WrappedImageInputStream(ImageInputStream.class.cast(input)));
+            ppm.readHeader(new WrappedImageInputStream((ImageInputStream) input));
         } catch (IOException e) {
             throw new IIOException("Error reading header", e);
         }
     }
 
-    /** */
+    @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
         checkIndex(imageIndex);
         readHeader();
@@ -252,7 +252,7 @@ public class PpmImageReader extends ImageReader {
             break;
         case Ppm.BINARY_PPM:
             ColorSpace rgb = ColorSpace.getInstance(1000);
-            int bandOffsets[] = new int[3];
+            int[] bandOffsets = new int[3];
             bandOffsets[0] = 0;
             bandOffsets[1] = 1;
             bandOffsets[2] = 2;

@@ -26,8 +26,8 @@ import vavi.util.Debug;
  */
 public class ArtMasterImageReaderSpi extends ImageReaderSpi {
 
-    private static final String VendorName = "http://www.vavisoft.com";
-    private static final String Version = "0.00";
+    private static final String VendorName = "http://www.vavi.com";
+    private static final String Version = "1.0.10";
     private static final String ReaderClassName =
         "vavi.imageio.am88.ArtMasterImageReader";
     private static final String[] Names = {
@@ -76,12 +76,13 @@ public class ArtMasterImageReaderSpi extends ImageReaderSpi {
               ExtraImageMetadataFormatClassNames);
     }
 
-    /* */
+    @Override
     public String getDescription(Locale locale) {
         return "Art Master 88 Image";
     }
 
     /* TODO InputStream */
+    @Override
     public boolean canDecodeInput(Object obj) throws IOException {
 
         final byte[] header = {
@@ -107,7 +108,7 @@ Debug.println(obj);
         }
     }
 
-    /* */
+    @Override
     public ImageReader createReaderInstance(Object obj) {
         return new ArtMasterImageReader(this);
     }

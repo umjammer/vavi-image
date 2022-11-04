@@ -11,6 +11,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
@@ -20,7 +23,10 @@ import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.util.Debug;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
@@ -38,7 +44,32 @@ class ArtMasterImageReaderTest {
 
     @Test
     void test() throws Exception {
+        ImageReader ir = null;
+        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("AM88");
+        while (irs.hasNext()) {
+            ImageReader tmpIr = irs.next();
+            if (tmpIr.getClass().getName().equals(ArtMasterImageReader.class.getName())) {
+                ir = tmpIr;
+                break;
+            }
+        }
+        ir.setInput(Files.newInputStream(Paths.get("src/test/resources/test.am88")));
+        Image image = ir.read(0);
+        assertNotNull(image);
+    }
+
+    @Test
+    void test1() throws Exception {
+        URL url = ArtMasterImageReaderTest.class.getResource("/test.am88");
+        Image image = ImageIO.read(url);
+        assertNotNull(image);
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
+    void test0() throws Exception {
         main(new String[] { "src/test/resources/test.am88" });
+        while (true) Thread.yield();
     }
 
     //----
@@ -57,8 +88,8 @@ Debug.println("found ImageReader: " + ir.getClass().getName());
                 break;
             }
         }
-        ir.setInput(new FileInputStream(args[0]));
-        final Image image = ir.read(0);
+        ir.setInput(Files.newInputStream(Paths.get(args[0])));
+        Image image = ir.read(0);
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

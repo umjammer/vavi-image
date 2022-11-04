@@ -1,7 +1,5 @@
 /*
- * Copyright (c) 2004  by Naohide Sano, All rights reserved.
- *
- * Programmed by Naohide Sano
+ * https://web.archive.org/web/20161106215528/http://homepage1.nifty.com/uchi/software.htm
  */
 
 package vavi.awt.image.gif;
@@ -28,7 +26,7 @@ public class NonLzwGifImageSource implements ImageProducer {
     /** @see ImageConsumer */
     private ImageConsumer ic;
 
-    /** @see ImageProducer */
+    @Override
     public synchronized void addConsumer(ImageConsumer ic) {
         this.ic = ic;
         if (this.ic != null) {
@@ -37,28 +35,28 @@ public class NonLzwGifImageSource implements ImageProducer {
         this.ic = null;
     }
 
-    /** @see ImageProducer */
+    @Override
     public void startProduction(ImageConsumer ic) {
         addConsumer(ic);
     }
 
-    /** @see ImageProducer */
+    @Override
     public synchronized boolean isConsumer(ImageConsumer ic) {
         return ic == this.ic;
     }
 
-    /** @see ImageProducer */
+    @Override
     public synchronized void removeConsumer(ImageConsumer ic) {
         if (this.ic == ic) {
             this.ic = null;
         }
     }
 
-    /** @see ImageProducer */
+    @Override
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 
-    /** ビットマップを作成します． */
+    /** Creates a bitmap. */
     public NonLzwGifImageSource(InputStream in) throws IOException {
         gifImage = GifImage.readFrom(in);
     }
@@ -68,7 +66,7 @@ public class NonLzwGifImageSource implements ImageProducer {
         return gifImage;
     }
 
-    /** ビットマップを作成します． */
+    /** Creates a bitmap. */
     private void loadPixel(int index) {
 
         ColorModel cm = gifImage.getColorModel(index);

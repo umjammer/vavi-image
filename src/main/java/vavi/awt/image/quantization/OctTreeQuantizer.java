@@ -2,7 +2,7 @@
  * Copyright (C) Jerry Huxtable 1998-2001. All rights reserved.
  */
 
-package vavi.awt.image.quantize;
+package vavi.awt.image.quantization;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -23,11 +23,11 @@ public class OctTreeQuantizer implements Quantizer {
     /**
      * An Octtree node.
      */
-    class OctTreeNode {
+    static class OctTreeNode {
         int children;
         int level;
         OctTreeNode parent;
-        OctTreeNode leaf[] = new OctTreeNode[8];
+        OctTreeNode[] leaf = new OctTreeNode[8];
         boolean isLeaf;
         int count;
         int    totalRed;
@@ -196,8 +196,7 @@ public class OctTreeQuantizer implements Quantizer {
         for (int level = MAX_LEVEL-1; level >= 0; level--) {
             List<OctTreeNode> v = colorList[level];
             if (v != null && v.size() > 0) {
-                for (int j = 0; j < v.size(); j++) {
-                    OctTreeNode node = v.get(j);
+                for (OctTreeNode node : v) {
                     if (node.children > 0) {
                         for (int i = 0; i < 8; i++) {
                             OctTreeNode child = node.leaf[i];
@@ -213,7 +212,7 @@ public class OctTreeQuantizer implements Quantizer {
                                 node.children--;
                                 colors--;
                                 nodes--;
-                                colorList[level+1].remove(child);
+                                colorList[level + 1].remove(child);
                             }
                         }
                         node.isLeaf = true;
@@ -241,8 +240,8 @@ public class OctTreeQuantizer implements Quantizer {
     public void buildColorTable(int[] inPixels, int[] table) {
         int count = inPixels.length;
         maximumColors = table.length;
-        for (int i = 0; i < count; i++) {
-            insertColor(inPixels[i]);
+        for (int inPixel : inPixels) {
+            insertColor(inPixel);
             if (colors > reduceColors) {
                 reduceTree(reduceColors);
             }

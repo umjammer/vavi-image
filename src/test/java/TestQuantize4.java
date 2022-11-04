@@ -15,7 +15,7 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
-import vavi.awt.image.quantize.NeuralNetQuantizeOp;
+import vavi.awt.image.quantization.NeuralNetQuantizeOp;
 
 
 /**
@@ -26,10 +26,12 @@ import vavi.awt.image.quantize.NeuralNetQuantizeOp;
  */
 public class TestQuantize4 {
 
-    /** */
-    public static void main(String args[]) throws Exception {
+    /**
+     * @param args 0: gif
+     */
+    public static void main(String[] args) throws Exception {
 
-        ImageWriter iw = ImageIO.getImageWritersByFormatName("GIF").next(); // ちょっと適当か？
+        ImageWriter iw = ImageIO.getImageWritersByFormatName("GIF").next(); // sloppy?
         float quality = 0.75f;
 
         ImageFrame originalFrame = new ImageFrame();

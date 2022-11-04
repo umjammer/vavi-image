@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class IIOUtilTest {
 
     @Test
-    public void test() {
+    public void testReplaceOrder() {
         String p1 = "com.sixlegs.png.iio.PngImageReaderSpi";
         String p2 = "com.sun.imageio.plugins.png.PNGImageReaderSpi";
         IIOUtil.setOrder(ImageReaderSpi.class, p1, p2);

@@ -71,7 +71,7 @@ public class GaussianBlurOp extends AbstractBufferedImageOp {
         return radius;
     }
 
-    /* */
+    @Override
     public BufferedImage filter(BufferedImage src, BufferedImage dst) {
         int width = src.getWidth();
         int height = src.getHeight();
@@ -168,7 +168,7 @@ public class GaussianBlurOp extends AbstractBufferedImageOp {
     /**
      * Clamp a value to the range 0..255
      */
-    private static final int clamp(int c) {
+    private static int clamp(int c) {
         if (c < 0) {
             return 0;
         }

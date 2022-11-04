@@ -19,6 +19,7 @@ import javax.imageio.stream.ImageOutputStream;
  * @version 0.00 070628 nsano initial version <br>
  */
 public class WrappedImageOutputStream extends OutputStream {
+
     /** */
     private ImageOutputStream os;
 
@@ -27,17 +28,17 @@ public class WrappedImageOutputStream extends OutputStream {
         this.os = os;
     }
 
-    /* */
+    @Override
     public void close() throws IOException {
         os.close();
     }
 
-    /* */
+    @Override
     public void flush() throws IOException {
         os.flush();
     }
 
-    /* */
+    @Override
     public void write(int b) throws IOException {
         os.write(b);
     }

@@ -31,7 +31,7 @@ public class WindowsBitmapImageSource implements ImageProducer {
     /** @see ImageConsumer */
     private ImageConsumer ic;
 
-    /* */
+    @Override
     public synchronized void addConsumer(ImageConsumer ic) {
         this.ic = ic;
         if (this.ic != null) {
@@ -40,24 +40,24 @@ public class WindowsBitmapImageSource implements ImageProducer {
         this.ic = null;
     }
 
-    /* */
+    @Override
     public void startProduction(ImageConsumer ic) {
         addConsumer(ic);
     }
 
-    /* */
+    @Override
     public synchronized boolean isConsumer(ImageConsumer ic) {
         return ic == this.ic;
     }
 
-    /* */
+    @Override
     public synchronized void removeConsumer(ImageConsumer ic) {
         if (this.ic == ic) {
             this.ic = null;
         }
     }
 
-    /* */
+    @Override
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 

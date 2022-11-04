@@ -12,6 +12,8 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -41,7 +43,7 @@ class WindowsBitmapImageSourceTest {
     /** */
     public static void main(final String[] args) throws IOException {
 System.err.println(args[0]);
-        Image image = Toolkit.getDefaultToolkit().createImage(new WindowsBitmapImageSource(new FileInputStream(args[0])));
+        Image image = Toolkit.getDefaultToolkit().createImage(new WindowsBitmapImageSource(Files.newInputStream(Paths.get(args[0]))));
 
         JFrame frame = new JFrame();
         frame.setSize(800, 600);

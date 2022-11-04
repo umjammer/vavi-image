@@ -1,19 +1,24 @@
 [![Release](https://jitpack.io/v/umjammer/vavi-image.svg)](https://jitpack.io/#umjammer/vavi-image)
+[![Java CI](https://github.com/umjammer/vavi-image/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/vavi-image/actions/workflows/maven.yml)
 [![CodeQL](https://github.com/umjammer/vavi-image/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/umjammer/vavi-image/actions/workflows/codeql-analysis.yml)
 [![GitHub Packages (only ffmpeg)](https://github.com/umjammer/vavi-image/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/umjammer/vavi-image/actions/workflows/maven-publish.yml)
+![Java](https://img.shields.io/badge/Java-8-b07219)
 
 # vavi-image
 
-Imaging goodies.
+🎨 Imaging the world!
 
 ## Formats
-  * artmaster 88 (old japanese pc pc-88,98 image format)
-  * windows bitmap
-  * gif (non lzw)
+
+  * [artmaster 88](http://fileformats.archiveteam.org/wiki/ArtMaster88) (old school japanese pc-8801,9801 image format)
+  * [mag](https://ja.wikipedia.org/wiki/MAG%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88) (maki-chan graphic loader: old school japanese pc-8801,9801 image format)
+  * [zim](https://ja.wikipedia.org/wiki/%E3%83%84%E3%82%A1%E3%82%A4%E3%83%88#Z's_STAFF) (z's staff kid: old school japanese 9801 image format)
+  * [windows bitmap](https://www.google.co.jp/books/edition/Windows3_1%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9/YEYsAgAACAAJ?hl=ja)
+  * gif ([non lzw](https://web.archive.org/web/20161106215528/http://homepage1.nifty.com/uchi/software.htm))
   * windows icon
   * ppm
 
-## Resizing Evaluation
+## Resizing
 
 |type|quality|speed|comment|
 |---|---|---|---|
@@ -23,60 +28,20 @@ Imaging goodies.
 |`G2dResample`|2|△|`Graphics2d#drawImage` with rendering hints (`VALUE_INTERPOLATION_NEAREST_NEIGHBOR`)| 
 |`AffineTransformOp`|2| |`TYPE_NEAREST_NEIGHBOR`|
 
-## Quantizing Evaluation
+## Quantization
 
-|type|quality|comment|
-|---|---|---|
-|`ImageMagick`|||
-|`NeuralNet`|👑|https://github.com/umjammer/vavi-image-sandbox/wiki/OctTree_vs_NeuralNet|
-|`OctTree`|||
+| type                                                                             |quality|comment|
+|----------------------------------------------------------------------------------|---|---|
+| [`ImageMagick`](src/main/java/vavi/awt/image/quantization/ImageMagikQuantizeOp.java) |||
+| `NeuralNet`                                                                      |👑|https://github.com/umjammer/vavi-image-sandbox/wiki/OctTree_vs_NeuralNet|
+| `OctTree`                                                                        |||
 
 ## Installation
 
- * maven repo.
-```xml
-    <repository>
-      <id>github</id>
-      <name>GitHub umjammer Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/umjammer/*</url>
-    </repository>
-
-    <dependency>
-      <groupId>vavi</groupId>
-      <artifactId>vavi-image</artifactId>
-      <version>1.0.9</version>
-    </dependency>
-```
- * if you want to use ffmpeg resizing, add below into your `pom.xml`
-   * exec jvm w/ `-Djava.library.path=/target/test-classes`
-```xml
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.10</version>
-        <executions>
-          <execution>
-            <id>copy</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>vavi</groupId>
-                  <artifactId>vavi-image-ffmpeg</artifactId>
-                  <version>1.0.9-SNAPSHOT</version>
-                  <type>dylib</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
-                  <destFileName>libFfmpegResampleOpWrapper.dylib</destFileName>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-```
+ * maven: https://jitpack.io/#umjammer/vavi-image
+ * if you want to use ffmpeg resizing
+   * [pom.xml](https://github.com/umjammer/vavi-image/wiki/Install-ffmpeg-native-library)
+   * exec jvm w/ `java.library.path` system property e.g `-Djava.library.path=/target/test-classes`
 
 ## TODO
 
@@ -84,11 +49,17 @@ Imaging goodies.
  * complete `ImageMagikQuantizer`
  * Lanczos3 filter using AWT API
  * `BufferedImageOp` ???
+ * https://github.com/iariro/N88BasicImage
+ * ffmpeg resize 4byte 32bit operation is wrong
 
 ## Tech Know
 
  * Mac Open JDK's JNI library extension is `.dylib`
  * `libsescale` has MMX bug, this causes segmentation fault when resizing image.
+
+## References
+
+ * https://sourceforge.net/projects/recoil/
 
 ## License
 
@@ -127,9 +98,9 @@ Public Domain
 
 ### Java Image Editor
 
-The downloadable source code on this page is released under the Apache License. Basically, this means that you are free to do whatever you like with this code, but it's not my fault if your satellite/nuclear power station/missile system fails as a result. Have fun!
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this code except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+| The downloadable source code on this page is released under the Apache License. Basically, this means that you are free to do whatever you like with this code, but it's not my fault if your satellite/nuclear power station/missile system fails as a result. Have fun!
+|
+| Licensed under the Apache License, Version 2.0 (the "License"); you may not use this code except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 ### SkyView
 

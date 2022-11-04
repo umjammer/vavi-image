@@ -15,7 +15,7 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
-import vavi.awt.image.quantize.QuantizeOp;
+import vavi.awt.image.quantization.QuantizeOp;
 
 
 /**
@@ -26,8 +26,10 @@ import vavi.awt.image.quantize.QuantizeOp;
  */
 public class TestQuantize2 {
 
-    /** */
-    public static void main(String args[]) throws Exception {
+    /**
+     * @param args 0: jpeg
+     */
+    public static void main(String[] args) throws Exception {
 
         ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ちょっと適当か？
         float quality = 0.75f;

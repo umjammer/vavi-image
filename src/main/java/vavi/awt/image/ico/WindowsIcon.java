@@ -151,7 +151,7 @@ top:    for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y 軸を逆転
         /**
          * ストリームからファイルヘッダのインスタンスを作成します．
          */
-        static final Header readFrom(LittleEndianDataInputStream lin) throws IOException {
+        static Header readFrom(LittleEndianDataInputStream lin) throws IOException {
 
             Header h = new Header();
 

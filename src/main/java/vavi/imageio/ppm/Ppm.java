@@ -49,12 +49,12 @@ public class Ppm {
         if (gotHeader)
             return;
 
-        byte signature[] = new byte[2];
+        byte[] signature = new byte[2];
         is.read(signature, 0, 2);
 
         if (signature[0] == 80) {
             imageType = signature[1] - 48;
-            if (imageType < BINARY_PBM && imageType > BINARY_PPM) {
+            if (imageType < BINARY_PBM || imageType > BINARY_PPM) {
                 throw new IOException("Bad PBM/PGM/PPM signature!");
             }
         } else {

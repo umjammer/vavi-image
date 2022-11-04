@@ -1,7 +1,5 @@
 /*
- * Copyright (c) 2004 by Naohide Sano, All rights reserved.
- *
- * Programmed by Naohide Sano
+ * https://web.archive.org/web/20161106215528/http://homepage1.nifty.com/uchi/software.htm
  */
 
 package vavi.awt.image.gif;
@@ -10,7 +8,7 @@ import vavi.util.Debug;
 
 
 /**
- * 非 LZW 理論 GIF デコーダ。
+ * Non LZW theory GIF decoder.
  *
  * @author DJ.Uchi [H.Uchida]
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
@@ -19,10 +17,9 @@ import vavi.util.Debug;
  */
 public class NonLzwGifDecoder {
     /**
-     * DIB データ書き込み用構造体
-     * DIB に画像データを書き込む際に必要な情報をまとめた物。
+     * DIB structure
      */
-    class RgbContext {
+    static class RgbContext {
         /** 展開データ書き込み位置(同一ライン上でのオフセット値) */
         int xPoint;
         /** 展開データ書き込みオフセット(ライン数 * アラインメント) */
@@ -47,7 +44,7 @@ public class NonLzwGifDecoder {
      * GIF データ解析用構造体
      * GIF の符号化コード取得に必要な情報をまとめた物。
      */
-    class GifContext {
+    static class GifContext {
         /** RgbDecodeStatus 構造体参照用ポインタ */
         RgbContext rgb;
         /** コードサイズ(CS) */

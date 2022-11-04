@@ -21,11 +21,12 @@ import javax.swing.JFrame;
  * @author <a href="http://www.gurge.com/amd/">Adam Doppelt</a>
  */
 public class ImageFrame extends JFrame {
-    int left = -1;
-    int top;
-    Image image;
 
-    ImageFrame() {
+    private int left = -1;
+    private int top;
+    private Image image;
+
+    public ImageFrame() {
         setLayout(null);
         setSize(100, 100);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -74,10 +75,10 @@ public class ImageFrame extends JFrame {
     /**
      * Set the image from an indexed color array.
      */
-    public void setImage(int palette[], int pixels[][]) {
+    public void setImage(int[] palette, int[][] pixels) {
         int w = pixels.length;
         int h = pixels[0].length;
-        int pix[] = new int[w * h];
+        int[] pix = new int[w * h];
 
         // convert to RGB
         for (int x = w; x-- > 0; ) {
@@ -92,10 +93,10 @@ public class ImageFrame extends JFrame {
     /**
      * Set the image from a 2D RGB pixel array.
      */
-    public void setImage(int pixels[][]) {
+    public void setImage(int[][] pixels) {
         int w = pixels.length;
         int h = pixels[0].length;
-        int pix[] = new int[w * h];
+        int[] pix = new int[w * h];
 
         // convert to RGB
         for (int x = w; x-- > 0; ) {
@@ -110,7 +111,7 @@ public class ImageFrame extends JFrame {
     /**
      * Set the image from a 1D RGB pixel array.
      */
-    public void setImage(int w, int h, int pix[]) {
+    public void setImage(int w, int h, int[] pix) {
         setImage(createImage(new MemoryImageSource(w, h, pix, 0, w)));
     }
 
@@ -144,7 +145,7 @@ public class ImageFrame extends JFrame {
         g.drawImage(image, left, top, this);
     }
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
         ImageFrame f = new ImageFrame();
         f.setImage(new File(args[0]));
     }
