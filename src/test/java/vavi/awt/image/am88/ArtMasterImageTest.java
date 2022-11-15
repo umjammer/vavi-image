@@ -18,9 +18,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.util.Debug;
+import vavi.util.properties.annotation.Property;
+import vavi.util.properties.annotation.PropsEntity;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -31,38 +34,56 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (umjammer)
  * @version 0.00 2021/11/29 umjammer initial version <br>
  */
+@PropsEntity(url = "file:local.properties")
 class ArtMasterImageTest {
+
+    static boolean localPropertiesExists() {
+        return Files.exists(Paths.get("local.properties"));
+    }
+
+    @Property(name = "art88")
+    String art88 = "src/test/resources/test.am88";
+
+    @BeforeEach
+    void setup() throws IOException {
+        if (localPropertiesExists()) {
+            PropsEntity.Util.bind(this);
+        }
+    }
 
     @Test
     void test1() throws Exception {
-        Image image = Toolkit.getDefaultToolkit().createImage(new ArtMasterImageSource(ArtMasterImageTest.class.getResourceAsStream("/test.am88")));
+        Image image = Toolkit.getDefaultToolkit().createImage(new ArtMasterImageSource(Files.newInputStream(Paths.get(art88))));
         assertNotNull(image);
     }
 
     @Test
     void test2() throws Exception {
-        BufferedImage image = ImageIO.read(ArtMasterImageTest.class.getResourceAsStream("/test.am88"));
+        BufferedImage image = ImageIO.read(Files.newInputStream(Paths.get(art88)));
         assertNotNull(image);
     }
 
     @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test() throws Exception {
-        main(new String[] { "src/test/resources/test.am88" });
+        main(new String[0]);
         while (true) Thread.yield();
     }
 
     //----
 
     /** */
-    public static void main(final String[] args) throws IOException {
-Debug.println(args[0]);
-        Image image = Toolkit.getDefaultToolkit().createImage(new ArtMasterImageSource(Files.newInputStream(Paths.get(args[0]))));
+    public static void main(String[] args) throws IOException {
+        ArtMasterImageTest app = new ArtMasterImageTest();
+//        app.art88 = args[0];
+        PropsEntity.Util.bind(app, args);
+Debug.println(app.art88);
+        Image image = Toolkit.getDefaultToolkit().createImage(new ArtMasterImageSource(Files.newInputStream(Paths.get(app.art88))));
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
-            public void paint(Graphics g) {
+            public void paintComponent(Graphics g) {
                 g.drawImage(image, 0, 0, 640, 400, 0, 0, 640, 200, this);
             }
         };

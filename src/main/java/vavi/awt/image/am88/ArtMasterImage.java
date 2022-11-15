@@ -19,6 +19,9 @@ import vavi.util.StringUtil;
 
 /**
  * ArtMasterImage.
+ * <p>
+ * magic SS_SIF
+ * separated RGB RLE
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (umjammer)
  * @version 0.00 2019/04/10 umjammer initial version <br>
