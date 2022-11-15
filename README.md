@@ -50,12 +50,13 @@
  * Lanczos3 filter using AWT API
  * `BufferedImageOp` ???
  * https://github.com/iariro/N88BasicImage
- * ffmpeg resize 4byte 32bit operation is wrong
+ * ~~ffmpeg resize 4byte 32bit operation is wrong~~
+ * DaVinchi (wip)
 
 ## Tech Know
 
  * Mac Open JDK's JNI library extension is `.dylib`
- * `libsescale` has MMX bug, this causes segmentation fault when resizing image.
+ * ~~`libsescale` has MMX bug, this causes segmentation fault when resizing image.~~
 
 ## References
 
