@@ -62,7 +62,7 @@ public class WindowsIconImageSource implements ImageProducer {
                 ic.setColorModel(cm);
 //Debug.println(image.getType() + ", " + cm);
                 ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT | ImageConsumer.COMPLETESCANLINES | ImageConsumer.SINGLEPASS | ImageConsumer.SINGLEFRAME);
-                int[] buf = image.getRGB(0, 0, width, height, (int[]) null, 0, width);
+                int[] buf = image.getRGB(0, 0, width, height, null, 0, width);
 //Debug.println(buf.length + ", " + width * height);
                 ic.setPixels(0, 0, width, height, ColorModel.getRGBdefault(), buf, 0, width); // colorModel ???
                 ic.imageComplete(ImageConsumer.STATICIMAGEDONE);

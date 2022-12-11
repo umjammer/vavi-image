@@ -33,7 +33,6 @@ import vavi.awt.ImageComponent;
 import vavi.awt.image.blur.GaussianBlurOp;
 import vavi.imageio.IIOUtil;
 import vavi.imageio.ImageConverter;
-import vavi.swing.JImageComponent;
 import vavi.util.properties.annotation.Property;
 import vavi.util.properties.annotation.PropsEntity;
 
@@ -73,7 +72,7 @@ public class JpegQualityBlur {
             elements[i] = othes;
         }
         elements[N * N / 2] = center;
-    };
+    }
 
     Image rightImage;
     JSlider qualitySlider;

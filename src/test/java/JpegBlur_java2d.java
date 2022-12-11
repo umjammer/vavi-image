@@ -17,8 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import vavi.awt.image.blur.GaussianBlurOp;
 import vavi.awt.image.resample.AwtResampleOp;

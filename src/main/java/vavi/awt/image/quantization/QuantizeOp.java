@@ -46,7 +46,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
     };
 
     /** */
-    private final int sum = 3 + 5 + 7 + 1;
+    private static final int sum = 3 + 5 + 7 + 1;
     /** */
     private boolean dither;
     /** */
@@ -130,7 +130,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
             for (int i = 0; i < count; i++)
                 outPixels[i] = table[quantizer.getIndexForColor(inPixels[i])];
         } else {
-            int index = 0;
+            int index;
             for (int y = 0; y < height; y++) {
                 boolean reverse = serpentine && (y & 1) == 1;
                 int direction;

@@ -8,7 +8,6 @@ package vavi.imageio.ppm;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -48,9 +47,9 @@ public class PpmImageReaderTest {
     //----
 
     /** */
-    public static void main(final String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 System.err.println(args[0]);
-        ImageReader ir = null;
+        ImageReader ir;
         Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("PPM");
         while (irs.hasNext()) {
             ImageReader tmpIr = irs.next();

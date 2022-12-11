@@ -99,7 +99,7 @@ Debug.println(Level.FINE, "skip B: " + l);
 
         for (int i = 0; i < 3; i++) {
 
-            byte[] g = null;
+            byte[] g;
             int count = 0;
 
             switch (buf[19 + i]) {

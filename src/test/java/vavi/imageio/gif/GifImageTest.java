@@ -11,7 +11,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -22,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.awt.ImageComponent;
 import vavi.awt.image.gif.NonLzwGifImageSource;
-import vavi.imageio.ImageConverter;
-import vavi.swing.JImageComponent;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -54,7 +51,7 @@ public class GifImageTest {
     /**
      * @param args 0...: gif
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 System.err.println(args[0]);
         Image image = Toolkit.getDefaultToolkit().createImage(new NonLzwGifImageSource(Files.newInputStream(Paths.get(args[0]))));
         ImageComponent component = new ImageComponent();

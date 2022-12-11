@@ -10,7 +10,6 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -85,7 +84,7 @@ public class WindowsIconImageReaderTest {
     }
 
     /** */
-    public static void main(final String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 System.err.println(args[0]);
         ImageReader ir = null;
         Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("ICO");

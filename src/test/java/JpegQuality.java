@@ -31,7 +31,6 @@ import javax.swing.event.ChangeListener;
 import vavi.awt.ImageComponent;
 import vavi.imageio.IIOUtil;
 import vavi.imageio.ImageConverter;
-import vavi.swing.JImageComponent;
 import vavi.util.properties.annotation.Property;
 import vavi.util.properties.annotation.PropsEntity;
 
@@ -73,7 +72,7 @@ public class JpegQuality {
             elements[i] = othes;
         }
         elements[N * N / 2] = center;
-    };
+    }
 
     Image rightImage;
     Image leftImage;

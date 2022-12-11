@@ -9,7 +9,6 @@ package vavi.imageio.am88;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -75,7 +74,7 @@ class ArtMasterImageReaderTest {
     //----
 
     /** */
-    public static void main(final String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 Debug.println(args[0]);
         ImageReader ir = null;
         Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("AM88");

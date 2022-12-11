@@ -19,7 +19,6 @@ import javax.swing.JFrame;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import vavi.imageio.mag.MagImageReader;
 import vavi.swing.JImageComponent;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

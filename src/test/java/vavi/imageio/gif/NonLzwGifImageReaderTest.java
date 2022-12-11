@@ -8,7 +8,6 @@ package vavi.imageio.gif;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,7 +49,7 @@ public class NonLzwGifImageReaderTest {
     //----
 
     /** */
-    public static void main(final String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 System.err.println(args[0]);
         ImageReader ir = IIOUtil.getImageReader("GIF", NonLzwGifImageReader.class.getName());
 //System.err.println("provider: " + StringUtil.paramString(ir.getOriginatingProvider().getInputTypes()));

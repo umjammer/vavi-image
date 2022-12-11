@@ -11,19 +11,14 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.JFrame;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import vavi.awt.image.mag.Mag;
-import vavi.imageio.am88.ArtMasterImageReader;
-import vavi.io.LittleEndianSeekableDataInputStream;
 import vavi.swing.JImageComponent;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

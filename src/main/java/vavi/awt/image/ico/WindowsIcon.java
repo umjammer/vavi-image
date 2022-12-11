@@ -56,7 +56,7 @@ public class WindowsIcon {
     private BufferedImage image;
 
     /** マスク */
-    private byte mask[];
+    private byte[] mask;
 
     /** アイコンを作成します． */
     public WindowsIcon(WindowsIconDevice device, WindowsBitmap bitmap) {

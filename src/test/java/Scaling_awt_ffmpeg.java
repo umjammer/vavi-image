@@ -71,40 +71,38 @@ System.err.println(w + ", " + h);
         slider.setMaximum(100);
         slider.setMinimum(1);
         slider.setValue(100);
-        slider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent event) {
-                JSlider source = (JSlider) event.getSource();
-                if (source.getValueIsAdjusting()) {
-                    return;
-                }
-                float scale = source.getValue() / 100f;
+        slider.addChangeListener(event -> {
+            JSlider source = (JSlider) event.getSource();
+            if (source.getValueIsAdjusting()) {
+                return;
+            }
+            float scale = source.getValue() / 100f;
 
-                // left
-                {
-                    BufferedImage image = leftImage;
-                    BufferedImageOp filter = new AwtResampleOp(scale, scale);
+            // left
+            {
+                BufferedImage image1 = leftImage;
+                BufferedImageOp filter = new AwtResampleOp(scale, scale);
 long t = System.currentTimeMillis();
-                    BufferedImage filteredImage = filter.filter(image, null);
+                BufferedImage filteredImage = filter.filter(image1, null);
 System.err.println("left: " + (System.currentTimeMillis() - t) + "ms");
-                    leftImageComponent.setImage(filteredImage);
-                    leftImageComponent.repaint();
-                }
+                leftImageComponent.setImage(filteredImage);
+                leftImageComponent.repaint();
+            }
 
-                // right
-                {
-                    BufferedImage image = rightImage;
-                    BufferedImageOp filter = new FfmpegResampleOp(scale, scale, FfmpegResampleOp.Hint.LANCZOS);
+            // right
+            {
+                BufferedImage image1 = rightImage;
+                BufferedImageOp filter = new FfmpegResampleOp(scale, scale, FfmpegResampleOp.Hint.LANCZOS);
 long t = System.currentTimeMillis();
-                    BufferedImage filteredImage = filter.filter(image, null);
+                BufferedImage filteredImage = filter.filter(image1, null);
 System.err.println("right: " + (System.currentTimeMillis() - t) + "ms");
 //System.err.println("image: " + filteredImage);
-                    rightImageComponent.setImage(filteredImage);
-                    rightImageComponent.repaint();
-                }
+                rightImageComponent.setImage(filteredImage);
+                rightImageComponent.repaint();
+            }
 
 System.err.println("scale: " + scale);
-                statusLabel.setText("scale: " + scale);
-            }
+            statusLabel.setText("scale: " + scale);
         });
 
         JPanel basePanel = new JPanel();
@@ -125,7 +123,7 @@ System.err.println("scale: " + scale);
         rightPanel.setPreferredSize(new Dimension(w, h));
         rightPanel.add(rightImageComponent, BorderLayout.CENTER);
 
-        final JSplitPane split = new JSplitPane();
+        JSplitPane split = new JSplitPane();
         split.setLeftComponent(leftPanel);
         split.setRightComponent(rightPanel);
         split.setPreferredSize(new Dimension(800, 600));

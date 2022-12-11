@@ -40,7 +40,7 @@ public class GifUnderDirectory {
      * @param args 0: dir
      */
     public static void main(String[] args) throws Exception {
-        final JPanel panel = new JPanel() {
+        JPanel panel = new JPanel() {
             public void paint(Graphics g) {
                 g.drawImage(image, 0, 0, this);
             }
@@ -53,15 +53,13 @@ public class GifUnderDirectory {
         frame.pack();
         frame.setVisible(true);
 
-        new RegexFileDigger(new FileDigger.FileDredger() {
-            public void dredge(File file) throws IOException {
-                try {
+        new RegexFileDigger(file -> {
+            try {
 System.err.println("--- " + file + " ---");
-                    image = ImageIO.read(file);
-                    panel.repaint();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                image = ImageIO.read(file);
+                panel.repaint();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }, Pattern.compile(".+\\.(gif|GIF)")).dig(new File(args[0]));
     }

@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -96,7 +95,7 @@ public class DigImages {
     /**
      * @param args 0: dir, 1: type e.g gif, 2: class e.g vavi.imageio.gif.NonLzwGifImageReader
      */
-    public static void main(final String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         String dir = args[0];
         String type = args[1];
         String clazz = args[2];

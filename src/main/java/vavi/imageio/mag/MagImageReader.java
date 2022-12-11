@@ -22,7 +22,6 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
-import vavi.awt.image.am88.ArtMasterImage;
 import vavi.awt.image.mag.Mag;
 import vavi.imageio.SeekableDataInputImageInputStream;
 import vavi.util.Debug;
@@ -66,7 +65,7 @@ public class MagImageReader extends ImageReader {
     public BufferedImage read(int imageIndex, ImageReadParam param)
         throws IIOException {
 
-        ImageInputStream iis = null;
+        ImageInputStream iis;
 
         try {
             if (input instanceof ImageInputStream) {

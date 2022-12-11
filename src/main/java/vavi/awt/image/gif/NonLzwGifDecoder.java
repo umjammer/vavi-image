@@ -81,7 +81,7 @@ public class NonLzwGifDecoder {
 
         byte[] vram = new byte[height * bytesPerLine];
         int[] lzw = new int[8192]; // 圧縮データ格納用配列(辞書テーブルではない！)
-        int code = 0; // 符号化コード初期化
+        int code; // 符号化コード初期化
 
         // DIB データ書き込み用構造体初期化
         RgbContext rgb = new RgbContext();
