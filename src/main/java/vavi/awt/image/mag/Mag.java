@@ -51,10 +51,10 @@ public class Mag {
 Debug.println(Level.FINE, "headerOffset: " + headerOffset);
         sdi.position(headerOffset);
 
-        class mag_info_t {
+        class MagInfo {
             // heading 32byte is fixed order.
             int top;
-            int machine;
+            int platform;
             int flags;
             int mode;
             int sx;
@@ -86,9 +86,9 @@ Debug.println(Level.FINE, "headerOffset: " + headerOffset);
 
             @Override
             public String toString() {
-                return "mag_info_t{" +
+                return "MagInfo{" +
                         "top=" + top +
-                        ", machine=" + machine +
+                        ", platform=" + platform +
                         ", flags=" + flags +
                         ", mode=" + mode +
                         ", sx=" + sx +
@@ -110,10 +110,10 @@ Debug.println(Level.FINE, "headerOffset: " + headerOffset);
             }
         }
 
-        mag_info_t mag = new mag_info_t();
+        MagInfo mag = new MagInfo();
 
         mag.top = sdi.readUnsignedByte();
-        mag.machine = sdi.readUnsignedByte();
+        mag.platform = sdi.readUnsignedByte();
         mag.flags = sdi.readUnsignedByte();
         mag.mode = sdi.readUnsignedByte();
         mag.sx = sdi.readUnsignedShort();
@@ -135,14 +135,17 @@ Debug.println(Level.FINE, mag);
         // (r0,g0,b0),(r1,g1,b1),...
         byte[] palette = new byte[mag.colors * 3];
         sdi.readFully(palette, 0, mag.colors * 3);
+Debug.printf(Level.FINE, "palette: pos: %d, len: %d", headerOffset + 32, mag.colors * 3);
 
         byte[] flagABuf = new byte[mag.flagASize];
         sdi.position(headerOffset + mag.flagAOffset);
         sdi.readFully(flagABuf, 0, mag.flagASize);
+Debug.printf(Level.FINE, "flagA: pos: %d, len: %d", headerOffset + mag.flagAOffset, mag.flagASize);
 
         byte[] flagBBuf = new byte[mag.flagBSize];
         sdi.position(headerOffset + mag.flagBOffset);
         sdi.readFully(flagBBuf, 0, mag.flagBSize);
+Debug.printf(Level.FINE, "flagB: pos: %d, len: %d", headerOffset + mag.flagBOffset, mag.flagBSize);
 
         byte[] flagBuf = new byte[mag.flagSize];
 
@@ -153,6 +156,7 @@ Debug.println(Level.FINE, mag);
 
         int src = 0; // (headerOffset + mag.pixelOffset) % (pixelBufSize);
         sdi.readFully(pixel, src, pixelBufSize - src);
+Debug.printf(Level.FINE, "pixel: pos: %d, len: %d", headerOffset + mag.pixelOffset, pixelBufSize - src);
 
         int flagAPos = 0;
         int flagBPos = 0;
@@ -169,7 +173,7 @@ Debug.println(Level.FINE, mag);
         int copySize = 1 << mag.pixelUnitLog;
         int mask = 0x80;
 
-Debug.printf(Level.FINE, "width=%d:height=%d", mag.width, mag.height);
+Debug.printf(Level.FINE, "width: %d, height: %d", mag.width, mag.height);
 
         int destDiff = 0;
 

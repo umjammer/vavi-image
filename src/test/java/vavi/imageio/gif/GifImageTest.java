@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JFrame;
 
@@ -42,8 +43,10 @@ public class GifImageTest {
     @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     public void test0() throws Exception {
+        // using cdl cause junit stops awt thread suddenly
+        CountDownLatch cdl = new CountDownLatch(1);
         main(new String[] { "src/test/resources/test.gif" });
-        while (true) Thread.yield();
+        cdl.await(); // depends on main frame's exit on close
     }
 
     //----

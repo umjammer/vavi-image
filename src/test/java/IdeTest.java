@@ -4,7 +4,10 @@
  * Programmed by Naohide Sano
  */
 
+import java.util.concurrent.CountDownLatch;
+
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
@@ -17,6 +20,14 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
  */
 @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
 class IdeTest {
+
+    /** using cdl cause junit stops awt thread suddenly */
+    CountDownLatch cdl;
+
+    @BeforeEach
+    void setup() {
+        cdl = new CountDownLatch(1);
+    }
 
     @Test
     void run_Scaling_awt_ffmpeg() throws Exception {
@@ -54,7 +65,7 @@ class IdeTest {
     }
 
     @AfterEach
-    void teardown() {
-        while (true) Thread.yield();
+    void teardown() throws Exception {
+        cdl.await(); // depends on each test frame's exit on close
     }
 }

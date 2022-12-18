@@ -173,7 +173,7 @@ System.err.println("quality: " + quality + ", size: " + baos.size());
         basePanel.add(statusLabel, BorderLayout.SOUTH);
 
         JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(scrollPane);
         frame.pack();
         split.setDividerLocation(0.5);

@@ -8,11 +8,14 @@ package vavi.imageio.zim;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.JFrame;
@@ -62,17 +65,21 @@ class ZimImageReaderTest {
         URL url = ZimImageReaderTest.class.getResource("/test2.zim");
         BufferedImage image = ImageIO.read(url);
         show(image);
-        while (true) Thread.yield();
     }
 
-    void show(BufferedImage image) {
-        JFrame frame = new JFrame("MAG");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    /** using cdl cause junit stops awt thread suddenly */
+    void show(BufferedImage image) throws Exception {
+        CountDownLatch cdl = new CountDownLatch(1);
+        JFrame frame = new JFrame("ZIM");
+        frame.addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) { cdl.countDown(); }
+        });
         JImageComponent panel = new JImageComponent();
         panel.setImage(image);
         panel.setPreferredSize(new Dimension(800, 600));
         frame.getContentPane().add(panel);
         frame.pack();
         frame.setVisible(true);
+        cdl.await();
     }
 }

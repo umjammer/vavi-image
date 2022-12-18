@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.CountDownLatch;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -66,17 +67,22 @@ class ArtMasterImageTest {
     @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test() throws Exception {
+        // using cdl cause junit stops awt thread suddenly
+        CountDownLatch cdl = new CountDownLatch(1);
         main(new String[0]);
-        while (true) Thread.yield();
+        cdl.await(); // depends on main frame's exit on close
     }
 
-    //----
-
-    /** */
+    /**
+     * @param args 0: art88
+     */
     public static void main(String[] args) throws IOException {
         ArtMasterImageTest app = new ArtMasterImageTest();
-//        app.art88 = args[0];
-        PropsEntity.Util.bind(app, args);
+        if (localPropertiesExists()) {
+            PropsEntity.Util.bind(app, args);
+        } else {
+            app.art88 = args[0];
+        }
 Debug.println(app.art88);
         Image image = Toolkit.getDefaultToolkit().createImage(new ArtMasterImageSource(Files.newInputStream(Paths.get(app.art88))));
 
