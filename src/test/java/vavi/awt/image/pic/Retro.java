@@ -745,6 +745,8 @@ Debug.printf(Level.FINE, "xstart: %d, xend: %d, ystart: %d, yend: %d", xstart, y
 
         // alloc buffer
         int vtlnsz = xend - xstart;
+        width = xend;
+        height = yend;
 Debug.printf(Level.FINE, "width: %d, height: %d", width, height);
         bufferEnsure();
 
