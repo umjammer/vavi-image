@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2022 by Naohide Sano, All rights reserved.
+ * Copyright (c) 2023 by Naohide Sano, All rights reserved.
  *
  * Programmed by Naohide Sano
  */
 
-package vavi.awt.image.pic;
+package vavi.awt.image.pi;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -16,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.CountDownLatch;
-
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -24,33 +23,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
-import vavi.swing.JImageComponent;
+import vavi.awt.image.mag.RetroMag;
+import vavi.awt.image.maki.RetroMaki;
+import vavi.awt.image.pic.RetroPic;
 import vavi.util.properties.annotation.Property;
 import vavi.util.properties.annotation.PropsEntity;
 
 
 /**
- * RetroTest.
+ * RetroPiTest.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 0.00 2022-12-18 nsano initial version <br>
+ * @version 0.00 2023-03-20 nsano initial version <br>
  */
 @EnabledIf("localPropertiesExists")
 @PropsEntity(url = "file:local.properties")
-class RetroTest {
+class RetroPiTest {
 
     static boolean localPropertiesExists() {
         return Files.exists(Paths.get("local.properties"));
     }
-
-    @Property(name = "picImage")
-    String picImage;
-
-    @Property(name = "magImage")
-    String magImage;
-
-    @Property(name = "mkiImage")
-    String mkiImage;
 
     @Property(name = "piImage")
     String piImage;
@@ -63,31 +55,9 @@ class RetroTest {
     }
 
     @Test
-    @DisplayName("PIC")
-    void test1() throws Exception {
-        BufferedImage image = new Retro().mainProcess(picImage);
-        show(image, "PIC");
-    }
-
-    @Test
-    @DisplayName("MAG")
-    void test2() throws Exception {
-        BufferedImage image = new Retro().mainProcess(magImage);
-        show(image, "MAG");
-    }
-
-    @Test
-    @DisplayName("MKI")
-    void test3() throws Exception {
-        BufferedImage image = new Retro().mainProcess(mkiImage);
-        show(image, "MAKI");
-    }
-
-    // TODO wip, sample
-    @Test
     @DisplayName("PI")
     void test4() throws Exception {
-        BufferedImage image = new Retro().mainProcess(piImage);
+        BufferedImage image = new RetroPi().mainProcess(Paths.get(piImage));
         show(image, "PI");
     }
 
