@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2002 by Naohide Sano, All rights reserved.
+ * Copyright (c) 2023 by Naohide Sano, All rights reserved.
  *
  * Programmed by Naohide Sano
  */
 
-package vavi.imageio.mag;
+package vavi.imageio.maki;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,32 +15,33 @@ import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
+import vavi.imageio.mag.MagImageReader;
 import vavi.util.Debug;
 
 
 /**
- * MagImageReaderSpi.
+ * MakiImageReaderSpi.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 0.00 221025 nsano initial version <br>
+ * @version 0.00 230323 nsano initial version <br>
  */
-public class MagImageReaderSpi extends ImageReaderSpi {
+public class MakiImageReaderSpi extends ImageReaderSpi {
 
     private static final String VendorName = "http://www.vavi.com";
-    private static final String Version = "1.0.10";
+    private static final String Version = "1.0.11";
     private static final String ReaderClassName =
-        "vavi.imageio.mag.MagImageReader";
+        "vavi.imageio.maki.MakiImageReader";
     private static final String[] Names = {
-        "MAG", "mag"
+        "MAKI", "maki"
     };
     private static final String[] Suffixes = {
-        "mag", "MAG"
+        "maki", "MAKI", "mki", "MKI"
     };
     private static final String[] mimeTypes = {
-        "image/x-mag"
+        "image/x-maki"
     };
     static final String[] WriterSpiNames = {
-        /*"vavi.imageio.mag.MagImageWriterSpi"*/
+        /*"vavi.imageio.maki.MakiImageWriterSpi"*/
     };
     private static final boolean SupportsStandardStreamMetadataFormat = false;
     private static final String NativeStreamMetadataFormatName = null;
@@ -48,14 +49,14 @@ public class MagImageReaderSpi extends ImageReaderSpi {
     private static final String[] ExtraStreamMetadataFormatNames = null;
     private static final String[] ExtraStreamMetadataFormatClassNames = null;
     private static final boolean SupportsStandardImageMetadataFormat = false;
-    private static final String NativeImageMetadataFormatName = "mag";
+    private static final String NativeImageMetadataFormatName = "maki";
     private static final String NativeImageMetadataFormatClassName =
-        /*"vavi.imageio.mag.MagImageMetaData"*/ null;
+        /*"vavi.imageio.maki.MakiImageMetaData"*/ null;
     private static final String[] ExtraImageMetadataFormatNames = null;
     private static final String[] ExtraImageMetadataFormatClassNames = null;
 
     /** */
-    public MagImageReaderSpi() {
+    public MakiImageReaderSpi() {
         super(VendorName,
               Version,
               Names,
@@ -85,7 +86,7 @@ public class MagImageReaderSpi extends ImageReaderSpi {
     @Override
     public boolean canDecodeInput(Object obj) throws IOException {
 
-        byte[] header = "MAKI02  ".getBytes();
+        byte[] header = "MAKI01".getBytes();
 
         if (obj instanceof ImageInputStream) {
             ImageInputStream is = (ImageInputStream) obj;
@@ -108,7 +109,7 @@ Debug.println(Level.FINE, obj);
 
     @Override
     public ImageReader createReaderInstance(Object obj) {
-        return new MagImageReader(this);
+        return new MakiImageReader(this);
     }
 }
 

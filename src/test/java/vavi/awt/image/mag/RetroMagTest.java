@@ -13,6 +13,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.CountDownLatch;
@@ -23,6 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.util.properties.annotation.Property;
 import vavi.util.properties.annotation.PropsEntity;
 
@@ -52,9 +54,15 @@ class RetroMagTest {
     }
 
     @Test
+    void test0() throws Exception {
+        new RetroMag().mainProcess(Files.newInputStream(Paths.get(magImage)));
+    }
+
+    @Test
     @DisplayName("MAG")
+    @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test2() throws Exception {
-        BufferedImage image = new RetroMag().mainProcess(Paths.get(magImage));
+        BufferedImage image = new RetroMag().mainProcess(Files.newInputStream(Paths.get(magImage)));
         show(image, "MAG");
     }
 

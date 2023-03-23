@@ -8,9 +8,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,10 +35,10 @@ public class RetroMag {
     private float yScale;
 
     /** entry point */
-    public BufferedImage mainProcess(Path path) throws IOException {
-        byte[] bytes = Files.readAllBytes(path);
+    public BufferedImage mainProcess(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
+        int b;
+        while ((b = is.read()) != -1) {
             String s = "00000000" + Integer.toBinaryString(b);
             sb.append(s.substring(s.length() - 8));
         }

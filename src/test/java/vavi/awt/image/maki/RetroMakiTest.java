@@ -23,6 +23,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import vavi.awt.image.mag.RetroMag;
 import vavi.util.properties.annotation.Property;
 import vavi.util.properties.annotation.PropsEntity;
 
@@ -52,9 +54,15 @@ class RetroMakiTest {
     }
 
     @Test
+    void test0() throws Exception {
+        new RetroMaki().mainProcess(Files.newInputStream(Paths.get(mkiImage)));
+    }
+
+    @Test
     @DisplayName("MKI")
+    @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test3() throws Exception {
-        BufferedImage image = new RetroMaki().mainProcess(Paths.get(mkiImage));
+        BufferedImage image = new RetroMaki().mainProcess(Files.newInputStream(Paths.get(mkiImage)));
         show(image, "MAKI");
     }
 

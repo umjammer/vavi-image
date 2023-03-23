@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2002 by Naohide Sano, All rights reserved.
+ * Copyright (c) 2023 by Naohide Sano, All rights reserved.
  *
  * Programmed by Naohide Sano
  */
 
-package vavi.imageio.mag;
+package vavi.imageio.pi;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,28 +19,28 @@ import vavi.util.Debug;
 
 
 /**
- * MagImageReaderSpi.
+ * PiImageReaderSpi.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 0.00 221025 nsano initial version <br>
+ * @version 0.00 230323 nsano initial version <br>
  */
-public class MagImageReaderSpi extends ImageReaderSpi {
+public class PiImageReaderSpi extends ImageReaderSpi {
 
     private static final String VendorName = "http://www.vavi.com";
-    private static final String Version = "1.0.10";
+    private static final String Version = "1.0.11";
     private static final String ReaderClassName =
-        "vavi.imageio.mag.MagImageReader";
+        "vavi.imageio.pi.PiImageReader";
     private static final String[] Names = {
-        "MAG", "mag"
+        "PI", "pi"
     };
     private static final String[] Suffixes = {
-        "mag", "MAG"
+        "pi", "PI"
     };
     private static final String[] mimeTypes = {
-        "image/x-mag"
+        "image/x-pi"
     };
     static final String[] WriterSpiNames = {
-        /*"vavi.imageio.mag.MagImageWriterSpi"*/
+        /*"vavi.imageio.pi.PiImageWriterSpi"*/
     };
     private static final boolean SupportsStandardStreamMetadataFormat = false;
     private static final String NativeStreamMetadataFormatName = null;
@@ -48,14 +48,14 @@ public class MagImageReaderSpi extends ImageReaderSpi {
     private static final String[] ExtraStreamMetadataFormatNames = null;
     private static final String[] ExtraStreamMetadataFormatClassNames = null;
     private static final boolean SupportsStandardImageMetadataFormat = false;
-    private static final String NativeImageMetadataFormatName = "mag";
+    private static final String NativeImageMetadataFormatName = "pi";
     private static final String NativeImageMetadataFormatClassName =
-        /*"vavi.imageio.mag.MagImageMetaData"*/ null;
+        /*"vavi.imageio.pi.PiImageMetaData"*/ null;
     private static final String[] ExtraImageMetadataFormatNames = null;
     private static final String[] ExtraImageMetadataFormatClassNames = null;
 
     /** */
-    public MagImageReaderSpi() {
+    public PiImageReaderSpi() {
         super(VendorName,
               Version,
               Names,
@@ -78,14 +78,14 @@ public class MagImageReaderSpi extends ImageReaderSpi {
 
     @Override
     public String getDescription(Locale locale) {
-        return "MAKI-chan Graphic loader";
+        return "Pi Yanagisawa Image";
     }
 
     /* TODO InputStream */
     @Override
     public boolean canDecodeInput(Object obj) throws IOException {
 
-        byte[] header = "MAKI02  ".getBytes();
+        byte[] header = "Pi".getBytes();
 
         if (obj instanceof ImageInputStream) {
             ImageInputStream is = (ImageInputStream) obj;
@@ -108,7 +108,7 @@ Debug.println(Level.FINE, obj);
 
     @Override
     public ImageReader createReaderInstance(Object obj) {
-        return new MagImageReader(this);
+        return new PiImageReader(this);
     }
 }
 

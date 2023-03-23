@@ -19,17 +19,17 @@ import vavi.util.Debug;
 
 
 /**
- * MagImageReaderSpi.
+ * RetroMagImageReaderSpi.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 0.00 221025 nsano initial version <br>
+ * @version 0.00 230323 nsano initial version <br>
  */
-public class MagImageReaderSpi extends ImageReaderSpi {
+public class RetroMagImageReaderSpi extends ImageReaderSpi {
 
     private static final String VendorName = "http://www.vavi.com";
-    private static final String Version = "1.0.10";
+    private static final String Version = "1.0.11";
     private static final String ReaderClassName =
-        "vavi.imageio.mag.MagImageReader";
+        "vavi.imageio.mag.RetroMagImageReader";
     private static final String[] Names = {
         "MAG", "mag"
     };
@@ -40,7 +40,7 @@ public class MagImageReaderSpi extends ImageReaderSpi {
         "image/x-mag"
     };
     static final String[] WriterSpiNames = {
-        /*"vavi.imageio.mag.MagImageWriterSpi"*/
+        /*"vavi.imageio.mag.RetroMagImageWriterSpi"*/
     };
     private static final boolean SupportsStandardStreamMetadataFormat = false;
     private static final String NativeStreamMetadataFormatName = null;
@@ -50,12 +50,12 @@ public class MagImageReaderSpi extends ImageReaderSpi {
     private static final boolean SupportsStandardImageMetadataFormat = false;
     private static final String NativeImageMetadataFormatName = "mag";
     private static final String NativeImageMetadataFormatClassName =
-        /*"vavi.imageio.mag.MagImageMetaData"*/ null;
+        /*"vavi.imageio.mag.RetroMagImageMetaData"*/ null;
     private static final String[] ExtraImageMetadataFormatNames = null;
     private static final String[] ExtraImageMetadataFormatClassNames = null;
 
     /** */
-    public MagImageReaderSpi() {
+    public RetroMagImageReaderSpi() {
         super(VendorName,
               Version,
               Names,
@@ -108,7 +108,7 @@ Debug.println(Level.FINE, obj);
 
     @Override
     public ImageReader createReaderInstance(Object obj) {
-        return new MagImageReader(this);
+        return new RetroMagImageReader(this);
     }
 }
 

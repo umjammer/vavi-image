@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.awt.image.mag.RetroMag;
 import vavi.awt.image.maki.RetroMaki;
 import vavi.awt.image.pic.RetroPic;
@@ -55,9 +56,15 @@ class RetroPiTest {
     }
 
     @Test
+    void test0() throws Exception {
+        new RetroPi().mainProcess(Files.newInputStream(Paths.get(piImage)));
+    }
+
+    @Test
     @DisplayName("PI")
+    @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test4() throws Exception {
-        BufferedImage image = new RetroPi().mainProcess(Paths.get(piImage));
+        BufferedImage image = new RetroPi().mainProcess(Files.newInputStream(Paths.get(piImage)));
         show(image, "PI");
     }
 
