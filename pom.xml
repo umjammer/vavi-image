@@ -6,7 +6,7 @@
 
   <groupId>vavi</groupId>
   <artifactId>vavi-image</artifactId>
-  <version>1.0.10-SNAPSHOT</version>
+  <version>1.0.11</version>
 
   <name>Vavi Imaging API</name>
   <organization>
