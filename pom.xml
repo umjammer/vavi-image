@@ -116,7 +116,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-install-plugin</artifactId>
-            <version>3.0.0-M1</version>
+            <version>3.0.1</version>
             <executions>
               <execution>
                 <id>install-library</id>
@@ -152,7 +152,7 @@
              -->
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.6.0</version>
+            <version>3.1.0</version>
             <executions>
               <execution>
                 <id>deploy-library</id>
@@ -180,15 +180,9 @@
           </plugin>
 
           <plugin>
+            <!-- ⚠⚠⚠ AD-HOC after 2.5 causes #13 ⚠⚠⚠ -->
             <artifactId>maven-jar-plugin</artifactId>
-            <version>3.0.2</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
+            <version>2.5</version>
           </plugin>
 
           <plugin>
