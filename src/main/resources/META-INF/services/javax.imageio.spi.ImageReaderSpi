@@ -5,3 +5,6 @@ vavi.imageio.ico.WindowsIconImageReaderSpi
 vavi.imageio.am88.ArtMasterImageReaderSpi
 vavi.imageio.mag.MagImageReaderSpi
 vavi.imageio.zim.ZimImageReaderSpi
+vavi.imageio.maki.MakiImageReaderSpi
+vavi.imageio.pic.PicImageReaderSpi
+vavi.imageio.pi.PiImageReaderSpi

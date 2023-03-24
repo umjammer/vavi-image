@@ -107,7 +107,7 @@ public class NeuralNetQuantizer {
 
     protected int[] pixels = null;
 
-    private int sampleFac = 0;
+    private int sampleFac;
 
     /** */
     public NeuralNetQuantizer(Image image, int w, int h, int netSize) throws IOException {
@@ -378,13 +378,13 @@ public class NeuralNetQuantizer {
         int delta = samplePixels / nCycles;
         int alpha = initAlpha;
 
-        int i = 0;
+        int i;
         int rad = biasRadius >> radiusBiasShift;
         if (rad <= 1) {
             rad = 0;
         }
 
-        int step = 0;
+        int step;
         int pos = 0;
 
         if ((lengthCount % prime1) != 0) {
@@ -470,7 +470,7 @@ public class NeuralNetQuantizer {
 
         for (int i = 0; i < netSize; i++) {
             int[] p = colorMap[i];
-            int[] q = null;
+            int[] q;
             int smallPos = i;
             int smallVal = p[1]; // index on g
             // find smallest in i..netsize-1

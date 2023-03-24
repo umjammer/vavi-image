@@ -85,7 +85,7 @@ public class ArtMasterImageReaderSpi extends ImageReaderSpi {
     @Override
     public boolean canDecodeInput(Object obj) throws IOException {
 
-        final byte[] header = {
+        byte[] header = {
             'S', 'S', '_', 'S', 'I', 'F', ' ', ' ', ' ', ' ', '0', '.', '0', '0', 0x1a, 0
         };
 

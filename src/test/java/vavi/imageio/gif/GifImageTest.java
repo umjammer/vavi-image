@@ -11,9 +11,9 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JFrame;
 
@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.awt.ImageComponent;
 import vavi.awt.image.gif.NonLzwGifImageSource;
-import vavi.imageio.ImageConverter;
-import vavi.swing.JImageComponent;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -45,8 +43,10 @@ public class GifImageTest {
     @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     public void test0() throws Exception {
+        // using cdl cause junit stops awt thread suddenly
+        CountDownLatch cdl = new CountDownLatch(1);
         main(new String[] { "src/test/resources/test.gif" });
-        while (true) Thread.yield();
+        cdl.await(); // depends on main frame's exit on close
     }
 
     //----
@@ -54,7 +54,7 @@ public class GifImageTest {
     /**
      * @param args 0...: gif
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 System.err.println(args[0]);
         Image image = Toolkit.getDefaultToolkit().createImage(new NonLzwGifImageSource(Files.newInputStream(Paths.get(args[0]))));
         ImageComponent component = new ImageComponent();

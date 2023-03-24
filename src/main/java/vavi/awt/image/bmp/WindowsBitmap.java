@@ -181,7 +181,7 @@ public class WindowsBitmap {
         system16IndexColorModel = new IndexColorModel(4, 16, reds, greens, blues);
 
         // 256
-        String colorTablePath = null;
+        String colorTablePath;
 //        if ("".equals(System.getProperty("os.type"))) {
             colorTablePath = "/vavi/awt/image/resources/WindowsSystem.ACT";
 //        }

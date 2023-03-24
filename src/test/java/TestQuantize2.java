@@ -31,7 +31,7 @@ public class TestQuantize2 {
      */
     public static void main(String[] args) throws Exception {
 
-        ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // ちょっと適当か？
+        ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // sloppy?
         float quality = 0.75f;
 
         ImageFrame originalFrame = new ImageFrame();

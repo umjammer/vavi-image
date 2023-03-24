@@ -72,7 +72,7 @@ public class NonLzwGifImageReader extends ImageReader {
 
         int pixelSize = cm.getPixelSize();
 
-        byte[] vram = null;
+        byte[] vram;
         switch (pixelSize) {
         case 1:
             vram = gifImage.loadMonoColor(imageIndex);

@@ -40,7 +40,7 @@ public class MagImageReaderSpi extends ImageReaderSpi {
         "image/x-mag"
     };
     static final String[] WriterSpiNames = {
-        /*"vavi.imageio.mag.MagMasterWriterSpi"*/
+        /*"vavi.imageio.mag.MagImageWriterSpi"*/
     };
     private static final boolean SupportsStandardStreamMetadataFormat = false;
     private static final String NativeStreamMetadataFormatName = null;
@@ -50,7 +50,7 @@ public class MagImageReaderSpi extends ImageReaderSpi {
     private static final boolean SupportsStandardImageMetadataFormat = false;
     private static final String NativeImageMetadataFormatName = "mag";
     private static final String NativeImageMetadataFormatClassName =
-        /*"vavi.imageio.mag.MagMasterMetaData"*/ null;
+        /*"vavi.imageio.mag.MagImageMetaData"*/ null;
     private static final String[] ExtraImageMetadataFormatNames = null;
     private static final String[] ExtraImageMetadataFormatClassNames = null;
 

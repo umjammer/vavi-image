@@ -37,7 +37,7 @@ public class CustomPNGReader {
 
         deregister(ImageReaderSpi.class, "com.sun.imageio.plugins.png.PNGImageReaderSpi");
 
-        final BufferedImage image = ImageIO.read(Files.newInputStream(Paths.get(args[0])));
+        BufferedImage image = ImageIO.read(Files.newInputStream(Paths.get(args[0])));
 
         JFrame frame = new JFrame();
         frame.setSize(image.getWidth(), image.getHeight());

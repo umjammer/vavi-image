@@ -45,7 +45,7 @@ System.err.println("image: " + args[0]);
         int point = 60;
         int ratio = 12;
 
-        final BufferedImage image = ImageIO.read(new File(imageFilename));
+        BufferedImage image = ImageIO.read(new File(imageFilename));
 System.err.println(image);
 
         Font font = new Font(fontName, Font.PLAIN, point);

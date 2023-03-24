@@ -10,7 +10,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -41,7 +40,7 @@ class WindowsBitmapImageSourceTest {
     //----
 
     /** */
-    public static void main(final String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 System.err.println(args[0]);
         Image image = Toolkit.getDefaultToolkit().createImage(new WindowsBitmapImageSource(Files.newInputStream(Paths.get(args[0]))));
 
@@ -49,7 +48,7 @@ System.err.println(args[0]);
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
-            public void paint(Graphics g) {
+            public void paintComponent(Graphics g) {
                 g.drawImage(image, 0, 0, this);
             }
         };

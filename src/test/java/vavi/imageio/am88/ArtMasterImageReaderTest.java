@@ -9,12 +9,12 @@ package vavi.imageio.am88;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -68,14 +68,16 @@ class ArtMasterImageReaderTest {
     @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test0() throws Exception {
+        // using cdl cause junit stops awt thread suddenly
+        CountDownLatch cdl = new CountDownLatch(1);
         main(new String[] { "src/test/resources/test.am88" });
-        while (true) Thread.yield();
+        cdl.await(); // depends on main frame's exit on close
     }
 
     //----
 
     /** */
-    public static void main(final String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 Debug.println(args[0]);
         ImageReader ir = null;
         Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("AM88");

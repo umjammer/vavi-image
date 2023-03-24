@@ -33,7 +33,6 @@ import vavi.awt.ImageComponent;
 import vavi.awt.image.blur.GaussianBlurOp;
 import vavi.imageio.IIOUtil;
 import vavi.imageio.ImageConverter;
-import vavi.swing.JImageComponent;
 import vavi.util.properties.annotation.Property;
 import vavi.util.properties.annotation.PropsEntity;
 
@@ -73,7 +72,7 @@ public class JpegQualityBlur {
             elements[i] = othes;
         }
         elements[N * N / 2] = center;
-    };
+    }
 
     Image rightImage;
     JSlider qualitySlider;
@@ -174,7 +173,7 @@ System.err.println("quality: " + quality + ", size: " + baos.size());
         basePanel.add(statusLabel, BorderLayout.SOUTH);
 
         JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(scrollPane);
         frame.pack();
         split.setDividerLocation(0.5);

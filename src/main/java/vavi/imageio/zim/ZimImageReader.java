@@ -65,7 +65,7 @@ public class ZimImageReader extends ImageReader {
     public BufferedImage read(int imageIndex, ImageReadParam param)
         throws IIOException {
 
-        ImageInputStream iis = null;
+        ImageInputStream iis;
 
         try {
             if (input instanceof ImageInputStream) {

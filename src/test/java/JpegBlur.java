@@ -27,8 +27,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import vavi.awt.image.AbstractBufferedImageOp;
 import vavi.awt.image.blur.GaussianBlurOp;
@@ -123,7 +121,7 @@ System.err.println(args[0]);
         rightPanel.setLayout(new BorderLayout());
         rightPanel.add(rightImageComponent, BorderLayout.CENTER);
 
-        final JSplitPane split = new JSplitPane();
+        JSplitPane split = new JSplitPane();
         split.setLeftComponent(leftPanel);
         split.setRightComponent(rightPanel);
         split.setPreferredSize(new Dimension(800, 600));
@@ -199,7 +197,7 @@ System.err.println("quality: " + quality + ", size: " + size + ", blur: " + blur
         @Property(name = "image.writer.class", value = "com.sun.imageio.plugins.jpeg.JPEGImageWriter")
         String className;
 
-        ImageWriter iw = null;
+        ImageWriter iw;
         {
             try {
                 PropsEntity.Util.bind(this);

@@ -48,7 +48,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import net.sourceforge.jiu.apps.Strings;
 import vavi.awt.image.AbstractBufferedImageOp;
 
 

@@ -48,11 +48,9 @@ public class TestQuantize {
 
         try {
             if (!grabber.grabPixels()) {
-                throw new IOException("Grabber returned false: " +
-                                      grabber.status());
+                throw new IOException("Grabber returned false: " + grabber.status());
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException ignore) {
         }
 
         int[][] pixels = new int[w][h];
@@ -68,7 +66,7 @@ public class TestQuantize {
     /**
      * @param args 0: jpeg
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         ImageConverter converter = ImageConverter.getInstance();
         ImageWriter iw = ImageIO.getImageWritersByFormatName("JPEG").next(); // sloppy?
         float quality = 0.75f;
