@@ -208,14 +208,14 @@
                   <goal>run</goal>
                 </goals>
                 <phase>compile</phase>
-            <configuration>
+                <configuration>
                   <target>
                     <mkdir dir="tmp/src/main/resources/natives/osx_arm64" />
                     <get src="${test.url}"
                          dest="tmp/src/main/resources/natives/osx_arm64"
                          usetimestamp="true"/>
                   </target>
-            </configuration>
+                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -226,17 +226,17 @@
 
   <build>
     <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
         <artifactId>properties-maven-plugin</artifactId>
         <version>1.1.0</version>
-            <executions>
-              <execution>
+        <executions>
+          <execution>
             <id>read-properties</id>
             <phase>initialize</phase>
-                <goals>
+            <goals>
               <goal>read-project-properties</goal>
-                </goals>
+            </goals>
             <configuration>
               <files>
                 <file>${basedir}/local.properties</file>
@@ -244,30 +244,30 @@
             </configuration>
           </execution>
         </executions>
-          </plugin>
+      </plugin>
 
-          <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
           <release>17</release>
         </configuration>
-          </plugin>
+      </plugin>
 
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.2</version>
-            <configuration>
-              <argLine>
-                -Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties
+        <configuration>
+          <argLine>
+            -Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties
             -Djava.library.path=${brew.prefix}/lib
-              </argLine>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
+          </argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <repositories>
     <repository>
@@ -281,7 +281,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.9.2</version>
+        <version>5.10.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -292,7 +292,7 @@
     <dependency>
       <groupId>com.github.umjammer</groupId>
       <artifactId>vavi-commons</artifactId>
-      <version>1.1.9</version>
+      <version>1.1.10</version>
     </dependency>
     <dependency>
       <groupId>com.github.umjammer</groupId>
@@ -309,7 +309,7 @@
     <dependency>
       <groupId>com.github.umjammer</groupId>
       <artifactId>vavi-awt</artifactId>
-      <version>1.0.6</version>
+      <version>1.0.7</version>
       <scope>test</scope>
     </dependency>
     <dependency>
