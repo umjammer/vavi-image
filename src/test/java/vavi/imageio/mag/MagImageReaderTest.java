@@ -76,7 +76,7 @@ class MagImageReaderTest {
         });
         JImageComponent panel = new JImageComponent();
         panel.setImage(image);
-        panel.setPreferredSize(new Dimension(800, 600));
+        panel.setPreferredSize(new Dimension(640, 400));
         frame.getContentPane().add(panel);
         frame.pack();
         frame.setVisible(true);

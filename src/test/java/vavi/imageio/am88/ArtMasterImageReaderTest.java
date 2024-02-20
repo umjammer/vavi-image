@@ -21,10 +21,14 @@ import javax.imageio.ImageReader;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.util.Debug;
+import vavi.util.properties.annotation.Property;
+import vavi.util.properties.annotation.PropsEntity;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -35,11 +39,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (umjammer)
  * @version 0.00 2019/04/11 umjammer initial version <br>
  */
+@PropsEntity(url = "file:local.properties")
 class ArtMasterImageReaderTest {
 
     static {
         System.setProperty("vavi.util.logging.VaviFormatter.extraClassMethod",
                            "sun\\.util\\.logging\\.[\\w\\$]+#\\w+");
+    }
+
+    static boolean localPropertiesExists() {
+        return Files.exists(Paths.get("local.properties"));
+    }
+
+    @Property
+    String art88Image = "src/test/resources/test.am88";
+
+    @BeforeEach
+    void setup() throws IOException {
+        if (localPropertiesExists()) {
+            PropsEntity.Util.bind(this);
+        }
     }
 
     @Test
@@ -70,7 +89,7 @@ class ArtMasterImageReaderTest {
     void test0() throws Exception {
         // using cdl cause junit stops awt thread suddenly
         CountDownLatch cdl = new CountDownLatch(1);
-        main(new String[] { "src/test/resources/test.am88" });
+        main(new String[] { art88Image });
         cdl.await(); // depends on main frame's exit on close
     }
 
