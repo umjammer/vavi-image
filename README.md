@@ -54,7 +54,7 @@
  * ~~ffmpeg resize 4byte 32bit operation is wrong~~
  * DaVinchi (wip, branch:davinch)
  * n88basic image format (wip, branch:n88basic)
- * yet another pic image format (wip)
+ * yet another pic image format (wip, branch:pic)
 
 ## Tech Know
 
