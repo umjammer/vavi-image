@@ -1,8 +1,7 @@
 [![Release](https://jitpack.io/v/umjammer/vavi-image.svg)](https://jitpack.io/#umjammer/vavi-image)
 [![Java CI](https://github.com/umjammer/vavi-image/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/vavi-image/actions/workflows/maven.yml)
 [![CodeQL](https://github.com/umjammer/vavi-image/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/umjammer/vavi-image/actions/workflows/codeql-analysis.yml)
-[![GitHub Packages (only ffmpeg)](https://github.com/umjammer/vavi-image/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/umjammer/vavi-image/actions/workflows/maven-publish.yml)
-![Java](https://img.shields.io/badge/Java-8-b07219)
+![Java](https://img.shields.io/badge/Java-17-b07219)
 
 # vavi-image
 
@@ -33,18 +32,17 @@
 
 ## Quantization
 
-| type                                                                             |quality|comment|
-|----------------------------------------------------------------------------------|---|---|
-| [`ImageMagick`](src/main/java/vavi/awt/image/quantization/ImageMagikQuantizeOp.java) |||
-| `NeuralNet`                                                                      |👑|https://github.com/umjammer/vavi-image-sandbox/wiki/OctTree_vs_NeuralNet|
-| `OctTree`                                                                        |||
+| type                                                                             |quality| comment                                                                                |
+|----------------------------------------------------------------------------------|---|----------------------------------------------------------------------------------------|
+| [`ImageMagick`](src/main/java/vavi/awt/image/quantization/ImageMagikQuantizeOp.java) ||                                                                                        |
+| `NeuralNet`                                                                      |👑| [comparison](https://github.com/umjammer/vavi-image-sandbox/wiki/OctTree-vs-NeuralNet) |
+| `OctTree`                                                                        ||                                                                                        |
 
 ## Installation
 
  * maven: https://jitpack.io/#umjammer/vavi-image
  * if you want to use ffmpeg resizing
-   * [pom.xml](https://github.com/umjammer/vavi-image/wiki/Install-ffmpeg-native-library)
-   * exec jvm w/ `java.library.path` system property e.g `-Djava.library.path=/target/test-classes`
+   * exec jvm w/ `java.library.path` system property e.g `-Djava.library.path=/opt/homebrew/lib`
 
 ## TODO
 
@@ -54,13 +52,13 @@
  * `BufferedImageOp` ???
  * https://github.com/iariro/N88BasicImage
  * ~~ffmpeg resize 4byte 32bit operation is wrong~~
- * DaVinchi (wip)
- * n88basic image format (wip)
- * yet another pic image format (wip)
+ * DaVinchi (wip, branch:davinch)
+ * n88basic image format (wip, branch:n88basic)
+ * yet another pic image format (wip, branch:pic)
 
 ## Tech Know
 
- * Mac Open JDK's JNI library extension is `.dylib`
+ * ~~Mac Open JDK's JNI library extension is `.dylib`~~ already common
  * ~~`libsescale` has MMX bug, this causes segmentation fault when resizing image.~~
 
 ## References
@@ -71,7 +69,7 @@
 
 ### Image I/O PPM Reader
 
-Public Domain
+🅮 Public Domain
 
 ### ImageMagik
 

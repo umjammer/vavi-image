@@ -6,7 +6,7 @@
 
   <groupId>vavi</groupId>
   <artifactId>vavi-image</artifactId>
-  <version>1.0.11</version>
+  <version>1.0.12</version>
 
   <name>Vavi Imaging API</name>
   <organization>
@@ -28,13 +28,17 @@
     </repository>
   </distributionManagement>
 
+  <properties>
+    <brew.prefix>/opt/homebrew</brew.prefix>
+  </properties>
+
   <profiles>
     <profile>
       <id>local (not on jitpack)</id>
       <activation>
         <os>
           <family>mac</family>
-          <arch>x86_64</arch>
+          <arch>aarch64</arch>
         </os>
         <property>
           <name>env.JITPACK</name>
@@ -44,27 +48,67 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <executions>
+              <execution>
+                <id>javah</id>
+                <goals>
+                  <goal>compile</goal>
+                </goals>
+                <phase>compile</phase>
+                <configuration>
+                  <compilerArgs>
+                    <arg>-h</arg>
+                    <arg>${project.build.directory}/native</arg>
+                    <arg>-d</arg>
+                    <arg>${project.build.directory}/native/classes</arg>
+                  </compilerArgs>
+                  <includes>
+                    <include>vavi/awt/image/resample/FfmpegResampleOp.java</include>
+                  </includes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <id>javah</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <phase>compile</phase>
+                <configuration>
+                  <target>
+                    <mkdir dir="${project.build.outputDirectory}/natives/osx_arm64" />
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <!-- ${java.home} contains whitespace (e.g. JetBrain's JVM) doesn't work -->
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>native-maven-plugin</artifactId>
             <version>1.0-alpha-11</version>
             <extensions>true</extensions>
             <configuration>
-              <javahClassNames>
-                <javahClassName>vavi.awt.image.resample.FfmpegResampleOp</javahClassName>
-              </javahClassNames>
-              <javahSearchJNIFromDependencies>false</javahSearchJNIFromDependencies>
-              <javahOS>darwin</javahOS>
               <compilerProvider>generic-classic</compilerProvider>
               <compilerStartOptions>
                 <compilerStartOption>-g -Wall -O2 -fomit-frame-pointer -fPIC</compilerStartOption>
                 <!-- unless locating jdk includes, cause error why??? -->
-                <compilerStartOption>-arch x86_64
-                      -I${java.home}/../include
-                      -I${java.home}/../include/darwin
-                      -I/usr/local/include/libavformat
-                      -I/usr/local/include/libavcodec
-                      -I/usr/local/include/libavutil
-                      -I/usr/local/include/libswscale
+                <compilerStartOption>-arch arm64
+                      -I${java.home}/include
+                      -I${java.home}/include/darwin
+                      -I${brew.prefix}/include
+                      -I${project.build.directory}/native
                 </compilerStartOption>
               </compilerStartOptions>
               <sources>
@@ -76,37 +120,22 @@
                 </source>
               </sources>
               <linkerStartOptions>
-                <linkerStartOption>-dynamiclib -arch x86_64 -v
-                  -L/usr/local/lib -lobjc -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
+                <linkerStartOption>-dynamiclib -arch arm64 -v
+                  -L${brew.prefix}/lib -lobjc -lavformat -lavcodec -lswscale -lavutil</linkerStartOption>
               </linkerStartOptions>
               <linkerFinalName/>
             </configuration>
             <executions>
               <execution>
-                <id>test-dylib</id>
-                <phase>test-compile</phase>
-                <goals>
-                  <goal>javah</goal>
-                  <goal>compile</goal>
-                  <goal>link</goal>
-                </goals>
-                <configuration>
-                  <linkerEndOptions>
-                    <linkerEndOption>-o ${project.build.testOutputDirectory}/libFfmpegResampleOpWrapper.dylib</linkerEndOption>
-                  </linkerEndOptions>
-                </configuration>
-              </execution>
-              <execution>
                 <id>dylib</id>
                 <phase>compile</phase>
                 <goals>
-                  <goal>javah</goal>
                   <goal>compile</goal>
                   <goal>link</goal>
                 </goals>
                 <configuration>
                   <linkerEndOptions>
-                    <linkerEndOption>-o ${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</linkerEndOption>
+                    <linkerEndOption>-o ${project.build.outputDirectory}/natives/osx_arm64/libFfmpegResampleOpWrapper.dylib</linkerEndOption>
                   </linkerEndOptions>
                 </configuration>
               </execution>
@@ -115,87 +144,100 @@
 
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-install-plugin</artifactId>
-            <version>3.0.1</version>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.5</version> <!-- ⚠⚠⚠ ADHOC after 2.5 causes #13 ⚠⚠⚠ -->
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>on jitpack</id>
+      <activation>
+        <property>
+          <name>env.JITPACK</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
             <executions>
               <execution>
-                <id>install-library</id>
-                <phase>install</phase>
+                <id>assets-download</id>
                 <goals>
-                  <goal>install-file</goal>
+                  <goal>run</goal>
+                </goals>
+                <phase>compile</phase>
+                <configuration>
+                  <target>
+                    <mkdir dir="${project.build.outputDirectory}/natives/osx_arm64" />
+                    <get src="${project.url}/releases/download/${project.version}/libFfmpegResampleOpWrapper.dylib"
+                         dest="${project.build.outputDirectory}/natives/osx_arm64"
+                         usetimestamp="true"/>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>local</id>
+      <activation>
+        <file>
+          <exists>${basedir}/local.properties</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>properties-maven-plugin</artifactId>
+            <version>1.1.0</version>
+            <executions>
+              <execution>
+                <id>read-properties</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>read-project-properties</goal>
                 </goals>
                 <configuration>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>vavi-image-ffmpeg</artifactId>
-                  <version>${project.version}</version>
-                  <packaging>dylib</packaging>
-                  <file>${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</file>
+                  <files>
+                    <file>${basedir}/local.properties</file>
+                  </files>
                 </configuration>
               </execution>
             </executions>
           </plugin>
 
           <plugin>
+            <!-- mvn -P local clean initialize antrun:run@assets-download -->
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <version>3.0.0-M2</version>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </plugin>
-
-          <plugin>
-            <!--
-              because of maven deploy-file uploads source, jar also
-              TODO maven-metadata.xml!/metadata/versioning/latest is not updated
-              TODO how about https://stackoverflow.com/a/37552776/6102938
-             -->
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
+            <artifactId>maven-antrun-plugin</artifactId>
             <version>3.1.0</version>
             <executions>
               <execution>
-                <id>deploy-library</id>
-                <phase>deploy</phase>
+                <id>assets-download</id>
                 <goals>
-                  <goal>exec</goal>
+                  <goal>run</goal>
                 </goals>
+                <phase>compile</phase>
+                <configuration>
+                  <target>
+                    <mkdir dir="tmp/src/main/resources/natives/osx_arm64" />
+                    <get src="${test.url}"
+                         dest="tmp/src/main/resources/natives/osx_arm64"
+                         usetimestamp="true"/>
+                  </target>
+                </configuration>
               </execution>
             </executions>
-            <configuration>
-              <executable>mvn</executable>
-              <arguments>
-                <argument>deploy:deploy-file</argument>
-                <argument>-DgroupId=${project.groupId}</argument>
-                <argument>-DartifactId=vavi-image-ffmpeg</argument>
-                <argument>-Dversion=${project.version}</argument>
-                <argument>-Dpackaging=dylib</argument>
-                <argument>-Dfile=${project.build.directory}/libFFmpegWrapper-${project.version}.dylib</argument>
-                <argument>-DrepositoryId=github</argument>
-                <argument>-Durl=https://maven.pkg.github.com/umjammer/vavi-image</argument>
-                <argument>-s</argument>
-                <argument>${env.GITHUB_WORKSPACE}/settings.xml</argument>
-              </arguments>
-            </configuration>
-          </plugin>
-
-          <plugin>
-            <!-- ⚠⚠⚠ AD-HOC after 2.5 causes #13 ⚠⚠⚠ -->
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>2.5</version>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>3.0.0-M7</version>
-            <configuration>
-              <forkMode>once</forkMode>
-              <argLine>
-                -Djava.library.path=${project.build.testOutputDirectory}
-                -Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties
-              </argLine>
-            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -207,11 +249,21 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>3.11.0</version>
         <configuration>
-          <source>8</source>
-          <target>8</target>
-          <encoding>UTF-8</encoding>
+          <release>17</release>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+          <argLine>
+            -Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties
+            -Djava.library.path=${brew.prefix}/lib
+          </argLine>
         </configuration>
       </plugin>
     </plugins>
@@ -229,7 +281,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.9.2</version>
+        <version>5.10.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -240,7 +292,7 @@
     <dependency>
       <groupId>com.github.umjammer</groupId>
       <artifactId>vavi-commons</artifactId>
-      <version>1.1.9</version>
+      <version>1.1.10</version>
     </dependency>
     <dependency>
       <groupId>com.github.umjammer</groupId>
@@ -249,9 +301,15 @@
     </dependency>
 
     <dependency>
+      <groupId>org.scijava</groupId>
+      <artifactId>native-lib-loader</artifactId>
+      <version>2.5.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.github.umjammer</groupId>
       <artifactId>vavi-awt</artifactId>
-      <version>1.0.6</version>
+      <version>1.0.7</version>
       <scope>test</scope>
     </dependency>
     <dependency>
