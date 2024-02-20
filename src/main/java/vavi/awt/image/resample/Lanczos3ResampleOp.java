@@ -25,6 +25,8 @@ import vavi.awt.image.BasicBufferedImageOp;
 /**
  * Lanczos3ResampleOp.
  *
+ * WARNING this filter doesn't deal alpha channel.
+ *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 060616 nsano initial version <br>
  */
@@ -41,7 +43,7 @@ public class Lanczos3ResampleOp extends BasicBufferedImageOp {
         this.sy = sy;
     }
 
-    /* */
+    @Override
     protected int[] filterPixels(int width, int height, int[] inPixels) {
 
         RGB24Image inImage = new MemoryRGB24Image(width, height);
@@ -88,12 +90,13 @@ public class Lanczos3ResampleOp extends BasicBufferedImageOp {
         return outPixels;
     }
 
-    /* */
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return new Rectangle(0, 0, (int) (src.getWidth() * sx), (int) (src.getHeight() * sy));
     }
 
     /** @return scaled point  */
+    @Override
     public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
         if (dstPt == null) {
             dstPt = new Point2D.Double();

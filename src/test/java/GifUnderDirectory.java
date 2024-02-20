@@ -9,6 +9,11 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
@@ -17,9 +22,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import vavi.imageio.IIOUtil;
-
-import vavix.util.grep.FileDigger;
-import vavix.util.grep.RegexFileDigger;
 
 
 /**
@@ -53,15 +55,22 @@ public class GifUnderDirectory {
         frame.pack();
         frame.setVisible(true);
 
-        new RegexFileDigger(file -> {
-            try {
+        Files.walkFileTree(Path.of(args[0]), new SimpleFileVisitor<Path>() {
+            Pattern p = Pattern.compile(".+\\.(gif|GIF)");
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                try {
+                    if (p.matcher(file.getFileName().toString()).find()) {
 System.err.println("--- " + file + " ---");
-                image = ImageIO.read(file);
-                panel.repaint();
-            } catch (IOException e) {
-                e.printStackTrace();
+                        image = ImageIO.read(file.toFile());
+                        panel.repaint();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return FileVisitResult.CONTINUE;
             }
-        }, Pattern.compile(".+\\.(gif|GIF)")).dig(new File(args[0]));
+        });
     }
 }
 
