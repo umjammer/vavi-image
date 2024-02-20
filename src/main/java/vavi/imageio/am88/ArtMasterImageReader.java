@@ -6,15 +6,12 @@
 
 package vavi.imageio.am88;
 
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-
 import javax.imageio.IIOException;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -24,8 +21,6 @@ import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
 import vavi.awt.image.am88.ArtMasterImage;
-import vavi.awt.image.am88.ArtMasterImageSource;
-import vavi.imageio.ImageConverter;
 import vavi.imageio.WrappedImageInputStream;
 import vavi.util.Debug;
 
@@ -41,8 +36,8 @@ public class ArtMasterImageReader extends ImageReader {
     /** */
     private IIOMetadata metadata;
 
-    /** TODO eliminate */
-    private ArtMasterImageSource imageSource;
+    /** */
+    private BufferedImage image;
 
     /** */
     public ArtMasterImageReader(ImageReaderSpi originatingProvider) {
@@ -56,12 +51,18 @@ public class ArtMasterImageReader extends ImageReader {
 
     @Override
     public int getWidth(int imageIndex) throws IIOException {
-        return ArtMasterImage.W;
+        if (imageIndex != 0) {
+            throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
+        }
+        return image.getWidth();
     }
 
     @Override
     public int getHeight(int imageIndex) throws IIOException {
-        return ArtMasterImage.H;
+        if (imageIndex != 0) {
+            throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
+        }
+        return image.getHeight();
     }
 
     @Override
@@ -78,12 +79,11 @@ public class ArtMasterImageReader extends ImageReader {
 Debug.println(input);
         }
 
-        Toolkit t = Toolkit.getDefaultToolkit();
         try {
-            imageSource = new ArtMasterImageSource(is);
-            Image image = t.createImage(imageSource);
-//Debug.println(w + ", " + h + ": " + image.getClass().getName() + "[" + imageIndex + "]");
-            return ImageConverter.getInstance().toBufferedImage(image);
+            ArtMasterImage ami = new ArtMasterImage(is);
+            image = new BufferedImage(ami.getWidth(), ami.getHeight(), BufferedImage.TYPE_BYTE_INDEXED, (IndexColorModel) ami.getColorModel());
+            image.getRaster().setDataElements(0, 0, ami.getWidth(), ami.getHeight(), ami.getPixels());
+            return image;
         } catch (IOException e) {
             throw new IIOException(e.getMessage(), e);
         }
@@ -96,12 +96,18 @@ Debug.println(input);
 
     @Override
     public IIOMetadata getImageMetadata(int imageIndex) throws IIOException {
+        if (imageIndex != 0) {
+            throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
+        }
         return metadata;
     }
 
     @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
-Debug.println(Level.FINE, "here");
+        if (imageIndex != 0) {
+            throw new IndexOutOfBoundsException(imageIndex + "/" + 1);
+        }
+
         ImageTypeSpecifier specifier = null;
         java.util.List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);

@@ -22,6 +22,8 @@ import vavi.util.StringUtil;
  * <p>
  * magic SS_SIF
  * separated RGB RLE
+ * </p>
+ * TODO 400 line
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (umjammer)
  * @version 0.00 2019/04/10 umjammer initial version <br>
@@ -41,23 +43,38 @@ public class ArtMasterImage {
     public ColorModel cm = defaultCm;
 
     /** width */
-    public static final int W = 640;
+    private static final int W = 640;
 
     /** height */
-    public static final int H = 200;
+    private int H = 200;
 
     /** Red buffer */
-    private byte[] R = new byte[(W / 8) * H + 256];
+    private byte[] R;
 
     /** Blue buffer */
-    private byte[] G = new byte[(W / 8) * H + 256];
+    private byte[] G;
 
     /** Green buffer */
-    private byte[] B = new byte[(W / 8) * H + 256];
+    private byte[] B;
 
     private static final byte[] header = {
-        'S', 'S', '_', 'S', 'I', 'F', ' ', ' ', ' ', ' ', '0', '.', '0', '0', 0x1a, 0
+        'S', 'S', '_', 'S', 'I', 'F', ' ', ' ', ' ', ' ', '#', '.', '#', '#', 0x1a, 0
     };
+
+    /** */
+    public int getWidth() {
+        return W;
+    }
+
+    /** */
+    public int getHeight() {
+        return H;
+    }
+
+    /** */
+    public ColorModel getColorModel() {
+        return defaultCm;
+    }
 
     /**
      * Creates ArtMaster88 image. 
@@ -70,15 +87,18 @@ public class ArtMasterImage {
         int l = 0;
         while (l < 40) {
             l += in.read(buf, l, 40 - l);
-//Debug.println(l);
         }
 
-//Debug.dump(buf);
         for (int i = 0; i < 16; i++) {
-            if (buf[i] != header[i]) {
+            if (header[i] == '#') {
+                if (!Character.isDigit(buf[i])) {
+                    throw new IllegalArgumentException("wrong version: " + StringUtil.getDump(buf, 16));
+                }
+            } else if (buf[i] != header[i]) {
                 throw new IllegalArgumentException("wrong header: " + StringUtil.getDump(buf, 16));
             }
         }
+Debug.println(Level.FINE, "version: " + (char) buf[10] + "." + (char) buf[12] + (char) buf[13]);
 
         l = 0;
         if (buf[16] == 'I') {
@@ -94,6 +114,18 @@ Debug.println(Level.FINE, "skip I: " + l);
             }
 Debug.println(Level.FINE, "skip B: " + l);
         }
+
+        H = buf[26] & 0xff | (buf[27] & 0xff) << 8;
+        if (H == 0) H = 200;
+        if (H == 400) {
+            // TODO use recoil currently
+            throw new IllegalArgumentException("wrong height: 400 lines mode is not supported");
+        }
+Debug.println(Level.FINE, "height: " + H);
+
+        R = new byte[(W / 8) * H + 256];
+        G = new byte[(W / 8) * H + 256];
+        B = new byte[(W / 8) * H + 256];
 
         PushbackInputStream pin = new PushbackInputStream(in, 2);
 

@@ -73,13 +73,13 @@ public class ArtMasterImageSource implements ImageProducer {
      * Loads pixels.
      */
     private void loadPixel() {
-        ic.setDimensions(ArtMasterImage.W, ArtMasterImage.H);
+        ic.setDimensions(image.getWidth(), image.getHeight());
         ic.setProperties(new Hashtable<>());
         ic.setColorModel(image.cm);
 
         ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT | ImageConsumer.COMPLETESCANLINES | ImageConsumer.SINGLEPASS | ImageConsumer.SINGLEFRAME);
 
-        ic.setPixels(0, 0, ArtMasterImage.W, ArtMasterImage.H, image.cm, image.getPixels(), 0, ArtMasterImage.W);
+        ic.setPixels(0, 0, image.getWidth(), image.getHeight(), image.cm, image.getPixels(), 0, image.getWidth());
 
         ic.imageComplete(ImageConsumer.STATICIMAGEDONE);
     }
