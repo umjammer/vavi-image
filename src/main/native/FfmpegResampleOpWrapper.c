@@ -6,8 +6,8 @@
 
 #include <stdio.h>
 #include <jni.h>
-#include "avutil.h"
-#include "avformat.h"
+#include "libavutil/avutil.h"
+#include "libavformat/avformat.h"
 #include "vavi_awt_image_resample_FfmpegResampleOp.h"
 
 /*
@@ -105,8 +105,8 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
 
 #else
 
-#include "swscale.h"
-#include "imgutils.h"
+#include "libswscale/swscale.h"
+#include "libavutil/imgutils.h"
 
 #ifdef __cplusplus
 extern "C" {

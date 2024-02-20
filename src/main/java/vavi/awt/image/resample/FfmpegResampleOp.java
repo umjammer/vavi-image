@@ -17,8 +17,10 @@ import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.awt.image.IndexColorModel;
+import java.io.IOException;
 import java.util.logging.Level;
 
+import org.scijava.nativelib.NativeLoader;
 import vavi.util.Debug;
 
 
@@ -177,9 +179,9 @@ Debug.println(Level.FINE, "dest data type: " + dest.getRaster().getDataBuffer().
     /* */
     static {
         try {
-            System.loadLibrary("FfmpegResampleOpWrapper");
-        } catch (UnsatisfiedLinkError e) {
-            e.printStackTrace(System.err);
+            NativeLoader.loadLibrary("FfmpegResampleOpWrapper");
+        } catch (IOException e) {
+Debug.printStackTrace(e);
             throw new IllegalStateException(e);
         }
     }
