@@ -224,5 +224,3 @@ System.err.println("quality: " + quality + ", L size: " + sizeL + ", R size: " +
         frame.setVisible(true);
     }
 }
-
-/* */

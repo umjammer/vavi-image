@@ -218,5 +218,3 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
         return c;
     }
 }
-
-/* */

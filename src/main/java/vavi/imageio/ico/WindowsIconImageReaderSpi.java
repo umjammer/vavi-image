@@ -115,5 +115,3 @@ Debug.println(obj);
         return new WindowsIconImageReader(this);
     }
 }
-
-/* */

@@ -51,5 +51,3 @@ Debug.println(image);
         }
     }
 }
-
-/* */

@@ -104,5 +104,3 @@ public class WindowsBitmapImageReaderSpi extends ImageReaderSpi {
         return new WindowsBitmapImageReader(this);
     }
 }
-
-/* */

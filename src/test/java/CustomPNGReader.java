@@ -71,5 +71,3 @@ public class CustomPNGReader {
         iioRegistry.deregisterServiceProvider(sp, pt);
     }
 }
-
-/* */

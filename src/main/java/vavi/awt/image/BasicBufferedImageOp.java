@@ -70,5 +70,3 @@ public abstract class BasicBufferedImageOp extends AbstractBufferedImageOp imple
      */
     protected abstract int[] filterPixels(int width, int height, int[] inPixels);
 }
-
-/* */

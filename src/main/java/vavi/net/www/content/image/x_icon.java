@@ -29,5 +29,3 @@ public class x_icon extends ContentHandler {
         return new WindowsIconImageSource(in);
     }
 }
-
-/* */

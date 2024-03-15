@@ -104,5 +104,3 @@ public class PpmImageReaderSpi extends ImageReaderSpi {
         return new PpmImageReader(this);
     }
 }
-
-/* */

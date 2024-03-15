@@ -111,5 +111,3 @@ Debug.println(Level.FINE, obj);
         return new PicImageReader(this);
     }
 }
-
-/* */

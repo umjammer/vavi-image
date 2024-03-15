@@ -699,5 +699,3 @@ public class ImageMagickQuantizer {
         }
     }
 }
-
-/* */

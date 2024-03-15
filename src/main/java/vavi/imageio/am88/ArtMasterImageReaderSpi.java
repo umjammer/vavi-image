@@ -113,5 +113,3 @@ Debug.println(obj);
         return new ArtMasterImageReader(this);
     }
 }
-
-/* */

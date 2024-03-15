@@ -71,5 +71,3 @@ public class ImageMagickQuantizeOp extends BasicBufferedImageOp {
         filter.filter(inImage, outImage);
     }
 }
-
-/* */

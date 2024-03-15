@@ -104,5 +104,3 @@ public abstract class AbstractBufferedImageOp implements BufferedImageOp, Clonea
         }
     }
 }
-
-/* */

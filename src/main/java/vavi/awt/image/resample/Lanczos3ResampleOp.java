@@ -105,5 +105,3 @@ public class Lanczos3ResampleOp extends BasicBufferedImageOp {
         return dstPt;
     }
 }
-
-/* */

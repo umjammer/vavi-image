@@ -178,5 +178,3 @@ public class GaussianBlurOp extends AbstractBufferedImageOp {
         return c;
     }
 }
-
-/* */

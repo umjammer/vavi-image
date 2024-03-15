@@ -84,5 +84,3 @@ public class ArtMasterImageSource implements ImageProducer {
         ic.imageComplete(ImageConsumer.STATICIMAGEDONE);
     }
 }
-
-/* */

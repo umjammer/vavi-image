@@ -267,5 +267,3 @@ public class PpmImageReader extends ImageReader {
         return l.iterator();
     }
 }
-
-/* */

@@ -98,5 +98,3 @@ public class AwtResampleOp implements BufferedImageOp {
         return null;
     }
 }
-
-/* */

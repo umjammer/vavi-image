@@ -132,5 +132,3 @@ public class WindowsBitmapImageSource implements ImageProducer {
         ic.imageComplete(ImageConsumer.STATICIMAGEDONE);
     }
 }
-
-/* */

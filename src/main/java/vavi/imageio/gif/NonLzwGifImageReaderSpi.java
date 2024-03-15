@@ -108,5 +108,3 @@ Debug.println("unsupported input: " + source);
         return new NonLzwGifImageReader(this);
     }
 }
-
-/* */

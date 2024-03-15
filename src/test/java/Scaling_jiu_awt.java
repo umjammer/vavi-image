@@ -63,5 +63,3 @@ System.err.println("awt filter: " + (System.currentTimeMillis() - t) + " ms");
         frame2.setVisible(true);
     }
 }
-
-/* */

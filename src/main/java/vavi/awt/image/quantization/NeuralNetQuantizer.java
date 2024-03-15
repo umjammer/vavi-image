@@ -616,5 +616,3 @@ public class NeuralNetQuantizer {
         return best;
     }
 }
-
-/* */

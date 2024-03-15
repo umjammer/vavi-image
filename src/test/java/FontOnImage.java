@@ -93,5 +93,3 @@ System.err.println(image);
         frame.setVisible(true);
     }
 }
-
-/* */

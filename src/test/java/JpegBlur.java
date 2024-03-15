@@ -247,5 +247,3 @@ System.err.println("quality: " + quality + ", size: " + size + ", blur: " + blur
         }
     }
 }
-
-/* */

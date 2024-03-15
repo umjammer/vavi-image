@@ -112,5 +112,3 @@ Debug.println(Level.FINE, obj);
         return new MakiImageReader(this);
     }
 }
-
-/* */

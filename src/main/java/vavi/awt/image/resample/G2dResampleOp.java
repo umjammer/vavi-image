@@ -113,5 +113,3 @@ public class G2dResampleOp implements BufferedImageOp {
         return hints;
     }
 }
-
-/* */

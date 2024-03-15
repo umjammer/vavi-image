@@ -1,10 +1,4 @@
 /*
- * Copyright (c) 2023 by Naohide Sano, All rights reserved.
- *
- * Programmed by Naohide Sano
- */
-
-/*
  * http://raimeiji.s1006.xrea.com/labo/pmloader/index.html
  */
 

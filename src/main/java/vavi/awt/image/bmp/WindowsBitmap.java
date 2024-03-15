@@ -757,5 +757,3 @@ if (bh.headerSize - 40 > 0) {
         return bitmap;
     }
 }
-
-/* */

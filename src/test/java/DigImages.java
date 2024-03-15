@@ -147,5 +147,3 @@ System.err.println(e.getMessage() + ": " + p);
         frame.setVisible(true);
     }
 }
-
-/* */

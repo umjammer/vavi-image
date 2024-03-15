@@ -275,5 +275,3 @@ public class OctTreeQuantizer implements Quantizer {
         return index;
     }
 }
-
-/* */

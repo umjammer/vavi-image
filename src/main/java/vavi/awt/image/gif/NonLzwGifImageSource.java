@@ -101,5 +101,3 @@ public class NonLzwGifImageSource implements ImageProducer {
         ic.imageComplete(ImageConsumer.STATICIMAGEDONE);
     }
 }
-
-/* */

@@ -68,5 +68,3 @@ Debug.println(imageReader + ", " + imageWriter + ", " + imageTranscoder);
         ImageIO.write(image, args[0], new File(args[2]));
     }
 }
-
-/* */

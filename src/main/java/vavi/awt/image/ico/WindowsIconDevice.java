@@ -146,5 +146,3 @@ Debug.println(iconDevices[i]);
         return iconDevices;
     }
 }
-
-/* */

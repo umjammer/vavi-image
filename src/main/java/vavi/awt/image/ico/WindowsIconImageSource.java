@@ -169,5 +169,3 @@ public class WindowsIconImageSource implements ImageProducer {
         return bitmap.getWindowsBitmap();
     }
 }
-
-/* */

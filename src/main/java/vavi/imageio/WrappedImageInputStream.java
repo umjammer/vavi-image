@@ -73,5 +73,3 @@ public class WrappedImageInputStream extends InputStream {
         return is.skipBytes(n);
     }
 }
-
-/* */

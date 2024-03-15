@@ -87,5 +87,3 @@ System.err.println(args[count]);
         frame.pack();
     }
 }
-
-/* */

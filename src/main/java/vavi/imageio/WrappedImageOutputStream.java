@@ -43,5 +43,3 @@ public class WrappedImageOutputStream extends OutputStream {
         os.write(b);
     }
 }
-
-/* */

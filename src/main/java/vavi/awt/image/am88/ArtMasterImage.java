@@ -191,5 +191,3 @@ Debug.println(Level.FINE, "height: " + H);
         return result;
     }
 }
-
-/* */

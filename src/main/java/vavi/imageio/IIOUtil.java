@@ -179,5 +179,3 @@ Debug.println(Level.FINEST, "ImageReader: " + ir.getClass().getName());
         throw new IllegalStateException("no suitable ImageReader: " + type);
     }
 }
-
-/* */

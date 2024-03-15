@@ -99,5 +99,3 @@ Debug.println(app.art88);
         frame.setVisible(true);
     }
 }
-
-/* */

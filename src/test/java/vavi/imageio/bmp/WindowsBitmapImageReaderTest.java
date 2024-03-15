@@ -87,5 +87,3 @@ System.err.println("found ImageReader: " + ir.getClass().getName());
         frame.setVisible(true);
     }
 }
-
-/* */

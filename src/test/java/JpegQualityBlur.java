@@ -180,5 +180,3 @@ System.err.println("quality: " + quality + ", size: " + baos.size());
         frame.setVisible(true);
     }
 }
-
-/* */
