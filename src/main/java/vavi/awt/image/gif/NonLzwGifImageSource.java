@@ -21,7 +21,7 @@ import java.util.Hashtable;
 public class NonLzwGifImageSource implements ImageProducer {
 
     /** GIF Image */
-    private GifImage gifImage;
+    private final GifImage gifImage;
 
     /** @see ImageConsumer */
     private ImageConsumer ic;
@@ -80,21 +80,11 @@ public class NonLzwGifImageSource implements ImageProducer {
 
         ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT | ImageConsumer.COMPLETESCANLINES | ImageConsumer.SINGLEPASS | ImageConsumer.SINGLEFRAME);
 
-        byte[] vram;
-        switch (cm.getPixelSize()) {
-        case 1:
-            vram = gifImage.loadMonoColor(index);
-            break;
-        case 2:
-        case 3:
-        case 4:
-            vram = gifImage.load16Color(index);
-            break;
-        default:
-        case 8:
-            vram = gifImage.load256Color(index);
-            break;
-        }
+        byte[] vram = switch (cm.getPixelSize()) {
+            case 1 -> gifImage.loadMonoColor(index);
+            case 2, 3, 4 -> gifImage.load16Color(index);
+            default -> gifImage.load256Color(index);
+        };
 
         ic.setPixels(0, 0, width, height, cm, vram, 0, width);
 

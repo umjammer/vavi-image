@@ -8,13 +8,16 @@ package vavi.awt.image.ico;
 
 import java.awt.Point;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 import vavi.io.LittleEndianDataInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
- * アイコンの大きさ等の情報を表すクラスです．
+ * This class represents information such as the size of an icon.
  *
  * <pre>
  *
@@ -25,7 +28,7 @@ import vavi.util.Debug;
  *  WORD  hotspot x
  *  WORD  hotspot y
  *  DWORD size
- *  DWORD offset - ヘッダ(6) + デバイス(16) x 個数 + size x #
+ *  DWORD offset - header(6) + device(16) x count + size x #
  *
  * </pre>
  *
@@ -35,69 +38,71 @@ import vavi.util.Debug;
  */
 public class WindowsIconDevice {
 
-    /** 幅 */
+    private static final Logger logger = getLogger(WindowsIconDevice.class.getName());
+
+    /** width */
     private int width;
 
-    /** 高さ */
+    /** height */
     private int height;
 
-    /** 色数 */
+    /** number of colors */
     private int colors;
 
-    /** X ホットスポット */
+    /** X hot spot */
     private int hotspotX;
 
-    /** Y ホットスポット */
+    /** Y hot spot */
     private int hotspotY;
 
-    /** サイズ */
+    /** size */
     private int size;
 
-    /** オフセット */
+    /** offset */
     private int offset;
 
-    /** #readFrom 用 */
+    /** for {@link #readFrom} */
     private WindowsIconDevice() {
     }
 
-    /** アイコンを作成します． */
+    /** Creates an icon. */
     public WindowsIconDevice(int width, int height, int colors) {
         this.width = width;
         this.height = height;
         this.colors = colors;
     }
 
-    /** 幅を取得します． */
+    /** Gets the width. */
     public int getWidth() {
         return width;
     }
 
-    /** 高さを取得します． */
+    /** Gets the height. */
     public int getHeight() {
         return height;
     }
 
-    /** 色数を取得します． */
+    /** Gets the number of colors. */
     public int getColors() {
         return colors;
     }
 
-    /** 色数を設定します． */
+    /** Sets the number of colors. */
     public void setColors(int colors) {
         this.colors = colors;
     }
 
-    /** サイズを取得します． */
+    /** Gets the size. */
     public int getSize() {
         return size;
     }
 
-    /** オフセットを取得します． */
+    /** Gets the offset. */
     public int getOffset() {
         return offset;
     }
 
-    /** ホットスポットを取得します． */
+    /** Gets the hot spot. */
     public Point getHotspot() {
         return new Point(hotspotX, hotspotY);
     }
@@ -114,7 +119,7 @@ public class WindowsIconDevice {
     }
 
     /**
-     * アイコンのデバイスのインスタンスをストリームから指定した個数作成します．
+     * Creates a specified number of instances of the icon device from the stream.
      */
     public static WindowsIconDevice[] readFrom(LittleEndianDataInputStream lin, int number) throws IOException {
 
@@ -133,14 +138,14 @@ public class WindowsIconDevice {
             iconDevices[i].size = lin.readInt();
             iconDevices[i].offset = lin.readInt();
 
-            // 書き出しのときは 0 に戻す！
-//          if (iconDevices[i].colors == 0) {
-// Debug.println("set color 0 -> 256");
-//              iconDevices[i].colors = 256;
-//          }
+            // Set it back to 0 when exporting!
+//            if (iconDevices[i].colors == 0) {
+//logger.log(Level.TRACE, "set color 0 -> 256");
+//                iconDevices[i].colors = 256;
+//            }
 
-// Debug.println("device [" + i + "]");
-Debug.println(iconDevices[i]);
+//logger.log(Level.TRACE, "device [" + i + "]");
+logger.log(Level.DEBUG, iconDevices[i]);
         }
 
         return iconDevices;

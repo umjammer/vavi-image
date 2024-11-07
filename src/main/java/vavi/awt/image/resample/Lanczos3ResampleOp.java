@@ -33,9 +33,9 @@ import vavi.awt.image.BasicBufferedImageOp;
 public class Lanczos3ResampleOp extends BasicBufferedImageOp {
 
     /** */
-    private double sx;
+    private final double sx;
     /** */
-    private double sy;
+    private final double sy;
 
     /** */
     public Lanczos3ResampleOp(double sx, double sy) {

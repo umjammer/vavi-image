@@ -7,11 +7,13 @@ package vavi.awt.image.mag;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Arrays;
-import java.util.logging.Level;
 
 import vavi.io.SeekableDataInput;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -23,6 +25,8 @@ import vavi.util.Debug;
  * @see "https://mooncore.eu/bunny/txt/makichan.htm"
  */
 public class Mag {
+
+    private static final Logger logger = getLogger(Mag.class.getName());
 
     private Mag() {}
 
@@ -45,10 +49,10 @@ public class Mag {
         // skip until the header
         int headerOffset = 30;
         sdi.position(headerOffset);
-        while (0x1A != sdi.readByte()) ++headerOffset;
+        while (0x1a != sdi.readByte()) ++headerOffset;
 
         headerOffset++;
-Debug.println(Level.FINE, "headerOffset: " + headerOffset);
+logger.log(Level.DEBUG, "headerOffset: " + headerOffset);
         sdi.position(headerOffset);
 
         class MagInfo {
@@ -79,7 +83,7 @@ Debug.println(Level.FINE, "headerOffset: " + headerOffset);
 
                 colors = (mode & 0x80) != 0 ? 256 : 16;
                 pixelUnitLog = (mode & 0x80) != 0 ? 1 : 2;
-                width = ((ex & 0xFFF8) | 7) - (sx & 0xFFF8) + 1;
+                width = ((ex & 0xfff8) | 7) - (sx & 0xfff8) + 1;
                 height = ey - sy + 1;
                 flagSize = width >> (pixelUnitLog + 1);
             }
@@ -126,7 +130,7 @@ Debug.println(Level.FINE, "headerOffset: " + headerOffset);
         mag.pixelOffset = sdi.readInt();
         mag.pixelSize = sdi.readInt();
         mag.init();
-Debug.println(Level.FINE, mag);
+logger.log(Level.DEBUG, mag);
 
         // image extraction buffer for 16 lines
         byte[] data = new byte[mag.width * 16];
@@ -135,17 +139,17 @@ Debug.println(Level.FINE, mag);
         // (r0,g0,b0),(r1,g1,b1),...
         byte[] palette = new byte[mag.colors * 3];
         sdi.readFully(palette, 0, mag.colors * 3);
-Debug.printf(Level.FINE, "palette: pos: %d, len: %d", headerOffset + 32, mag.colors * 3);
+logger.log(Level.DEBUG, String.format("palette: pos: %d, len: %d", headerOffset + 32, mag.colors * 3));
 
         byte[] flagABuf = new byte[mag.flagASize];
         sdi.position(headerOffset + mag.flagAOffset);
         sdi.readFully(flagABuf, 0, mag.flagASize);
-Debug.printf(Level.FINE, "flagA: pos: %d, len: %d", headerOffset + mag.flagAOffset, mag.flagASize);
+logger.log(Level.DEBUG, String.format("flagA: pos: %d, len: %d", headerOffset + mag.flagAOffset, mag.flagASize));
 
         byte[] flagBBuf = new byte[mag.flagBSize];
         sdi.position(headerOffset + mag.flagBOffset);
         sdi.readFully(flagBBuf, 0, mag.flagBSize);
-Debug.printf(Level.FINE, "flagB: pos: %d, len: %d", headerOffset + mag.flagBOffset, mag.flagBSize);
+logger.log(Level.DEBUG, String.format("flagB: pos: %d, len: %d", headerOffset + mag.flagBOffset, mag.flagBSize));
 
         byte[] flagBuf = new byte[mag.flagSize];
 
@@ -156,7 +160,7 @@ Debug.printf(Level.FINE, "flagB: pos: %d, len: %d", headerOffset + mag.flagBOffs
 
         int src = 0; // (headerOffset + mag.pixelOffset) % (pixelBufSize);
         sdi.readFully(pixel, src, pixelBufSize - src);
-Debug.printf(Level.FINE, "pixel: pos: %d, len: %d", headerOffset + mag.pixelOffset, pixelBufSize - src);
+logger.log(Level.DEBUG, String.format("pixel: pos: %d, len: %d", headerOffset + mag.pixelOffset, pixelBufSize - src));
 
         int flagAPos = 0;
         int flagBPos = 0;
@@ -173,7 +177,7 @@ Debug.printf(Level.FINE, "pixel: pos: %d, len: %d", headerOffset + mag.pixelOffs
         int copySize = 1 << mag.pixelUnitLog;
         int mask = 0x80;
 
-Debug.printf(Level.FINE, "width: %d, height: %d", mag.width, mag.height);
+logger.log(Level.DEBUG, String.format("width: %d, height: %d", mag.width, mag.height));
 
         int destDiff = 0;
 

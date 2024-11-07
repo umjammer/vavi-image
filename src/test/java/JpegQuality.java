@@ -96,9 +96,9 @@ System.err.println(w + ", " + h);
         qualitySlider.setMinimum(5);
         qualitySlider.setValue(75);
         qualitySlider.addChangeListener(new ChangeListener() {
-            ImageConverter converter = ImageConverter.getInstance();
-            ImageWriter iwL;
-            ImageWriter iwR;
+            final ImageConverter converter = ImageConverter.getInstance();
+            final ImageWriter iwL;
+            final ImageWriter iwR;
             {
                 // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
                 iwL = IIOUtil.getImageWriter("JPEG", classNameL);
@@ -107,6 +107,7 @@ System.err.println(w + ", " + h);
                 //
                 converter.setColorModelType(BufferedImage.TYPE_INT_RGB);
             }
+            @Override
             public void stateChanged(ChangeEvent event) {
                 JSlider source = (JSlider) event.getSource();
                 if (source.getValueIsAdjusting()) {

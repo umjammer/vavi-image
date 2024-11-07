@@ -8,13 +8,15 @@ package vavi.imageio.gif;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Locale;
-
+import java.util.Properties;
 import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
-import vavi.util.Debug;
+import static java.lang.System.getLogger;
 
 
 /**
@@ -25,8 +27,26 @@ import vavi.util.Debug;
  */
 public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
 
+    private static final Logger logger = getLogger(NonLzwGifImageReaderSpi.class.getName());
+
+    static {
+        try {
+            try (InputStream is = NonLzwGifImageReaderSpi.class.getResourceAsStream("/META-INF/maven/vavi/vavi-image/pom.properties")) {
+                if (is != null) {
+                    Properties props = new Properties();
+                    props.load(is);
+                    Version = props.getProperty("version", "undefined in pom.properties");
+                } else {
+                    Version = System.getProperty("vavi.test.version", "undefined");
+                }
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     private static final String VendorName = "http://www.vavisoft.com";
-    private static final String Version = "1.00";
+    private static final String Version;
     private static final String ReaderClassName =
         "vavi.imageio.gif.NonLzwGifImageReader";
     private static final String[] Names = {
@@ -82,15 +102,14 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
 
     @Override
     public boolean canDecodeInput(Object source) throws IOException {
-        if (source instanceof ImageInputStream) {
-            ImageInputStream is = (ImageInputStream) source;
+        if (source instanceof ImageInputStream is) {
             byte[] bytes = new byte[4];
             try {
                 is.mark();
                 is.readFully(bytes);
                 is.reset();
             } catch (IOException e) {
-Debug.printStackTrace(e);
+logger.log(Level.ERROR, e.getMessage(), e);
                 return false;
             }
             return bytes[0] == 'G' && // 識別子 = "GIF8" + ("7a" or "9a")
@@ -98,7 +117,7 @@ Debug.printStackTrace(e);
                    bytes[2] == 'F' &&
                    bytes[3] == '8';
         } else {
-Debug.println("unsupported input: " + source);
+logger.log(Level.WARNING, "unsupported input: " + source);
             return false;
         }
     }

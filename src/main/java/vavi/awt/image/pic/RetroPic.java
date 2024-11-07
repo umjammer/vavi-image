@@ -9,13 +9,15 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import vavi.util.ByteUtil;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -27,6 +29,8 @@ import vavi.util.Debug;
  *          2014-05-19 1.51 performance up
  */
 public class RetroPic {
+
+    private static final Logger logger = getLogger(RetroPic.class.getName());
 
     private Object[][] pixels;
     private int width, height;
@@ -69,7 +73,7 @@ public class RetroPic {
             }
             commentBuffer.add((byte) Integer.parseInt(s, 2));
         }
-        if (commentBuffer.size() != 0) {
+        if (!commentBuffer.isEmpty()) {
             comment = comment(ByteUtil.toByteArray(commentBuffer));
             if (comment.startsWith("/MM/")) {
                 // extended comment
@@ -78,7 +82,7 @@ public class RetroPic {
                 }
                 comment = comment.substring(comment.indexOf(":") + 1);
             }
-Debug.println(Level.FINE, "COMMENT:\n" + comment);
+logger.log(Level.DEBUG, "COMMENT:\n" + comment);
         }
         while ((pos += 8) <= len) {
             if (data.startsWith("00000000", pos)) {
@@ -91,7 +95,7 @@ Debug.println(Level.FINE, "COMMENT:\n" + comment);
         int mode = Integer.parseInt(s, 2);
         s = data.substring(pos + 4, pos + 8);
         platform = Integer.parseInt(s, 2);
-Debug.printf(Level.FINE, "platform: %d, mode: %d", platform, mode);
+logger.log(Level.DEBUG, String.format("platform: %d, mode: %d", platform, mode));
         boolean isHR;
         boolean pseudo256;
         switch (platform) {
@@ -101,7 +105,7 @@ Debug.printf(Level.FINE, "platform: %d, mode: %d", platform, mode);
         case 0x1: // PC-88VA 256 -> GGGRRRBB, 4096 -> GGGGRRRRBBBB, 65536 -> GGGGGGRRRRRBBBBB
             isHR = (mode & 0x01) != 0;
             pseudo256 = (mode & 0x02) != 0;
-Debug.printf(Level.FINE, "isHR: %s, pseudo256: %s", isHR, pseudo256);
+logger.log(Level.DEBUG, String.format("isHR: %s, pseudo256: %s", isHR, pseudo256));
             break;
         case 0x2: // FM-TOWNS 1:1 32768 GGGGGRRRRRBBBBB
             break;
@@ -119,7 +123,7 @@ Debug.printf(Level.FINE, "isHR: %s, pseudo256: %s", isHR, pseudo256);
         pos += 8;
         // color depth
         int depth = Integer.parseInt(data.substring(pos, pos + 16), 2);
-Debug.println(Level.FINE, "depth: " + depth);
+logger.log(Level.DEBUG, "depth: " + depth);
         if (depth != 15 && depth != 16) {
             throw new IllegalArgumentException("unsupported color depth: " + depth);
         }
@@ -129,21 +133,21 @@ Debug.println(Level.FINE, "depth: " + depth);
         pos += 16;
         height = Integer.parseInt(data.substring(pos, pos + 16), 2);
         pos += 16;
-Debug.printf(Level.FINE, "size: %dx%d", width, height);
+logger.log(Level.DEBUG, String.format("size: %dx%d", width, height));
         int pixels = width * height;
         if (pixels == 0) {
             throw new IllegalArgumentException("no pixels");
         }
         if (platform == 1) {
             if (height == 200) {
-Debug.printf(Level.FINE, "set height 400");
+logger.log(Level.DEBUG, "set height 400");
                 height = 400;
             }
         }
         // skip extension part
         int xs, ys, rx, ry, pbl; // TODO implement
         if (hasHdExtension) {
-Debug.printf(Level.FINE, "has extension");
+logger.log(Level.DEBUG, "has extension");
             pos += 48;
         }
 
@@ -313,7 +317,7 @@ Debug.printf(Level.FINE, "has extension");
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (this.pixels[x][y] == null) {
-//Debug.printf("here: %d, %d, %s", x, y, prevColor);
+//logger.log(Level.TRACE, String.format("here: %d, %d, %s", x, y, prevColor));
                     this.pixels[x][y] = prevColor;
                 } else {
                     prevColor = this.pixels[x][y];
@@ -336,14 +340,11 @@ Debug.printf(Level.FINE, "has extension");
 
     /** Converts string to color */
     private static int convertColor(String data, int colorDepth) {
-        switch (colorDepth) {
-        case 15:
-            return (int) Math.round(Integer.parseInt(data, 2) * 8.22);
-        case 16:
-            return (int) Math.round(Integer.parseInt(data, 2) * 4.04);
-        default:
-            throw new IllegalArgumentException(String.valueOf(colorDepth));
-        }
+        return switch (colorDepth) {
+            case 15 -> (int) Math.round(Integer.parseInt(data, 2) * 8.22);
+            case 16 -> (int) Math.round(Integer.parseInt(data, 2) * 4.04);
+            default -> throw new IllegalArgumentException(String.valueOf(colorDepth));
+        };
     }
 
     /** */
@@ -360,7 +361,7 @@ Debug.printf(Level.FINE, "has extension");
     /** Draws image. */
     private BufferedImage drawImage() {
         BufferedImage image = new BufferedImage((int) (width * xScale), (int) (height * yScale), BufferedImage.TYPE_INT_RGB);
-Debug.printf(Level.FINE, "image: %dx%d (%dx%d)", width, height, image.getWidth(), image.getHeight());
+logger.log(Level.DEBUG, String.format("image: %dx%d (%dx%d)", width, height, image.getWidth(), image.getHeight()));
         Graphics2D g2d = image.createGraphics();
         g2d.scale(xScale, yScale);
         if (platform == 1) {

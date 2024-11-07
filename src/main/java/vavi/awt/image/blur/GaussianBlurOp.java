@@ -22,12 +22,12 @@ public class GaussianBlurOp extends AbstractBufferedImageOp {
     /** */
     public static int ZERO_EDGES = 0;
     /** */
-    public static int CLAMP_EDGES = 1;
+    public static final int CLAMP_EDGES = 1;
     /** */
-    public static int WRAP_EDGES = 2;
+    public static final int WRAP_EDGES = 2;
 
     /** */
-    protected boolean alpha = true;
+    protected final boolean alpha = true;
 
     /** */
     protected float radius;

@@ -24,7 +24,6 @@ import javax.swing.JPanel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.util.Debug;
 import vavi.util.properties.annotation.Property;
@@ -115,6 +114,7 @@ Debug.println("found ImageReader: " + ir.getClass().getName());
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
+            @Override
             public void paint(Graphics g) {
                 g.drawImage(image, 0, 0, 640, 400, 0, 0, 640, 200, this);
             }

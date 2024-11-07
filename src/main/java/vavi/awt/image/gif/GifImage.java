@@ -9,13 +9,16 @@ import java.awt.image.IndexColorModel;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import vavi.io.LittleEndianDataInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -48,18 +51,20 @@ import vavi.util.Debug;
  */
 public class GifImage {
 
+    private static final Logger logger = getLogger(GifImage.class.getName());
+
     /** */
-    private static NonLzwGifDecoder decoder = new NonLzwGifDecoder();
+    private static final NonLzwGifDecoder decoder = new NonLzwGifDecoder();
 
     /**
-     * GIF のパレット構造体 RGB 順の並びで 3 バイト構成
+     * GIF palette structure, 3 bytes in RGB order
      */
     private static class GifRGB {
-        /** 赤成分 */
+        /** Red component */
         byte red;
-        /** 緑成分 */
+        /** Green component */
         byte green;
-        /** 青成分 */
+        /** Blue component */
         byte blue;
         /** */
         static GifRGB readFrom(LittleEndianDataInputStream dis) throws IOException {
@@ -74,29 +79,29 @@ public class GifImage {
     private static GifRGB[] readColorTable(LittleEndianDataInputStream dis, int sizeOfColorTable) throws IOException {
         int size = (int) Math.pow(2, sizeOfColorTable + 1);
         GifRGB[] colorTable = new GifRGB[size];
-//Debug.println("colorTable: " + size);
+//logger.log(Level.TRACE, "colorTable: " + size);
         for (int i = 0; i < size; i++) {
             colorTable[i] = GifRGB.readFrom(dis);
-//Debug.println("gifRGB: " + StringUtil.paramString(gifImage.palette[i]));
+//logger.log(Level.TRACE, "gifRGB: " + StringUtil.paramString(gifImage.palette[i]));
         }
         return colorTable;
     }
 
     /**
-     * GIF の画面記述情報構造体 GIF 全体の情報を記述したヘッダー部。
+     * GIF screen description information structure Header section describing the entire GIF information.
      */
     private static class GifHeader {
         /** GIF Signature ("GIF") */
-        byte[] signature = new byte[3];
+        final byte[] signature = new byte[3];
         /** GIF Version ("87a" or "89a") */
-        byte[] version = new byte[3];
+        final byte[] version = new byte[3];
         /**
-         * この GIF 全体を表示するのに必要な横 pixel 数
+         * The number of horizontal pixels needed to display this entire GIF.
          */
         @SuppressWarnings("unused")
         int logicalScreenWidth;
         /**
-         * この GIF 全体を表示するのに必要な縦 pixel 数
+         * The number of vertical pixels needed to display this entire GIF.
          */
         @SuppressWarnings("unused")
         int logicalScreenHeight;
@@ -145,16 +150,16 @@ public class GifImage {
     }
 
     /**
-     * GIF のイメージ記述情報構造体 GIF 画像一枚についての情報を記述したもの。
+     * GIF image description information structure Describes information about a single GIF image.
      */
     public static class ImageDescriptor {
-        /** 画面左上からの表示位置 (横 pixel 数) */
+        /** Display position from top left of screen (horizontal pixels) */
         public int left;
-        /** 画面左上からの表示位置 (縦 pixel 数) */
+        /** Display position from the top left of the screen (vertical pixels) */
         public int top;
-        /** この画像の横 pixel 数 */
+        /** The horizontal pixel count of this image */
         public int width;
-        /** この画像の縦 pixel 数 */
+        /** The vertical pixel count of this image */
         public int height;
         /**
          * Packed Fields
@@ -212,9 +217,9 @@ public class GifImage {
      */
     public GraphicControlExtension getGraphicControlExtension(int index) {
         if (extentionBlocks.get(index).containsKey(0xf9)) {
-            ExtentionBlock extentionBlock = extentionBlocks.get(index).get(0xf9); 
+            ExtensionBlock extensionBlock = extentionBlocks.get(index).get(0xf9);
             GraphicControlExtension extention = new GraphicControlExtension();
-            byte[] data = extentionBlock.subBlocks.get(0);
+            byte[] data = extensionBlock.subBlocks.get(0);
             extention.packedFields = data[0] & 0xff;
             extention.delayTime = data[1] & 0xff | (data[2] << 8) & 0xff00;
             extention.transparentColorIndex = data[3] & 0xff;
@@ -255,7 +260,7 @@ public class GifImage {
 
             int bytesParLine = image.imageDescriptor.width;
             int dibColorDepth = -1;
-            // カラービット数をDIBで使用できる値に強制変換 (オーバーサンプル)
+            // Coerce color bit depth to what the DIB can handle (oversampling)
             if (image.sizeOfColorTable == 0) {
                 bytesParLine = (((image.imageDescriptor.width + 7) >> 3) + 3) & ~3;
                 dibColorDepth = 1;
@@ -282,7 +287,7 @@ public class GifImage {
             }
             byte[] data = baos.toByteArray();
 
-            // GIF 展開
+            // GIF Extraction
             image.tableBasedImageData = decoder.decode(data,
                                                        image.imageDescriptor.width,
                                                        image.imageDescriptor.height,
@@ -311,7 +316,7 @@ public class GifImage {
 //        return header.logicalScreenHeight; // TODO
     }
 
-    /** パレットを作成します． */
+    /** Creates a palette. */
     public ColorModel getColorModel(int index) {
 
         InternalImage image = images.get(index);
@@ -327,7 +332,7 @@ public class GifImage {
             blues[i] = image.localColorTable[i].blue;
             greens[i] = image.localColorTable[i].green;
             reds[i] = image.localColorTable[i].red;
-//Debug.println("palette(" + i + "): " + StringUtil.paramString(palette[i]));
+//logger.log(Level.TRACE, "palette(" + i + "): " + StringUtil.paramString(palette[i]));
         }
 
         GraphicControlExtension graphicControlExtention = getGraphicControlExtension(index);
@@ -342,11 +347,11 @@ public class GifImage {
      * @return pixels
      */
     public byte[] getPixels(int index) {
-//Debug.println("image[" + index + "]: " + images.get(index).tableBasedImageData.length);
+//logger.log(Level.TRACE, "image[" + index + "]: " + images.get(index).tableBasedImageData.length);
         return images.get(index).tableBasedImageData;
     }
 
-    static class ExtentionBlock {
+    static class ExtensionBlock {
         // 0xf9: Graphic Control Label
         // 0xfe: Comment Label
         // 0x01: Plain Text Label
@@ -354,9 +359,9 @@ public class GifImage {
         //   byte[] applicationIdentifier = new byte[8];
         //   byte[] applicationAuthenticationCode = new byte[3];
         int extentionType;
-        List<byte[]> subBlocks = new ArrayList<>();
-        static ExtentionBlock readFrom(LittleEndianDataInputStream dis) throws IOException {
-            ExtentionBlock block = new ExtentionBlock();
+        final List<byte[]> subBlocks = new ArrayList<>();
+        static ExtensionBlock readFrom(LittleEndianDataInputStream dis) throws IOException {
+            ExtensionBlock block = new ExtensionBlock();
             block.extentionType = dis.readUnsignedByte();
             while (true) {
                 int subBlockSize = dis.readUnsignedByte();
@@ -381,10 +386,10 @@ public class GifImage {
     private GifRGB[] globalColorTable;
 
     /** */
-    private List<InternalImage> images = new ArrayList<>();
+    private final List<InternalImage> images = new ArrayList<>();
 
     /** */
-    private List<Map<Integer, ExtentionBlock>> extentionBlocks = new ArrayList<>();
+    private final List<Map<Integer, ExtensionBlock>> extentionBlocks = new ArrayList<>();
 
     public ImageDescriptor getImageDescriptor(int index) {
         return images.get(index).imageDescriptor;
@@ -401,12 +406,12 @@ public class GifImage {
         LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is);
 
         GifImage gifImage = new GifImage();
-        // グローバル画面記述情報を取得。
+        // Get global screen description information.
         gifImage.header = GifHeader.readFrom(dis);
-        // 元の GIF のカラービット数 (8 ビット以下)
+        // Original GIF color bit depth (8 bit or less)
         int sizeOfGlobalColorTable = gifImage.header.getSizeOfGlobalColorTable();
 
-        // グローバルカラーマップの処理
+        // Global color map processing
         if (gifImage.header.hasGlobalColorTable()) {
             gifImage.globalColorTable = readColorTable(dis, sizeOfGlobalColorTable);
         }
@@ -416,37 +421,37 @@ public class GifImage {
             if (blockType == 0x2c) { // Image Separator
                 InternalImage image = InternalImage.readFrom(dis, sizeOfGlobalColorTable, gifImage.globalColorTable);
                 gifImage.images.add(image);
-//Debug.println("imageBlock: " + image);
+//logger.log(Level.TRACE, "imageBlock: " + image);
             } else if (blockType == 0x21) { // extention
-                // GIF 拡張ブロック
-                ExtentionBlock extentionBlock = ExtentionBlock.readFrom(dis);
-//Debug.println("extentionBlock: " + extentionBlock);
+                // GIF extension block
+                ExtensionBlock extensionBlock = ExtensionBlock.readFrom(dis);
+//logger.log(Level.TRACE, "extensionBlock: " + extensionBlock);
                 if (gifImage.extentionBlocks.size() == gifImage.images.size()) {
-                    Map<Integer, ExtentionBlock> extentionBlocks = new HashMap<>();
-                    extentionBlocks.put(extentionBlock.extentionType, extentionBlock);
-                    gifImage.extentionBlocks.add(extentionBlocks);
+                    Map<Integer, ExtensionBlock> extensionBlocks = new HashMap<>();
+                    extensionBlocks.put(extensionBlock.extentionType, extensionBlock);
+                    gifImage.extentionBlocks.add(extensionBlocks);
                 } else {
-                    gifImage.extentionBlocks.get(gifImage.images.size()).put(extentionBlock.extentionType, extentionBlock);
+                    gifImage.extentionBlocks.get(gifImage.images.size()).put(extensionBlock.extentionType, extensionBlock);
                 }
             } else if (blockType == 0x3b) {
-//Debug.println("3b: Trailer");
+//logger.log(Level.TRACE, "3b: Trailer");
                 break;
             } else if (blockType == -1) {
-Debug.println("unexpected eof");
+logger.log(Level.DEBUG, "unexpected eof");
                 break;
             } else {
-Debug.println(String.format("%02x: unknown block type", blockType));
+logger.log(Level.DEBUG, String.format("%02x: unknown block type", blockType));
             }
         }
 
-        if (gifImage.images.size() == 0) {
+        if (gifImage.images.isEmpty()) {
             throw new IllegalStateException("no image");
         }
 
         return gifImage;
     }
 
-    /** モノカラービットマップを作成します． */
+    /** Creates a monochrome bitmap. */
     public byte[] loadMonoColor(int index) {
 
         int width = getWidth(index);
@@ -483,7 +488,7 @@ Debug.println(String.format("%02x: unknown block type", blockType));
         return vram;
     }
 
-    /** 16 色ビットマップを作成します． */
+    /** Creates a 16-color bitmap. */
     public byte[] load16Color(int index) {
 
         int width = getWidth(index);
@@ -513,7 +518,7 @@ Debug.println(String.format("%02x: unknown block type", blockType));
         return vram;
     }
 
-    /** 256 色ビットマップを作成します． */
+    /** Creates a 256 color bitmap. */
     public byte[] load256Color(int index) {
 
         int width = getWidth(index);
@@ -521,7 +526,7 @@ Debug.println(String.format("%02x: unknown block type", blockType));
         byte[] buffer = getPixels(index);
 
         byte[] vram = new byte[width * height];
-//Debug.println(width + ", " + height + ", " + width * height + ", " + buffer.length);
+//logger.log(Level.TRACE, width + ", " + height + ", " + width * height + ", " + buffer.length);
 
         int count = 0;
         int skip = (width % 4 != 0) ? 4 - width % 4 : 0;

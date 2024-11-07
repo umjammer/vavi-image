@@ -92,6 +92,7 @@ System.err.println("ImageWriter: " + iw.getClass());
                     throw new IllegalStateException("no suitable ImageWriter");
                 }
             }
+            @Override
             public void stateChanged(ChangeEvent event) {
                 JSlider source = (JSlider) event.getSource();
                 if (source.getValueIsAdjusting()) {

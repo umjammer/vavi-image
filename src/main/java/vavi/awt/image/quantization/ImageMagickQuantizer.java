@@ -244,8 +244,8 @@ public class ImageMagickQuantizer {
     private static final int MAX_TREE_DEPTH = 8;
 
     // these are precomputed in advance
-    private static int[] SQUARES;
-    private static int[] SHIFT;
+    private static final int[] SQUARES;
+    private static final int[] SHIFT;
 
     static {
         SQUARES = new int[MAX_RGB + MAX_RGB + 1];
@@ -274,11 +274,11 @@ public class ImageMagickQuantizer {
 
     /** */
     private static class Cube {
-        int[][] pixels;
-        int maxColors;
+        final int[][] pixels;
+        final int maxColors;
         int[] colorMap;
 
-        Node root;
+        final Node root;
         int depth;
 
         // counter for the number of colors in the cube. this gets
@@ -497,17 +497,17 @@ public class ImageMagickQuantizer {
             Node parent;
 
             // child nodes
-            Node[] child;
+            final Node[] child;
             int nChild;
 
             // our index within our parent
-            int id;
+            final int id;
             // our level within the tree
-            int level;
+            final int level;
             // our color midpoint
-            int midRed;
-            int midGreen;
-            int midBlue;
+            final int midRed;
+            final int midGreen;
+            final int midBlue;
 
             // the pixel count for this node and all children
             int number_pixels;

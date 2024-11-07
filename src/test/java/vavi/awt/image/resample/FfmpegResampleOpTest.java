@@ -23,7 +23,7 @@ import vavi.util.Debug;
  */
 public class FfmpegResampleOpTest {
 
-    static String file = "/erika.jpg";
+    static final String file = "/erika.jpg";
 
     @Test
     public void test01() throws Exception {

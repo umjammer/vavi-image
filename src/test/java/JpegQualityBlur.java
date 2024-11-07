@@ -93,13 +93,14 @@ System.err.println(w + ", " + h);
         qualitySlider.setMinimum(5);
         qualitySlider.setValue(75);
         qualitySlider.addChangeListener(new ChangeListener() {
-            ImageConverter converter = ImageConverter.getInstance();
-            ImageWriter iw;
+            final ImageConverter converter = ImageConverter.getInstance();
+            final ImageWriter iw;
             {
                 iw = IIOUtil.getImageWriter("JPEG", className);
                 //
                 converter.setColorModelType(BufferedImage.TYPE_3BYTE_BGR);
             }
+            @Override
             public void stateChanged(ChangeEvent event) {
                 JSlider source = (JSlider) event.getSource();
                 if (source.getValueIsAdjusting()) {

@@ -10,9 +10,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import javax.imageio.IIOException;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -23,7 +24,8 @@ import javax.imageio.stream.ImageInputStream;
 
 import vavi.awt.image.bmp.WindowsBitmap;
 import vavi.imageio.WrappedImageInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -34,6 +36,8 @@ import vavi.util.Debug;
  *          0.01 021116 nsano refine <br>
  */
 public class WindowsBitmapImageReader extends ImageReader {
+
+    private static final Logger logger = getLogger(WindowsBitmapImageReader.class.getName());
 
     /** */
     private BufferedImage image;
@@ -107,15 +111,15 @@ public class WindowsBitmapImageReader extends ImageReader {
         BufferedImage image;
         if (bits == 24) {
             image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
-//Debug.println(image.getType() + ", " + image.getColorModel());
+//logger.log(Level.TRACE, image.getType() + ", " + image.getColorModel());
             image.getRaster().setDataElements(0, 0, width, height, ivram);
         } else if (bits == 32) { // TODO test
             image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-Debug.println(image.getType() + ", " + image.getColorModel());
+logger.log(Level.DEBUG, image.getType() + ", " + image.getColorModel());
             image.getRaster().setDataElements(0, 0, width, height, ivram);
         } else {
             image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED, (IndexColorModel) windowsBitmap.getColorModel());
-//Debug.println(image.getType() + ", " + image.getColorModel());
+//logger.log(Level.TRACE, image.getType() + ", " + image.getColorModel());
             image.getRaster().setDataElements(0, 0, width, height, vram);
         }
 
@@ -137,7 +141,7 @@ Debug.println(image.getType() + ", " + image.getColorModel());
         } else if (input instanceof InputStream) {
             is = (InputStream) input;
         } else {
-Debug.println(input);
+logger.log(Level.WARNING, "unsupported input: " + input);
         }
 
         try {

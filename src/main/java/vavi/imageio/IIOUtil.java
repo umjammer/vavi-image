@@ -6,15 +6,15 @@
 
 package vavi.imageio;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Iterator;
-import java.util.logging.Level;
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.ImageWriter;
 import javax.imageio.spi.IIORegistry;
 
-import vavi.util.Debug;
+import static java.lang.System.getLogger;
 
 
 /**
@@ -24,6 +24,8 @@ import vavi.util.Debug;
  * @version 0.00 2011/02/16 umjammer initial version <br>
  */
 public class IIOUtil {
+
+    private static final Logger logger = getLogger(IIOUtil.class.getName());
 
     private IIOUtil() {
     }
@@ -102,7 +104,7 @@ public class IIOUtil {
             if (!ignoreErrors) {
                 throw new IllegalArgumentException(p1 + " or " + p2 + " not found");
             } else {
-                Debug.println(p1 + " or " + p2 + " not found");
+                logger.log(Level.DEBUG, p1 + " or " + p2 + " not found");
             }
         }
         iioRegistry.setOrdering(pt, sp1, sp2);
@@ -127,7 +129,7 @@ public class IIOUtil {
             if (!ignoreErrors) {
                 throw new IllegalArgumentException(p0 + " not found");
             } else {
-                Debug.println(p0 + " not found");
+                logger.log(Level.DEBUG, p0 + " not found");
             }
         }
         iioRegistry.deregisterServiceProvider(sp, pt);
@@ -148,7 +150,7 @@ public class IIOUtil {
         while (iws.hasNext()) {
             ImageWriter iw = iws.next();
             if (clazz.isInstance(iw)) {
-Debug.println(Level.FINEST, "ImageWriter: " + iw.getClass());
+logger.log(Level.TRACE, "ImageWriter: " + iw.getClass());
                 return iw;
             }
         }
@@ -171,7 +173,7 @@ Debug.println(Level.FINEST, "ImageWriter: " + iw.getClass());
         while (irs.hasNext()) {
             ImageReader ir = irs.next();
             if (clazz.isInstance(ir)) {
-Debug.println(Level.FINEST, "ImageReader: " + ir.getClass().getName());
+logger.log(Level.TRACE, "ImageReader: " + ir.getClass().getName());
                 return ir;
             }
         }

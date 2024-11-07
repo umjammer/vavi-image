@@ -18,10 +18,12 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
-import java.util.logging.Level;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 import org.scijava.nativelib.NativeLoader;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -31,6 +33,8 @@ import vavi.util.Debug;
  * @version 0.00 060616 nsano initial version <br>
  */
 public class FfmpegResampleOp implements BufferedImageOp {
+
+    private static final Logger logger = getLogger(FfmpegResampleOp.class.getName());
 
     /** */
     public enum Hint {
@@ -49,16 +53,16 @@ public class FfmpegResampleOp implements BufferedImageOp {
         Hint(int value) {
             this.value = value;
         }
-        int value;
+        final int value;
     }
 
     /** */
-    private Hint hint;
+    private final Hint hint;
 
     /** */
-    private double sx;
+    private final double sx;
     /** */
-    private double sy;
+    private final double sy;
 
     /**
      * hint is {@link Hint#FAST_BILINEAR}
@@ -97,7 +101,7 @@ public class FfmpegResampleOp implements BufferedImageOp {
      */
     private native void filterInternal(Object inBuffer, int inType, int inPixelFormat, int inPixelSize, int inWidth, int inHeight, Object outBuffer, int outType, int outPixelFormat, int outPixelSize, int outWidth, int outHeight, int hint);
 
-    /* */
+    @Override
     public BufferedImage filter(BufferedImage src, BufferedImage dest) {
 
         if (src.getColorModel() instanceof IndexColorModel) {
@@ -110,13 +114,13 @@ public class FfmpegResampleOp implements BufferedImageOp {
 
         int srcPxelFormat = src.getType();
         int destPxelFormat = dest.getType();
-Debug.println(Level.FINE, "src pixel format: " + src.getType());
-Debug.println(Level.FINE, "dest pixel format: " + dest.getType());
+logger.log(Level.DEBUG, "src pixel format: " + src.getType());
+logger.log(Level.DEBUG, "dest pixel format: " + dest.getType());
 
         int srcPixelSize = src.getColorModel().getPixelSize();
         int destPixelSize = dest.getColorModel().getPixelSize();
-Debug.println(Level.FINE, "src pixel size: " + src.getColorModel().getPixelSize());
-Debug.println(Level.FINE, "dest pixel size: " + dest.getColorModel().getPixelSize());
+logger.log(Level.DEBUG, "src pixel size: " + src.getColorModel().getPixelSize());
+logger.log(Level.DEBUG, "dest pixel size: " + dest.getColorModel().getPixelSize());
 
         int srcWidth = src.getWidth();
         int srcHeight = src.getHeight();
@@ -126,8 +130,8 @@ Debug.println(Level.FINE, "dest pixel size: " + dest.getColorModel().getPixelSiz
 
         int srcDataType = src.getRaster().getDataBuffer().getDataType();
         int destDataType = dest.getRaster().getDataBuffer().getDataType();
-Debug.println(Level.FINE, "src data type: " + src.getRaster().getDataBuffer().getDataType());
-Debug.println(Level.FINE, "dest data type: " + dest.getRaster().getDataBuffer().getDataType());
+logger.log(Level.DEBUG, "src data type: " + src.getRaster().getDataBuffer().getDataType());
+logger.log(Level.DEBUG, "dest data type: " + dest.getRaster().getDataBuffer().getDataType());
 
         Object srcBuffer;
         if (srcDataType == DataBuffer.TYPE_BYTE) {
@@ -152,17 +156,18 @@ Debug.println(Level.FINE, "dest data type: " + dest.getRaster().getDataBuffer().
     /**
      * @param destCM when null, used src color model 
      */
+    @Override
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
         Rectangle2D destBounds = getBounds2D(src);
         return new BufferedImage(destCM, destCM.createCompatibleWritableRaster((int) destBounds.getWidth(), (int) destBounds.getHeight()), destCM.isAlphaPremultiplied(), null);
     }
 
-    /* */
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return new Rectangle(0, 0, (int) (src.getWidth() * sx), (int) (src.getHeight() * sy));
     }
 
-    /* */
+    @Override
     public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
         if (dstPt == null) {
             dstPt = new Point2D.Double();
@@ -172,6 +177,7 @@ Debug.println(Level.FINE, "dest data type: " + dest.getRaster().getDataBuffer().
     }
 
     /* TODO implement */
+    @Override
     public RenderingHints getRenderingHints() {
         return null;
     }
@@ -181,7 +187,7 @@ Debug.println(Level.FINE, "dest data type: " + dest.getRaster().getDataBuffer().
         try {
             NativeLoader.loadLibrary("FfmpegResampleOpWrapper");
         } catch (IOException e) {
-Debug.printStackTrace(e);
+logger.log(Level.ERROR, e.getMessage(), e);
             throw new IllegalStateException(e);
         }
     }

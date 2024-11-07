@@ -10,6 +10,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.lang.System.Logger;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -20,14 +23,13 @@ import java.awt.image.ImageObserver;
  */
 public class ImageConverter {
 
-    /** */
-//  private static Log logger = LogFactory.getLog(ImageConverter.class);
+//    private static final Logger logger = getLogger(ImageConverter.class.getName());
 
     /** */
     private ImageConverter() {}
 
     /** */
-    private static ImageConverter instance = new ImageConverter();
+    private static final ImageConverter instance = new ImageConverter();
 
     /** */
     public static ImageConverter getInstance() {
@@ -46,7 +48,7 @@ public class ImageConverter {
     public BufferedImage toBufferedImage(Image image) {
         int w = image.getWidth(imageObserver);
         int h = image.getHeight(imageObserver);
-//logger.debug(w + ", " + h + ": " + image.getClass().getName());
+//logger.log(Level.DEBUG, w + ", " + h + ": " + image.getClass().getName());
         BufferedImage bi = new BufferedImage(w, h, cmType);
         Graphics g = bi.createGraphics();
         g.drawImage(image, 0, 0, imageObserver);
@@ -54,8 +56,8 @@ public class ImageConverter {
     }
 
     /** */
-    private ImageObserver imageObserver = (img, infoflags, x, y, width, height) -> {
-//Debug.println(infoflags);
+    private final ImageObserver imageObserver = (img, infoflags, x, y, width, height) -> {
+//logger.log(Level.TRACE, infoflags);
         if ((infoflags & ImageObserver.ALLBITS) == ImageObserver.ALLBITS) {
             return false;
         } else {

@@ -36,10 +36,10 @@ import vavi.io.SeekableDataInput;
  */
 public class ZimStream {
 
-    byte[] flags1 = new byte[1];
-    byte[] flags2 = new byte[8];
+    final byte[] flags1 = new byte[1];
+    final byte[] flags2 = new byte[8];
 
-    private SeekableDataInput<?> sdi;
+    private final SeekableDataInput<?> sdi;
 
     public ZimStream(SeekableDataInput<?> sdi) {
         this.sdi = sdi;

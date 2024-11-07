@@ -64,6 +64,7 @@ public class Blur {
         BufferedImage bluredImage = new BlurOp().filter(image, null);
 
         JPanel panel = new JPanel() {
+            @Override
             public void paint(Graphics g) {
                 int w = image.getWidth();
 
@@ -90,6 +91,7 @@ class BlurOp extends AbstractBufferedImageOp {
     };
 
     /* */
+    @Override
     public BufferedImage filter(BufferedImage src, BufferedImage dst) {
         Kernel kernel = new Kernel(3, 3, elements);
         ConvolveOp cop = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);

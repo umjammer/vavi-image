@@ -27,17 +27,17 @@ import java.util.Map;
 public class G2dResampleOp implements BufferedImageOp {
 
     /** */
-    private double sx;
+    private final double sx;
 
     /** */
-    private double sy;
+    private final double sy;
 
     /** */
-    private RenderingHints hints;
+    private final RenderingHints hints;
 
     /**
-     * @param sx 比率だよ！
-     * @param sy 比率だよ！
+     * @param sx horizontal scale
+     * @param sy vertical scale
      */
     public G2dResampleOp(double sx, double sy) {
         this.sx = sx;
@@ -56,9 +56,9 @@ public class G2dResampleOp implements BufferedImageOp {
     }
 
     /**
-     * @param sx 比率だよ！
-     * @param sy 比率だよ！
-     * @param hints
+     * @param sx horizontal scale
+     * @param sy vertical scale
+     * @param hints rendering hints
      */
     public G2dResampleOp(double sx, double sy, RenderingHints hints) {
         this.sx = sx;
@@ -67,9 +67,9 @@ public class G2dResampleOp implements BufferedImageOp {
     }
 
     /**
-     * @param dst when null, created by
-     *            {@link #createCompatibleDestImage(BufferedImage, ColorModel)}
+     * @param dst when null, created by {@link #createCompatibleDestImage(BufferedImage, ColorModel)}
      */
+    @Override
     public BufferedImage filter(BufferedImage src, BufferedImage dst) {
         if (dst == null) {
             dst = createCompatibleDestImage(src, src.getColorModel());
@@ -85,6 +85,7 @@ public class G2dResampleOp implements BufferedImageOp {
     /**
      * @param destCM when null, used src color model
      */
+    @Override
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
         Rectangle destBounds = (Rectangle) getBounds2D(src);
         if (destCM != null) {
@@ -94,12 +95,12 @@ public class G2dResampleOp implements BufferedImageOp {
         }
     }
 
-    /* */
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return new Rectangle(0, 0, (int) (src.getWidth() * sx), (int) (src.getHeight() * sy));
     }
 
-    /* */
+    @Override
     public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
         if (dstPt == null) {
             dstPt = new Point2D.Double();
@@ -108,7 +109,7 @@ public class G2dResampleOp implements BufferedImageOp {
         return dstPt;
     }
 
-    /* */
+    @Override
     public RenderingHints getRenderingHints() {
         return hints;
     }

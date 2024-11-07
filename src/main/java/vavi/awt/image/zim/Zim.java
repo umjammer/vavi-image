@@ -24,12 +24,14 @@ package vavi.awt.image.zim;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Arrays;
-import java.util.logging.Level;
 
 import vavi.io.SeekableDataInput;
 import vavi.util.ByteUtil;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -39,6 +41,8 @@ import vavi.util.Debug;
  * @version 0.00 2022-10-26 nsano initial version <br>
  */
 public class Zim {
+
+    private static final Logger logger = getLogger(Zim.class.getName());
 
     private Zim() {}
 
@@ -64,7 +68,7 @@ public class Zim {
         int v_1_2 = content.readUnsignedShort();
         int contentOffset = 0x200 + (v_5_6 << 1);
         content.position(contentOffset);
-Debug.printf(Level.FINE, "pos: %1$d, %1$08x", content.position());
+logger.log(Level.DEBUG, String.format("pos: %1$d, %1$08x", content.position()));
         byte[] b1 = new byte[22];
         content.readFully(b1);
         if (b1[0] != 0 || b1[1] != 0
@@ -73,7 +77,7 @@ Debug.printf(Level.FINE, "pos: %1$d, %1$08x", content.position());
             throw new IllegalArgumentException("wrong zim");
         int width = ByteUtil.readLeShort(b1, 4) + 1;
         int height = ByteUtil.readLeShort(b1, 6) + 1;
-Debug.println(Level.FINE, "size: " + width + "x" + height);
+logger.log(Level.DEBUG, "size: " + width + "x" + height);
         if (width * height > MaxPixelsLength)
             throw new IllegalArgumentException("too large " + width + "x" + height);
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -81,11 +85,11 @@ Debug.println(Level.FINE, "size: " + width + "x" + height);
         contentOffset += 24;
         int v_2 = content.readUnsignedByte(); // 23
         int v_1 = content.readUnsignedByte(); // 24
-Debug.printf(Level.FINE, "pos: %1$d, %1$08x", content.position());
+logger.log(Level.DEBUG, String.format("pos: %1$d, %1$08x", content.position()));
         // RGB palette decoded from the image file.
         int[] contentPalette = new int[256];
         if (v_2 != 0 || v_1 != 0) {
-Debug.println(Level.FINE, "user palette");
+logger.log(Level.DEBUG, "user palette");
             for (int c = 0; c < 16; c++) {
                 int v0 = content.readUnsignedByte();
                 int v1 = content.readUnsignedByte();
@@ -95,26 +99,26 @@ Debug.println(Level.FINE, "user palette");
                 contentOffset += 4;
             }
         } else {
-Debug.println(Level.FINE, "default palette");
+logger.log(Level.DEBUG, "default palette");
             for (int c = 0; c < 16; c++)
                 contentPalette[c] = getZxColor(c);
             contentPalette[8] = 0xffff_ffff;
         }
-Debug.printf(Level.FINE, "pos: %1$d, %1$08x", content.position());
+logger.log(Level.DEBUG, String.format("pos: %1$d, %1$08x", content.position()));
         int pixelsLength = width * height;
         for (int pixelsOffset = 0; pixelsOffset < pixelsLength; pixelsOffset++)
             pixels[pixelsOffset] = contentPalette[0];
         byte[] flags3 = new byte[64];
         byte[] data = new byte[512];
-Debug.printf(Level.FINE, "pos: %1$d, %1$08x", content.position());
+logger.log(Level.DEBUG, String.format("pos: %1$d, %1$08x", content.position()));
         ZimStream stream = new ZimStream(content);
         int skip = stream.readUnsignedShort();
-Debug.println(Level.FINE, "skip: " + (skip << 1));
+logger.log(Level.DEBUG, "skip: " + (skip << 1));
         stream.skipBytes(skip << 1);
-Debug.printf(Level.FINE, "pos: %1$d, %1$08x", content.position());
+logger.log(Level.DEBUG, String.format("pos: %1$d, %1$08x", content.position()));
         while (true) {
             int dot = stream.readUnsignedShort();
-//Debug.println(Level.FINER, "dot: " + dot + ", " + content.position());
+//logger.log(Level.TRACE, "dot: " + dot + ", " + content.position());
             switch (dot) {
             case -1:
                 throw new IllegalArgumentException("wrong zim");
@@ -124,19 +128,19 @@ Debug.printf(Level.FINE, "pos: %1$d, %1$08x", content.position());
                 break;
             }
             int x = stream.readUnsignedShort();
-//Debug.println(Level.FINER, "x: " + x);
+//logger.log(Level.TRACE, "x: " + x);
             if (x < 0 || x >= width)
                 throw new IllegalArgumentException("wrong zim: " + x);
             int y = stream.readUnsignedShort();
-//Debug.println(Level.FINER, "y: " + y);
+//logger.log(Level.TRACE, "y: " + y);
             if (y < 0 || y >= height)
                 throw new IllegalArgumentException("wrong zim: " + y);
             int len = stream.readUnsignedShort();
-//Debug.println(Level.FINER, "len: " + len);
+//logger.log(Level.TRACE, "len: " + len);
             if (len < 0)
                 throw new IllegalArgumentException("wrong zim: " + len);
             int size = stream.readUnsignedShort();
-//Debug.println(Level.FINER, "size: " + size);
+//logger.log(Level.TRACE, "size: " + size);
             if (size > 512 || (size & 3) != 0 || size << 1 < dot)
                 throw new IllegalArgumentException("wrong zim: " + size);
             int pixelsOffset = y * width + x;
@@ -146,9 +150,9 @@ Debug.printf(Level.FINE, "pos: %1$d, %1$08x", content.position());
             stream.unpack(stream.flags2, flags3, 64);
             stream.unpack(flags3, data, size);
             for (int i = 1; i < size; i++)
-                data[i] ^= data[i - 1] & 0xff;
+                data[i] = (byte) (data[i] ^ data[i - 1] & 0xff);
             for (int i = 2; i < size; i++)
-                data[i] ^= data[i - 2] & 0xff;
+                data[i] = (byte) (data[i] ^ data[i - 2] & 0xff);
             size >>= 2;
             for (int i = 0; i < dot; i++) {
                 int bit = ~i & 7;

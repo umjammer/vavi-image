@@ -11,10 +11,11 @@ import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.imageio.IIOException;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -26,10 +27,10 @@ import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
 import org.w3c.dom.Node;
-
 import vavi.awt.image.gif.GifImage;
 import vavi.imageio.WrappedImageInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -39,6 +40,9 @@ import vavi.util.Debug;
  * @version 0.00 040914 nsano initial version <br>
  */
 public class NonLzwGifImageReader extends ImageReader {
+
+    private static final Logger logger = getLogger(NonLzwGifImageReader.class.getName());
+
     /** */
     private GifImage gifImage;
 
@@ -72,21 +76,11 @@ public class NonLzwGifImageReader extends ImageReader {
 
         int pixelSize = cm.getPixelSize();
 
-        byte[] vram;
-        switch (pixelSize) {
-        case 1:
-            vram = gifImage.loadMonoColor(imageIndex);
-            break;
-        case 2:
-        case 3:
-        case 4:
-            vram = gifImage.load16Color(imageIndex);
-            break;
-        default:
-        case 8:
-            vram = gifImage.load256Color(imageIndex);
-            break;
-        }
+        byte[] vram = switch (pixelSize) {
+            case 1 -> gifImage.loadMonoColor(imageIndex);
+            case 2, 3, 4 -> gifImage.load16Color(imageIndex);
+            default -> gifImage.load256Color(imageIndex);
+        };
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED, (IndexColorModel) cm);
         image.getRaster().setDataElements(0, 0, width, height, vram);
@@ -105,7 +99,7 @@ public class NonLzwGifImageReader extends ImageReader {
         } else if (input instanceof InputStream) {
             is = (InputStream) input;
         } else {
-Debug.println("unsupported input: " + input);
+logger.log(Level.WARNING, "unsupported input: " + input);
         }
 
         try {
@@ -155,14 +149,14 @@ Debug.println("unsupported input: " + input);
             @Override public String getNativeMetadataFormatName() {
                 return NonLzwGifImageReaderSpi.NativeImageMetadataFormatName;
             }
-            String getDisposalMethod(int disposalMethod) {
-                switch (disposalMethod) {
-                case 0: return "none";
-                case 1: return "doNotDispose";
-                case 2: return "restoreToBackgroundColor";
-                case 3: return "restoreToPrevious";
-                default: return "notSpecified";
-                }
+            static String getDisposalMethod(int disposalMethod) {
+                return switch (disposalMethod) {
+                    case 0 -> "none";
+                    case 1 -> "doNotDispose";
+                    case 2 -> "restoreToBackgroundColor";
+                    case 3 -> "restoreToPrevious";
+                    default -> "notSpecified";
+                };
             }
         };
     }

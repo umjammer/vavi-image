@@ -83,8 +83,7 @@ public class PpmImageReaderSpi extends ImageReaderSpi {
     @Override
     public boolean canDecodeInput(Object obj)
         throws IOException {
-        if (obj instanceof ImageInputStream) {
-            ImageInputStream imageinputstream = (ImageInputStream) obj;
+        if (obj instanceof ImageInputStream imageinputstream) {
             byte[] bytes = new byte[4];
             try {
                 imageinputstream.mark();

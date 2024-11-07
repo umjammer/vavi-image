@@ -11,9 +11,10 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
 import javax.imageio.IIOException;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -25,7 +26,8 @@ import javax.imageio.stream.ImageInputStream;
 import vavi.awt.image.ico.WindowsIconImageSource;
 import vavi.imageio.ImageConverter;
 import vavi.imageio.WrappedImageInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -35,6 +37,8 @@ import vavi.util.Debug;
  * @version 0.00 021116 nsano initial version <br>
  */
 public class WindowsIconImageReader extends ImageReader {
+
+    private static final Logger logger = getLogger(WindowsIconImageReader.class.getName());
 
     /** */
     private IIOMetadata metadata;
@@ -73,7 +77,7 @@ public class WindowsIconImageReader extends ImageReader {
         } else if (input instanceof InputStream) {
             is = (InputStream) input;
         } else {
-Debug.println(input);
+logger.log(Level.WARNING, input);
         }
 
         return new WindowsIconImageSource(is);
@@ -94,7 +98,7 @@ Debug.println(input);
         imageSource.changeDevice(imageIndex);
         Toolkit t = Toolkit.getDefaultToolkit();
         Image image = t.createImage(imageSource);
-//Debug.println(w + ", " + h + ": " + image.getClass().getName() + "[" + imageIndex + "]");
+//logger.log(Level.TRACE, w + ", " + h + ": " + image.getClass().getName() + "[" + imageIndex + "]");
         return ImageConverter.getInstance().toBufferedImage(image); // TODO implement properly
     }
 
@@ -110,7 +114,7 @@ Debug.println(input);
 
     @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
-Debug.println(Level.FINE, "here");
+logger.log(Level.TRACE, "here");
         ImageTypeSpecifier specifier = null;
         java.util.List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);

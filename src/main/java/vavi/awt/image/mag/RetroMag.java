@@ -9,13 +9,15 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import vavi.util.ByteUtil;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -27,6 +29,8 @@ import vavi.util.Debug;
  *          2014-05-19 1.51 performance up
  */
 public class RetroMag {
+
+    private static final Logger logger = getLogger(RetroMag.class.getName());
 
     private Color[][] pixels;
     private int width, height;
@@ -77,13 +81,13 @@ public class RetroMag {
                 commentBufC.add((byte) Integer.parseInt(b, 2));
             }
         }
-        if (commentBufS.size() != 0) {
+        if (!commentBufS.isEmpty()) {
             comment = comment(ByteUtil.toByteArray(commentBufS));
-Debug.println(Level.FINE, "SAVER/USER:\n" + comment);
+logger.log(Level.DEBUG, "SAVER/USER:\n" + comment);
         }
-        if (commentBufC.size() != 0) {
+        if (!commentBufC.isEmpty()) {
             comment = comment(ByteUtil.toByteArray(commentBufC));
-Debug.println(Level.FINE, "COMMENT:\n" + comment);
+logger.log(Level.DEBUG, "COMMENT:\n" + comment);
         }
         int commentSize = pos[0] + 8;
         while ((pos[0] += 8) <= len) {
@@ -113,7 +117,7 @@ Debug.println(Level.FINE, "COMMENT:\n" + comment);
         }
         int yend = wordConvert(16, data, pos);
         yend++;
-Debug.printf(Level.FINE, "xstart: %d, xend: %d, ystart: %d, yend: %d", xstart, ystart, xend, yend);
+logger.log(Level.DEBUG, String.format("xstart: %d, xend: %d, ystart: %d, yend: %d", xstart, ystart, xend, yend));
         // flag A, flag B, pixel data start position
         int flagA = commentSize + wordConvert(32, data, pos) * 8;
         int flagB;
@@ -126,7 +130,7 @@ Debug.printf(Level.FINE, "xstart: %d, xend: %d, ystart: %d, yend: %d", xstart, y
         int vtlnsz = xend - xstart;
         width = xend;
         height = yend;
-Debug.printf(Level.FINE, "width: %d, height: %d", width, height);
+logger.log(Level.DEBUG, String.format("width: %d, height: %d", width, height));
         ensureBuffer();
 
         Color[] colorPalette = new Color[16];
@@ -252,7 +256,7 @@ Debug.printf(Level.FINE, "width: %d, height: %d", width, height);
     /** Draws image. */
     private BufferedImage drawImage() {
         BufferedImage image = new BufferedImage((int) (width * xScale), (int) (height * yScale), BufferedImage.TYPE_INT_RGB);
-Debug.printf(Level.FINE, "image: %dx%d (%dx%d)", width, height, image.getWidth(), image.getHeight());
+logger.log(Level.DEBUG, String.format("image: %dx%d (%dx%d)", width, height, image.getWidth(), image.getHeight()));
         Graphics2D g2d = image.createGraphics();
         g2d.scale(xScale, yScale);
         for (int x = 0; x < width; x++) {

@@ -119,7 +119,7 @@ public class QuantizeOp extends BasicBufferedImageOp implements Serializable {
     }
 
     /** */
-    protected void quantize(int[] inPixels, int[] outPixels, int width, int height, int numColors, boolean dither, boolean serpentine) {
+    protected static void quantize(int[] inPixels, int[] outPixels, int width, int height, int numColors, boolean dither, boolean serpentine) {
         int count = width * height;
         Quantizer quantizer = new OctTreeQuantizer();
         quantizer.setup(numColors);

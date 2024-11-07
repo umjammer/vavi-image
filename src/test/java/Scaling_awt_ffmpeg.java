@@ -21,8 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import vavi.awt.image.resample.AwtResampleOp;
 import vavi.awt.image.resample.FfmpegResampleOp;
@@ -130,9 +128,11 @@ System.err.println("scale: " + scale);
 
         basePanel.add(split, BorderLayout.CENTER);
         basePanel.addComponentListener(new ComponentAdapter() {
+            @Override
             public void componentShown(ComponentEvent event) {
                 split.setDividerLocation(0.5);
             }
+            @Override
             public void componentResized(ComponentEvent event) {
                 split.setDividerLocation(0.5);
             }

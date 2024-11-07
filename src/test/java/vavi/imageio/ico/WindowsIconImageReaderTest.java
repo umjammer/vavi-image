@@ -111,11 +111,13 @@ System.err.println("found ImageReader: " + ir.getClass().getName());
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
+            @Override
             public void paint(Graphics g) {
                 g.drawImage(images.get(counter.get()), 0, 0, this);
             }
         };
         panel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent ev) {
                 counter.increment();
                 panel.repaint();

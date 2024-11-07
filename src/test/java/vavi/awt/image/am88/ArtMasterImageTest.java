@@ -89,6 +89,7 @@ Debug.println(app.art88);
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
+            @Override
             public void paintComponent(Graphics g) {
                 g.drawImage(image, 0, 0, 640, 400, 0, 0, 640, 200, this);
             }

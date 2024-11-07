@@ -26,12 +26,12 @@ import java.awt.image.ColorModel;
 public class AwtResampleOp implements BufferedImageOp {
 
     /** */
-    private double sx;
+    private final double sx;
     /** */
-    private double sy;
+    private final double sy;
 
     /** */
-    private int hint;
+    private final int hint;
 
     /**
      * TODO hints
@@ -55,6 +55,7 @@ public class AwtResampleOp implements BufferedImageOp {
     /**
      * @param dst when null, created by {@link #createCompatibleDestImage(BufferedImage, ColorModel)} 
      */
+    @Override
     public BufferedImage filter(BufferedImage src, BufferedImage dst) {
         Rectangle destBounds = (Rectangle) getBounds2D(src);
         Image tmpImage = src.getScaledInstance(destBounds.width, destBounds.height, hint);
@@ -70,6 +71,7 @@ public class AwtResampleOp implements BufferedImageOp {
     /**
      * @param destCM when null, used src color model 
      */
+    @Override
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
         Rectangle destBounds = (Rectangle) getBounds2D(src);
         if (destCM != null) {
@@ -80,11 +82,13 @@ public class AwtResampleOp implements BufferedImageOp {
     }
 
     /** */
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return new Rectangle(0, 0, (int) (src.getWidth() * sx), (int) (src.getHeight() * sy));
     }
 
     /** */
+    @Override
     public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
         if (dstPt == null) {
             dstPt = new Point2D.Double();
@@ -94,6 +98,7 @@ public class AwtResampleOp implements BufferedImageOp {
     }
 
     /** TODO impl */
+    @Override
     public RenderingHints getRenderingHints() {
         return null;
     }

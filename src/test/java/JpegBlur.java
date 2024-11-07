@@ -128,9 +128,11 @@ System.err.println(args[0]);
 
         basePanel.add(split, BorderLayout.CENTER);
         basePanel.addComponentListener(new ComponentAdapter() {
+            @Override
             public void componentShown(ComponentEvent event) {
                 split.setDividerLocation(0.5);
             }
+            @Override
             public void componentResized(ComponentEvent event) {
                 split.setDividerLocation(0.5);
             }
@@ -197,7 +199,7 @@ System.err.println("quality: " + quality + ", size: " + size + ", blur: " + blur
         @Property(name = "image.writer.class", value = "com.sun.imageio.plugins.jpeg.JPEGImageWriter")
         String className;
 
-        ImageWriter iw;
+        final ImageWriter iw;
         {
             try {
                 PropsEntity.Util.bind(this);
@@ -217,6 +219,7 @@ System.err.println("quality: " + quality + ", size: " + size + ", blur: " + blur
          * {@link #size} will be set.
          * @param dst not used
          */
+        @Override
         public BufferedImage filter(BufferedImage src, BufferedImage dst) {
             try {
                 //

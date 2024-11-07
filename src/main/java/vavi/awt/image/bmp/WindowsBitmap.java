@@ -11,14 +11,16 @@ import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 import vavi.io.LittleEndianDataInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
- * Windows の bitmap 形式を表すオブジェクトです．
+ * An object representing the Windows bitmap format.
  *
  * <pre><code>
  *
@@ -45,92 +47,94 @@ import vavi.util.Debug;
  */
 public class WindowsBitmap {
 
+    private static final Logger logger = getLogger(WindowsBitmap.class.getName());
+
     /** */
     public enum Type {
         RGB,
-        /** 圧縮 */
+        /** compressed */
         RLE8,
-        /** 圧縮 */
+        /** compressed */
         RLE4,
         /** */
         BITFIELDS
     }
 
-    /** ファイルのヘッダ */
+    /** the header of the file */
     private Header header;
 
-    /** ビットマップヘッダ */
+    /** the header of the bitmap  */
     private WindowsBitmapHeader bitmapHeader;
 
-    /** イメージのバッファ */
+    /** the buffer of the image */
     private byte[] bitmap;
 
-    /** サイズを取得します． */
+    /** Gets the size. */
     public int getSize() {
         return header.bitmapSize;
     }
 
-    /** イメージへのオフセットを取得します． */
+    /** Gets the offset of the image. */
     public int getOffset() {
         return header.bitmapOffset;
     }
 
-    /** ビットマップヘッダを取得します． */
+    /** Gets the bitmap header. */
     public WindowsBitmapHeader getBitmapHeader() {
         return bitmapHeader;
     }
 
-    /** イメージのバッファを取得します． */
+    /** Gets the image buffer. */
     public byte[] getBitmap() {
         return bitmap;
     }
 
-    /** イメージのバッファを設定します． */
+    /** Sets the image buffer. */
     public void setBitmap(byte[] bitmap) {
         this.bitmap = bitmap;
     }
 
-    /** イメージのヘッダサイズを取得します． */
+    /** Gets the image header size. */
     public int getHeaderSize() {
         return bitmapHeader.headerSize;
     }
 
-    /** 幅を取得します． */
+    /** Gets the width. */
     public int getWidth() {
         return bitmapHeader.width;
     }
 
-    /** 高さを取得します． */
+    /** Gets the height. */
     public int getHeight() {
         return bitmapHeader.height;
     }
 
-    /** bit of color depth を取得します． */
+    /** Gets the bit of color depth */
     public int getBits() {
         return bitmapHeader.bits;
     }
 
-    /** bit of color depth を設定します． */
+    /** Sets the bit of color depth. */
     public void setBits(int bits) {
         bitmapHeader.bits = bits;
     }
 
-    /** 圧縮方法を取得します． */
+    /** Gets the compression methods. */
     public int getCompression() {
         return bitmapHeader.compression;
     }
 
-    /** イメージのサイズを取得します． */
+    /** Gets the image size. */
     public int getImageSize() {
         return bitmapHeader.imageSize;
     }
 
-    /** 使用している色数 0(full)，2, 16, 256 を取得します． */
+    /** Gets the number of colors used: 0 (full), 2, 16, 256. */
     public int getUsedColor() {
         return bitmapHeader.usedColor;
     }
 
-    /** 使用している色数 0(full)，2, 16, 256 を設定します． */
+    /** Sets the number of colors used: 0 (full), 2, 16, 256. */
     public void setUsedColor(int colors) {
         bitmapHeader.usedColor = colors;
     }
@@ -199,7 +203,7 @@ public class WindowsBitmap {
                 blues[i] = (byte) is.read();
             }
         } catch (IOException e) {
-Debug.println(Level.SEVERE, e);
+logger.log(Level.ERROR, e.getMessage(), e);
         }
 
         system256IndexColorModel = new IndexColorModel(8, 256, reds, greens, blues);
@@ -210,10 +214,10 @@ Debug.println(Level.SEVERE, e);
         return bitmapHeader.palette;
     }
 
-    // -------------------------------------------------------------------------
+    // ----
 
     /**
-     * Bitmap ファイルのヘッダ
+     * The Bitmap file header.
      *
      * <pre><code>
      *
@@ -232,7 +236,7 @@ Debug.println(Level.SEVERE, e);
         int bitmapSize;
 
         /**
-         * ビットマップファイルのヘッダを読み込みます．
+         * Reads the header of a bitmap file.
          * @throws IllegalArgumentException not a windows bitmap
          */
         static Header readFrom(LittleEndianDataInputStream lin) throws IOException {
@@ -269,21 +273,21 @@ Debug.println(Level.SEVERE, e);
     // -------------------------------------------------------------------------
 
     /**
-     * Windows の bitmap header を表すオブジェクトです．
+     * An object that represents a Windows bitmap header.
      * 
      * <pre><code>
      * 
-     *  DWORD   size            ヘッダのバイト数
-     *  LONG    width           幅
-     *  LONG    height          高さ
-     *  WORD    planes          常に1
+     *  DWORD   size            header size
+     *  LONG    width           width
+     *  LONG    height          height
+     *  WORD    planes          always 1
      *  WORD    bitCount        1: mono, 4: 16 colors, 8: 256 colors, 24: full colors
      *  DWORD   compression     0: no compression, 1: 8bit/pixel RLE, 2: 4bit/pixel RLE
-     *  DWORD   sizeImage       イメージのサイズ
+     *  DWORD   sizeImage       size of the image
      *  LONG    XPelsPerMeter   X pixels/meter
      *  LONG    YPelsPerMeter   Y pixels/meter
      *  DWORD   ClrUsed         0: see bitCount, else: &lt;24:??? =24:???
-     *  DWORD   ClrImportant    表示に必要なインデックス数 0: すべて
+     *  DWORD   ClrImportant    Number of indexes required to display 0: All
      *  
      * </code></pre>
      * 
@@ -293,29 +297,30 @@ Debug.println(Level.SEVERE, e);
      *          1.10 010901 nsano be inner class <br>
      */
     private static final class WindowsBitmapHeader {
-        /** ヘッダのサイズ */
+
+        /** the header size */
         int headerSize;
-        /** 幅 */
+        /** the width */
         int width;
-        /** 高さ */
+        /** the height */
         int height;
-        /**  */
+        /** the number of planes */
         int planes;
-        /** bit of color depth */
+        /** the number of bit of color depth */
         int bits;
-        /** 圧縮方法 */
+        /** the compression method */
         int compression;
-        /** イメージのサイズ */
+        /** the size of the image */
         int imageSize;
-        /** 横 pixel/m */
+        /** horizontal pixel/m */
         int ppmX;
-        /** 縦 pixel/m */
+        /** vertical pixel/m */
         int ppmY;
-        /** 使用している色数 0(full)，2, 16, 256 */
+        /** Number of colors used 0(full)，2, 16, 256 */
         int usedColor;
-        /**  */
+        /** */
         int importantColor;
-        /** パレット */
+        /** palette */
         ColorModel palette;
 
         /** for debug */
@@ -334,7 +339,7 @@ Debug.println(Level.SEVERE, e);
         }
 
         /**
-         * ストリームからビットマップヘッダのインスタンスを作成します．
+         * Creates a bitmap header instance from a stream.
          */
         static WindowsBitmapHeader readFrom(LittleEndianDataInputStream lin) throws IOException {
 
@@ -353,8 +358,8 @@ Debug.println(Level.SEVERE, e);
             bh.usedColor = lin.readInt();
             bh.importantColor = lin.readInt();
 
-//Debug.println("bitmap");
-//Debug.print(bh);
+//logger.log(Level.TRACE, "bitmap");
+//logger.log(Level.TRACE, bh);
 
             if (bh.usedColor == 0) {
                 switch (bh.bits) {
@@ -372,14 +377,14 @@ Debug.println(Level.SEVERE, e);
                     // DO NOT SET
                     break;
                 default:
-Debug.println("unknown bits: " + bh.bits);
+logger.log(Level.DEBUG, "unknown bits: " + bh.bits);
                     break;
                 }
-//Debug.println("usedColor: " + bh.usedColor);
+//logger.log(Level.TRACE, "usedColor: " + bh.usedColor);
             }
 
-//Debug.println("usedColor: " + bh.usedColor);
-//Debug.println("bits: " + bh.bits);
+//logger.log(Level.TRACE, "usedColor: " + bh.usedColor);
+//logger.log(Level.TRACE, "bits: " + bh.bits);
             if (bh.usedColor != 0) {
                 byte[] reds = new byte[bh.usedColor];
                 byte[] greens = new byte[bh.usedColor];
@@ -391,8 +396,8 @@ Debug.println("unknown bits: " + bh.bits);
                     greens[i] = lin.readByte();
                     reds[i] = lin.readByte();
                     alphas[i] = lin.readByte();
-//System.err.print("(" + i + ")");
-//bh.palette[i].print();
+//logger.log(Level.TRACE, "(" + i + ")");
+//logger.log(Level.TRACE, bh.palette[i]);
                 }
 
                 bh.palette = new IndexColorModel(bh.bits, bh.usedColor, reds, greens, blues);
@@ -402,41 +407,41 @@ Debug.println("unknown bits: " + bh.bits);
                  } else if (bh.bits == 32) {
                      bh.palette = new DirectColorModel(bh.bits, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
                  } else {
-Debug.println("unknown bits: " + bh.bits);
+logger.log(Level.DEBUG, "unknown bits: " + bh.bits);
                  }
             }
 
             if (bh.palette == null) { // IndexColorModel
                  switch (bh.usedColor) {
                  case 2:
-//Debug.println("use default bw");
+//logger.log(Level.TRACE, "use default bw");
                      bh.palette = systemBWIndexColorModel;
                      break;
                  case 16:
-//Debug.println("use default 16 color");
+//logger.log(Level.TRACE, "use default 16 color");
                      bh.palette = system16IndexColorModel;
                      break;
                  case 256:
-//Debug.println("use system 256 color ");
+//logger.log(Level.TRACE, "use system 256 color ");
                      bh.palette = system256IndexColorModel;
                      break;
                  default:
-Debug.println("unknown color size: " + bh.usedColor);
+logger.log(Level.DEBUG, "unknown color size: " + bh.usedColor);
                  }
             }
 
             lin.skipBytes(bh.headerSize - 40);
 if (bh.headerSize - 40 > 0) {
- Debug.println("skip: " + (bh.headerSize - 40));
+ logger.log(Level.DEBUG, "skip: " + (bh.headerSize - 40));
 }
 
             return bh;
         }
     }
 
-    //----
+    // ----
 
-    /** 24 Bit フルカラービットマップを作成します． */
+    /** Creates a 24-bit full-color bitmap. */
     public int[] get24BitColorData() {
 
         int width = getWidth();
@@ -462,7 +467,7 @@ if (bh.headerSize - 40 > 0) {
         return ivram;
     }
 
-    /** 32 Bit フルカラービットマップを作成します． */
+    /** Creates a 32-bit full-color bitmap. */
     public int[] get32BitColorData() {
 
         int width = getWidth();
@@ -489,7 +494,7 @@ if (bh.headerSize - 40 > 0) {
         return ivram;
     }
 
-    /** モノカラービットマップを作成します． */
+    /** Creates a monochrome bitmap. */
     public byte[] getMonoColorData() {
 
         int width = getWidth();
@@ -525,7 +530,7 @@ if (bh.headerSize - 40 > 0) {
         return vram;
     }
 
-    /** 16 色ビットマップを作成します． */
+    /** Creates a 16-color bitmap. */
     public byte[] get16ColorData() {
 
         int width = getWidth();
@@ -554,7 +559,7 @@ if (bh.headerSize - 40 > 0) {
         return vram;
     }
 
-    /** 16 色圧縮ビットマップを作成します． */
+    /** Creates a 16-color compressed bitmap. */
     public byte[] get16ColorRleData() {
 
         int width = getWidth();
@@ -610,7 +615,7 @@ if (bh.headerSize - 40 > 0) {
         return vram;
     }
 
-    /** 256 色ビットマップを作成します． */
+    /** Creates a 256 color bitmap. */
     public byte[] get256ColorData() {
 
         int width = getWidth();
@@ -632,7 +637,7 @@ if (bh.headerSize - 40 > 0) {
         return vram;
     }
 
-    /** 256 色圧縮ビットマップを作成します． */
+    /** Creates a 256-color compressed bitmap. */
     public byte[] get256ColorRleData() {
 
         int width = getWidth();
@@ -684,9 +689,9 @@ if (bh.headerSize - 40 > 0) {
         return vram;
     }
 
-    // -------------------------------------------------------------------------
+    // ----
 
-    /** ビットマップイメージを読み込みます． */
+    /** Loads a bitmap image. */
     private static byte[] readBitmap(LittleEndianDataInputStream in, int num) throws IOException {
         byte[] buf = new byte[num];
         in.readFully(buf, 0, num);
@@ -694,9 +699,9 @@ if (bh.headerSize - 40 > 0) {
     }
 
     /**
-     * ビットマップをストリームから作成します．
+     * Creates a bitmap from a stream.
      * <p>
-     * 普通のビットマップ用
+     * For normal bitmaps
      * </p>
      */
     public static WindowsBitmap readFrom(InputStream in) throws IOException {
@@ -710,7 +715,7 @@ if (bh.headerSize - 40 > 0) {
 
         if (bitmap.bitmapHeader.imageSize == 0) {
             bitmap.bitmapHeader.imageSize = bitmap.header.bitmapSize - bitmap.header.bitmapOffset;
-//Debug.println(b.bitmapHeader.imageSize);
+//logger.log(Level.TRACE, b.bitmapHeader.imageSize);
         }
 
         bitmap.bitmap = readBitmap(lin, bitmap.bitmapHeader.imageSize);
@@ -719,9 +724,9 @@ if (bh.headerSize - 40 > 0) {
     }
 
     /**
-     * ビットマップをストリームから作成します．
+     * Creates a bitmap from a stream.
      * <p>
-     * アイコン用
+     * For icons
      * </p>
      *
      * <pre><code>
@@ -748,10 +753,10 @@ if (bh.headerSize - 40 > 0) {
         bitmap.bitmapHeader.height /= 2;
         bitmap.header.bitmapOffset = bitmap.bitmapHeader.headerSize + 4 * bitmap.bitmapHeader.usedColor;
 
-//b.header.print();
-//b.bitmapHeader.print();
-//included mask
-//Debug.println("read: " + (b.header.bitmapSize - b.header.bitmapOffset));
+//logger.log(Level.TRACE, b.header)
+//logger.log(Level.TRACE, b.bitmapHeader);
+// included mask
+//logger.log(Level.TRACE, "read: " + (b.header.bitmapSize - b.header.bitmapOffset));
         bitmap.bitmap = readBitmap(lin, bitmap.header.bitmapSize - bitmap.header.bitmapOffset);
 
         return bitmap;

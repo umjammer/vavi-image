@@ -9,13 +9,15 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import vavi.util.ByteUtil;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -27,6 +29,8 @@ import vavi.util.Debug;
  *          2014-05-19 1.51 performance up
  */
 public class RetroMaki {
+
+    private static final Logger logger = getLogger(RetroMaki.class.getName());
 
     private Color[][] pixels;
     private int width, height;
@@ -79,9 +83,9 @@ public class RetroMaki {
             }
             commentBuffer.add((byte) Integer.parseInt(b, 2));
         }
-        if (commentBuffer.size() != 0) {
+        if (!commentBuffer.isEmpty()) {
             comment = "SAVER/USER:\n" + comment(ByteUtil.toByteArray(commentBuffer));
-Debug.println(Level.FINE, "\n" + comment);
+logger.log(Level.DEBUG, "\n" + comment);
         }
         // flag B, pixel data start position
         int flagB = 8768;
@@ -173,7 +177,7 @@ Debug.println(Level.FINE, "\n" + comment);
     /** Draws image. */
     private BufferedImage drawImage() {
         BufferedImage image = new BufferedImage((int) (width * xScale), (int) (height * yScale), BufferedImage.TYPE_INT_RGB);
-Debug.printf(Level.FINE, "image: %dx%d (%dx%d)", width, height, image.getWidth(), image.getHeight());
+logger.log(Level.DEBUG, String.format("image: %dx%d (%dx%d)", width, height, image.getWidth(), image.getHeight()));
         Graphics2D g2d = image.createGraphics();
         g2d.scale(xScale, yScale);
         for (int x = 0; x < width; x++) {

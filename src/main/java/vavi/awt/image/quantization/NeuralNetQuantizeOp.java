@@ -39,7 +39,7 @@ import java.io.IOException;
 public class NeuralNetQuantizeOp implements BufferedImageOp {
 
     /** */
-    private int colors;
+    private final int colors;
 
     /** */
     public NeuralNetQuantizeOp(int colors) {
