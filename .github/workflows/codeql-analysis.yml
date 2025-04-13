@@ -56,7 +56,7 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Build
       run: |
-        brew install ffmpeg
+        arch -arm64 brew install ffmpeg
         mvn -B install --file pom.xml -Dmaven.test.skip=true
 
     - name: Perform CodeQL Analysis
