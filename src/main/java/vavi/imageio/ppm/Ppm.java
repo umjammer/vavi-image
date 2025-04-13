@@ -107,5 +107,3 @@ public class Ppm {
         return i;
     }
 }
-
-/* */

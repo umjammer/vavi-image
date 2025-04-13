@@ -7,7 +7,7 @@
 
 🎨 Imaging the world!
 
-## Formats
+### Formats
 
   * [artmaster 88](http://fileformats.archiveteam.org/wiki/ArtMaster88) (old school japanese pc-8801,9801 image format)
   * [mag](https://ja.wikipedia.org/wiki/MAG%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88) (maki-chan graphic loader: old school japanese pc-8801,9801 image format)
@@ -20,7 +20,7 @@
   * windows icon
   * ppm
 
-## Resizing
+### Resizing
 
 |type|quality|speed|comment|
 |---|---|---|---|
@@ -30,7 +30,7 @@
 |`G2dResample`|2|△|`Graphics2d#drawImage` with rendering hints (`VALUE_INTERPOLATION_NEAREST_NEIGHBOR`)| 
 |`AffineTransformOp`|2| |`TYPE_NEAREST_NEIGHBOR`|
 
-## Quantization
+### Quantization
 
 | type                                                                             |quality| comment                                                                                |
 |----------------------------------------------------------------------------------|---|----------------------------------------------------------------------------------------|
@@ -40,38 +40,33 @@
 
 ## Installation
 
- * maven: https://jitpack.io/#umjammer/vavi-image
+ * [maven](https://jitpack.io/#umjammer/vavi-image)
  * if you want to use ffmpeg resizing
-   * exec jvm w/ `java.library.path` system property e.g `-Djava.library.path=/opt/homebrew/lib`
+   * install ffmpeg e.g. `$ brew intall ffmpeg`
+   * exec jvm w/ `java.library.path` system property e.g. `-Djava.library.path=/opt/homebrew/lib`
 
-## TODO
+## Usage
 
- * test `OctTreeQuantizer` (only 256 colors?)  
- * complete `ImageMagikQuantizer`
- * Lanczos3 filter using AWT API
- * `BufferedImageOp` ???
- * https://github.com/iariro/N88BasicImage
- * ~~ffmpeg resize 4byte 32bit operation is wrong~~
- * DaVinchi (wip, branch:davinch)
- * n88basic image format (wip, branch:n88basic)
- * yet another pic image format (wip, branch:pic)
-
-## Tech Know
-
- * ~~Mac Open JDK's JNI library extension is `.dylib`~~ already common
- * ~~`libsescale` has MMX bug, this causes segmentation fault when resizing image.~~
+```java
+    var image = ImageIO.read(Path.of("test.mki").toFile());
+```
 
 ## References
 
  * https://sourceforge.net/projects/recoil/
 
-## License
+### Tech Know
 
-### Image I/O PPM Reader
+* ~~Mac Open JDK's JNI library extension is `.dylib`~~ already common
+* ~~`libsescale` has MMX bug, this causes segmentation fault when resizing image.~~
 
-🅮 Public Domain
+### License
 
-### ImageMagik
+#### Image I/O PPM Reader
+
+ 🅮 Public Domain
+
+#### ImageMagik
 
 ```
 /*
@@ -100,21 +95,34 @@
  */
 ```
 
-### Java Image Editor
+#### Java Image Editor
 
 | The downloadable source code on this page is released under the Apache License. Basically, this means that you are free to do whatever you like with this code, but it's not my fault if your satellite/nuclear power station/missile system fails as a result. Have fun!
 |
 | Licensed under the Apache License, Version 2.0 (the "License"); you may not use this code except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-### SkyView
+#### SkyView
 
  * none?
 
-### Java Imaging Utilities  
+#### Java Imaging Utilities  
 
  * GNU General Public License (GPL) version 2 
 
-### libswscale (ffmpeg)  
+#### libswscale (ffmpeg)  
 
  * GNU General Public License (GPL) version 2 
  * FFmpeg License and Legal Considerations 
+
+## TODO
+
+* test `OctTreeQuantizer` (only 256 colors?)
+* complete `ImageMagikQuantizer`
+* Lanczos3 filter using AWT API
+* `BufferedImageOp` ???
+* https://github.com/iariro/N88BasicImage
+* ~~ffmpeg resize 4byte 32bit operation is wrong~~
+* DaVinchi (wip, branch:davinch)
+* n88basic image format (wip, branch:n88basic)
+* yet another pic image format (wip, branch:pic)
+* ffmpeg op jna-ize

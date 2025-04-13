@@ -22,7 +22,6 @@ import javax.swing.JFrame;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import vavi.imageio.mag.MagImageReader;
 import vavi.swing.JImageComponent;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -69,7 +68,7 @@ class PicImageReaderTest {
     }
 
     /** using cdl cause junit stops awt thread suddenly */
-    void show(BufferedImage image) throws Exception {
+    static void show(BufferedImage image) throws Exception {
         CountDownLatch cdl = new CountDownLatch(1);
         JFrame frame = new JFrame("PIC");
         frame.addWindowListener(new WindowAdapter() {

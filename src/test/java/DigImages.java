@@ -65,9 +65,9 @@ public class DigImages {
     }
 
     static class RegexFileVisitor extends SimpleFileVisitor<Path> {
-        Pattern pattern;
-        Function<Path, Boolean> function;
-        int max;
+        final Pattern pattern;
+        final Function<Path, Boolean> function;
+        final int max;
         int count;
         RegexFileVisitor(String pattern, int max, Function<Path, Boolean> function) {
             this.pattern = Pattern.compile(pattern);
@@ -83,9 +83,11 @@ public class DigImages {
             }
             return count == max ? TERMINATE : CONTINUE;
         }
+        @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
             return CONTINUE;
         }
+        @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) {
             System.err.println(exc);
             return CONTINUE;
@@ -132,11 +134,13 @@ System.err.println(e.getMessage() + ": " + p);
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
+            @Override
             public void paint(Graphics g) {
                 g.drawImage(images.get(counter.get()), 0, 0, this);
             }
         };
         panel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent ev) {
                 counter.increment();
                 frame.setTitle(counter.get() + "/" + images.size());
@@ -147,5 +151,3 @@ System.err.println(e.getMessage() + ": " + p);
         frame.setVisible(true);
     }
 }
-
-/* */

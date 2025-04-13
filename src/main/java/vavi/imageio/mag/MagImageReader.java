@@ -9,10 +9,11 @@ package vavi.imageio.mag;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -24,7 +25,8 @@ import javax.imageio.stream.ImageInputStream;
 
 import vavi.awt.image.mag.Mag;
 import vavi.imageio.SeekableDataInputImageInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -34,6 +36,8 @@ import vavi.util.Debug;
  * @version 0.00 221025 nsano initial version <br>
  */
 public class MagImageReader extends ImageReader {
+
+    private static final Logger logger = getLogger(MagImageReader.class.getName());
 
     /** */
     private IIOMetadata metadata;
@@ -95,12 +99,10 @@ public class MagImageReader extends ImageReader {
 
     @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
-Debug.println(Level.FINE, "here");
+logger.log(Level.TRACE, "here");
         ImageTypeSpecifier specifier = null;
         java.util.List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);
         return l.iterator();
     }
 }
-
-/* */

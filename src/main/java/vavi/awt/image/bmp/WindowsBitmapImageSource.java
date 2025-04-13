@@ -26,7 +26,7 @@ import java.util.Hashtable;
 public class WindowsBitmapImageSource implements ImageProducer {
 
     /** WindowsBitmap */
-    private WindowsBitmap bitmap;
+    private final WindowsBitmap bitmap;
 
     /** @see ImageConsumer */
     private ImageConsumer ic;
@@ -132,5 +132,3 @@ public class WindowsBitmapImageSource implements ImageProducer {
         ic.imageComplete(ImageConsumer.STATICIMAGEDONE);
     }
 }
-
-/* */

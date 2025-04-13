@@ -21,7 +21,7 @@ import javax.imageio.stream.ImageOutputStream;
 public class WrappedImageOutputStream extends OutputStream {
 
     /** */
-    private ImageOutputStream os;
+    private final ImageOutputStream os;
 
     /** */
     public WrappedImageOutputStream(ImageOutputStream os) {
@@ -43,5 +43,3 @@ public class WrappedImageOutputStream extends OutputStream {
         os.write(b);
     }
 }
-
-/* */

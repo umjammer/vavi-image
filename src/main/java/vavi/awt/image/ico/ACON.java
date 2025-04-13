@@ -8,12 +8,14 @@ package vavi.awt.image.ico;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 import vavi.io.LittleEndianDataInputStream;
-import vavi.util.Debug;
 import vavi.util.win32.Chunk;
 import vavi.util.win32.RIFF;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -27,24 +29,25 @@ import vavi.util.win32.RIFF;
  */
 public class ACON extends RIFF {
 
-    /**
-     */
+    private static final Logger logger = getLogger(ACON.class.getName());
+
+    /** */
     public ACON() {
     }
 
-    /** Gets extention. */
-    public static String getExtention() {
+    /** Gets extension. */
+    public static String getExtension() {
         return "ani";
     }
 
     /** */
     private anih header;
 
-    /** */
-//  private String name;
+//    /** */
+//    private String name;
 
-    /** */
-//  private String copyright;
+//    /** */
+//    private String copyright;
 
     /** temporary counter for icons */
     private int count;
@@ -61,16 +64,18 @@ public class ACON extends RIFF {
     // ----
 
     public class LIST extends Chunk {
+
         /** */
-        public class INAM extends Chunk {
+        public static class INAM extends Chunk {
         }
 
         /** */
-        public class IART extends Chunk {
+        public static class IART extends Chunk {
         }
 
         /** */
         public class icon extends Chunk {
+            @Override
             public void setData(InputStream is) throws IOException {
                 icons[count++] = WindowsIcon.readFrom(is)[0];
             }
@@ -105,6 +110,7 @@ public class ACON extends RIFF {
         int flags;
 
         /** */
+        @Override
         public void setData(InputStream is) throws IOException {
 
             LittleEndianDataInputStream ledis = new LittleEndianDataInputStream(is);
@@ -118,7 +124,7 @@ public class ACON extends RIFF {
             plains = ledis.readInt();
             jifrate = ledis.readInt();
             flags = ledis.readInt();
-Debug.println(Level.FINE, this);
+logger.log(Level.DEBUG, this);
             icons = new WindowsIcon[frames];
             count = 0;
 
@@ -141,6 +147,7 @@ Debug.println(Level.FINE, this);
     /** */
     public class rate extends Chunk {
         /** */
+        @Override
         public void setData(InputStream is) throws IOException {
             LittleEndianDataInputStream ledis = new LittleEndianDataInputStream(is);
             steps = new int[header.steps];
@@ -153,6 +160,7 @@ Debug.println(Level.FINE, this);
     /** */
     public class seq extends Chunk {
         /** */
+        @Override
         public void setData(InputStream is) throws IOException {
             LittleEndianDataInputStream ledis = new LittleEndianDataInputStream(is);
             sequences = new int[header.steps];
@@ -162,5 +170,3 @@ Debug.println(Level.FINE, this);
         }
     }
 }
-
-/* */

@@ -29,5 +29,3 @@ public class x_art88 extends ContentHandler {
         return new ArtMasterImageSource(in);
     }
 }
-
-/* */

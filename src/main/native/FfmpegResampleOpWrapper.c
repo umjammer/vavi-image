@@ -245,5 +245,3 @@ JNIEXPORT void JNICALL Java_vavi_awt_image_resample_FfmpegResampleOp_filterInter
 #endif
 
 #endif
-
-/* */

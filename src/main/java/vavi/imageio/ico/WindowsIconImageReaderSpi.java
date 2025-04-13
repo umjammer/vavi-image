@@ -8,14 +8,16 @@ package vavi.imageio.ico;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.ByteOrder;
 import java.util.Locale;
-
+import java.util.Properties;
 import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
-import vavi.util.Debug;
+import static java.lang.System.getLogger;
 
 
 /**
@@ -26,8 +28,26 @@ import vavi.util.Debug;
  */
 public class WindowsIconImageReaderSpi extends ImageReaderSpi {
 
+    private static final Logger logger = getLogger(WindowsIconImageReaderSpi.class.getName());
+
+    static {
+        try {
+            try (InputStream is = WindowsIconImageReaderSpi.class.getResourceAsStream("/META-INF/maven/vavi/vavi-image/pom.properties")) {
+                if (is != null) {
+                    Properties props = new Properties();
+                    props.load(is);
+                    Version = props.getProperty("version", "undefined in pom.properties");
+                } else {
+                    Version = System.getProperty("vavi.test.version", "undefined");
+                }
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     private static final String VendorName = "http://www.vavisoft.com";
-    private static final String Version = "0.00";
+    private static final String Version;
     private static final String ReaderClassName =
         "vavi.imageio.ico.WindowsIconImageReader";
     private static final String[] Names = {
@@ -85,8 +105,7 @@ public class WindowsIconImageReaderSpi extends ImageReaderSpi {
     @Override
     public boolean canDecodeInput(Object obj) throws IOException {
 
-        if (obj instanceof ImageInputStream) {
-            ImageInputStream is = (ImageInputStream) obj;
+        if (obj instanceof ImageInputStream is) {
             int type, count;
             byte[] bytes = new byte[2];
             try {
@@ -99,13 +118,13 @@ public class WindowsIconImageReaderSpi extends ImageReaderSpi {
                 is.setByteOrder(byteOrder);
                 is.reset();
             } catch (IOException e) {
-Debug.println(e);
+logger.log(Level.ERROR, e.getMessage(), e);
                 return false;
             }
-//Debug.println(type + ", " + count + ", " + (bytes[0] == 0 && bytes[1] == 0 && type == 1 && count > 0));
+//logger.log(Level.TRACE, type + ", " + count + ", " + (bytes[0] == 0 && bytes[1] == 0 && type == 1 && count > 0));
             return bytes[0] == 0 && bytes[1] == 0 && type == 1 && count > 0;
         } else {
-Debug.println(obj);
+logger.log(Level.DEBUG, obj);
             return false;
         }
     }
@@ -115,5 +134,3 @@ Debug.println(obj);
         return new WindowsIconImageReader(this);
     }
 }
-
-/* */

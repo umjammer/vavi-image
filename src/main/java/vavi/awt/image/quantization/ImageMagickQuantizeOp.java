@@ -26,7 +26,7 @@ import vavi.awt.image.BasicBufferedImageOp;
 public class ImageMagickQuantizeOp extends BasicBufferedImageOp {
 
     /** */
-    private int colors;
+    private final int colors;
 
     /** */
     public ImageMagickQuantizeOp(int colors) {
@@ -71,5 +71,3 @@ public class ImageMagickQuantizeOp extends BasicBufferedImageOp {
         filter.filter(inImage, outImage);
     }
 }
-
-/* */

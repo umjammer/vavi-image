@@ -4,7 +4,10 @@
 
 package vavi.awt.image.gif;
 
-import vavi.util.Debug;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -12,63 +15,68 @@ import vavi.util.Debug;
  *
  * @author DJ.Uchi [H.Uchida]
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 1.20 xxxxxx huchida original version <br>
  * @version 2.00 040913 nsano port to java <br>
  */
 public class NonLzwGifDecoder {
+
+    private static final Logger logger = getLogger(NonLzwGifDecoder.class.getName());
+
     /**
      * DIB structure
      */
     static class RgbContext {
-        /** 展開データ書き込み位置(同一ライン上でのオフセット値) */
+
+        /** Expanded data write position (offset value on the same line) */
         int xPoint;
-        /** 展開データ書き込みオフセット(ライン数 * アラインメント) */
+        /** Expanded data write offset (number of lines * alignment) */
         int offset;
-        /** 横 pixel 数 */
+        /** horizontal pixel count */
         int width;
-        /** 縦 pixel 数 */
+        /** Vertical pixel count */
         int height;
-        /** アラインメント値(１ライン分のバイト数) */
+        /** Alignment value (number of bytes per line) */
         int bytesPerLine;
-        /** カラービット値 */
+        /** Color Bit Value */
         int colorDepth;
-        /** 展開データ書き込みライン(インタレース時に使用) */
+        /** Expanded data writing line (used when interlacing) */
         int currentLine;
-        /** インタレースオフセット(ライン数) */
+        /** Interlace offset (number of lines) */
         int interlaceOffset;
-        /** インタレースフラグ true でインターレース */
+        /** Interlace flag: true for interlacing */
         boolean interlaced;
     }
 
     /**
-     * GIF データ解析用構造体
-     * GIF の符号化コード取得に必要な情報をまとめた物。
+     * GIF data parsing structure.
+     * A collection of information necessary to obtain the GIF encoding code.
      */
     static class GifContext {
-        /** RgbDecodeStatus 構造体参照用ポインタ */
+
+        /** RgbDecodeStatus Structure reference pointer */
         RgbContext rgb;
-        /** コードサイズ(CS) */
+        /** Code Size(CS) */
         int codeSize;
-        /** ビットサイズ(CBL) */
+        /** Bit Size(CBL) */
         int bitSize;
-        /** クリアコード */
+        /** Clear Code */
         int clearCode;
-        /** エンドコード */
+        /** End Code */
         int endCode;
-        /** 現エントリ数 */
+        /** Current number of entries */
         int entry;
-        /** 現ビット位置 */
+        /** Current bit position */
         int bitPoint;
-        /** 次ブロック開始位置 */
+        /** Next block start position */
         int nextBlock;
-        /** データサイズ */
+        /** Data size */
         int dataSize;
     }
 
     /**
-     * GIF 画像(最初の一枚のみ)を展開する。
-     * 入力は GIF データ、出力は RGB。
-     * ここでは主にデコードの前処理を行います。
+     * Extracts the GIF image (only the first one).
+     * Input is GIF data, output is RGB.
+     * This mainly involves pre-processing for decoding.
+     *
      * @return new allocated buffer (height * bytesPerLine)
      */
     public byte[] decode(byte[] data,
@@ -80,61 +88,62 @@ public class NonLzwGifDecoder {
                          int size) {
 
         byte[] vram = new byte[height * bytesPerLine];
-        int[] lzw = new int[8192]; // 圧縮データ格納用配列(辞書テーブルではない！)
-        int code; // 符号化コード初期化
+        int[] lzw = new int[8192]; // Array for storing compressed data (not a dictionary table!)
+        int code; // Encoding code initialization
 
-        // DIB データ書き込み用構造体初期化
+        // DIB Data Write Structure Initialization
         RgbContext rgb = new RgbContext();
-        rgb.xPoint = 0; // 展開データ書き込み位置初期化
-        rgb.offset = (height - 1) * bytesPerLine; // 書き込み位置オフセット
-        rgb.width = width; // 横 pixel 数取得
-        rgb.height = height; // 縦 pixel 数取得
-        rgb.bytesPerLine = bytesPerLine; // アラインメント値取得
-        rgb.colorDepth = colorDepth; // カラービット値取得
-        rgb.currentLine = 0; // 展開データ書き込みライン初期化
-        rgb.interlaceOffset = 8; // インタレースオフセット初期化
-        rgb.interlaced = interlaced; // インタレースフラグ取得
-//Debug.println(StringUtil.paramString(rgb));
+        rgb.xPoint = 0; // Expand data write position initialization
+        rgb.offset = (height - 1) * bytesPerLine; // Write position offset
+        rgb.width = width; // Get horizontal pixel count
+        rgb.height = height; // Get vertical pixel count
+        rgb.bytesPerLine = bytesPerLine; // Get alignment value
+        rgb.colorDepth = colorDepth; // Get color bit value
+        rgb.currentLine = 0; // Expand data write line initialization
+        rgb.interlaceOffset = 8; // Interlace offset initialization
+        rgb.interlaced = interlaced; // Get Interlace Flag
+//logger.log(Level.TRACE, StringUtil.paramString(rgb));
 
-        // GIF データ解析用構造体初期化
+        // Initialize structure for GIF data analysis
         GifContext gif = new GifContext();
-        gif.rgb = rgb; // RgbDecodeStatus 構造体参照用ポインタ取得
-        gif.codeSize = data[0] & 0xff; // コードサイズ取得
-        gif.bitSize = gif.codeSize + 1; // CBL 初期化 (コードサイズ + 1)
-        gif.clearCode = 1 << gif.codeSize; // クリアコード設定 (2 ^ コードサイズ)
-        gif.endCode = gif.clearCode + 1; // エンドコード設定 (2 ^ コードサイズ + 1)
-        gif.entry = gif.endCode + 1; // エントリ数初期化 (2 ^ コードサイズ + 2)
-        gif.bitPoint = 8; // ビットポインタ初期化 (8 bit = 1 byte)
-        gif.nextBlock = 1; // 次ブロック位置初期化 (先頭ブロック)
-        gif.dataSize = size; // GIF データサイズ取得
-//Debug.println(StringUtil.paramString(gif));
+        gif.rgb = rgb; // Obtaining a pointer to a RgbDecodeStatus structure
+        gif.codeSize = data[0] & 0xff; // Get Code Size
+        gif.bitSize = gif.codeSize + 1; // CBL initialization (code size + 1)
+        gif.clearCode = 1 << gif.codeSize; // Clear Code Setting (2 ^ Code Size)
+        gif.endCode = gif.clearCode + 1; // End code setting (2 ^ code size + 1)
+        gif.entry = gif.endCode + 1; // Entry count initialization (2 ^ code size + 2)
+        gif.bitPoint = 8; // Bit pointer initialization (8 bit = 1 byte)
+        gif.nextBlock = 1; // Next block position initialization (first block)
+        gif.dataSize = size; // Get GIF data size
+//logger.log(Level.TRACE, StringUtil.paramString(gif));
 
-        int times = 0; // 展開回数初期化
-        int offset = 0; // 展開開始位置初期化
+        int times = 0; // Initialize deployment count
+        int offset = 0; // Initialize deployment start position
 
-        // エンドコードが現れるまでひたすらループ
+        // Loop until the end code appears
         while ((code = getCode(data, gif)) != gif.endCode) {
-            // クリアコードが現れた場合
-//System.err.println("code: " + code);
+            // If a clear code appears
+//logger.log(Level.TRACE, "code: " + code);
             if (code == gif.clearCode) {
-                // エントリ数 & CBL 初期化
+                // Number of entries & CBL initialization
                 gif.entry = gif.endCode + 1;
                 gif.bitSize = gif.codeSize + 1;
 
-                // 展開関数をコール。
+                // Call the expansion function.
                 decodeLzw(vram, lzw, gif, times, offset);
                 times = 0;
                 offset = 0;
             } else {
-                // int サイズ配列に取得した符号化コードを溜め込む。
-                // これは展開作業をより円滑に行う為であり、辞書テーブルとは異なります。
-                // 配列に溜め込まずに取得した符号化コードを直に展開することも出来ますが、
-                // 速度的に問題がある為、この方法を採用しています。
+                // The obtained encoded codes are stored in an int sized array.
+                // This is to make the extraction process smoother, and is different from
+                // a dictionary table. It is also possible to extract the obtained encoded
+                // codes directly without storing them in an array, but this would be
+                // problematic in terms of speed, so this method is used.
                 lzw[times++] = code & 0xffff;
 
-                // いつまでもクリアコードが現れないと配列が溢れるため、
-                // 符号化コードが 8192 個貯まった時点で展開作業を行う。
-                // 非圧縮 GIF 対策か？
+                // If no clear code appears for a long time, the array will overflow,
+                // so the extraction process will be performed once 8192 encoding codes have been accumulated.
+                // Is this a measure against uncompressed GIFs?
                 if (times == 8192) {
                     decodeLzw(vram, lzw, gif, times, offset);
                     times = 4096;
@@ -146,46 +155,46 @@ public class NonLzwGifDecoder {
             }
         }
 
-        // 配列に残っている符号化コードを展開する。
+        // Extract the remaining encoded codes from the array.
         decodeLzw(vram, lzw, gif, times, offset);
 
         return vram;
     }
 
     /**
-     * 可変ビット長入力関数。
-     * 符号化コードを一つ取り出して、ビット位置をインクリメントする。
+     * Variable bit-length input function.
+     * One encoded code is taken and the bit position is incremented.
      */
-    private int getCode(byte[] data, GifContext gif) {
-        int code = 0; // 符号化コード初期化
-        int bytePoint = gif.bitPoint >> 3; // 読み込み位置(バイト単位)取得
-//System.err.println("pt: " + bytePoint);
+    private static int getCode(byte[] data, GifContext gif) {
+        int code = 0; // Encoding code initialization
+        int bytePoint = gif.bitPoint >> 3; // Get the read position (in bytes)
+//logger.log(Level.TRACE, "pt: " + bytePoint);
 
-        // サイズオーバーフローの場合、強制的にエンドコードを返す(破損ファイル対策)
+        // In case of size overflow, force return of end code (to prevent corrupted files)
         if ((bytePoint + 2) > gif.dataSize) {
-Debug.println("maybe broken");
+            logger.log(Level.WARNING, "maybe broken");
             return gif.endCode;
         }
 
-        // 符号化コード取得
-        int i = 0; // 読み込みバイト数初期化
+        // Get encoding code
+        int i = 0; // Read byte count initialization
         while ((((gif.bitPoint + gif.bitSize) - 1) >> 3) >= bytePoint) {
-            // 読み込み中にブロックが終了した場合
+            // If a block ends during a read
             if (bytePoint == gif.nextBlock) {
-                gif.nextBlock += ((data[bytePoint++] & 0xff) + 1); // 次ブロック位置更新
-                gif.bitPoint += 8; // ビットポインタを１バイト分加算
+                gif.nextBlock += ((data[bytePoint++] & 0xff) + 1); // Update next block position
+                gif.bitPoint += 8; // Add one byte to the bit pointer
             }
-            code += ((data[bytePoint++] & 0xff) << i); // コード取得
+            code += ((data[bytePoint++] & 0xff) << i); // Get the code
             i += 8;
         }
 
-        // 得られたコードの余分なビットを切りとばす。(マスキング処理)
+        // The extra bits of the resulting code are then cut off (masking process).
         code = (code >> (gif.bitPoint & 0x07)) & ((1 << gif.bitSize) - 1);
 
-        // ビットポインタ更新
+        // Bit Pointer Update
         gif.bitPoint += gif.bitSize;
 
-        // CBL をインクリメントする必要があるかどうか確認する。
+        // Check if CBL needs to be incremented.
         if (gif.entry > ((1 << gif.bitSize) - 1)) {
             gif.bitSize++;
         }
@@ -194,120 +203,120 @@ Debug.println("maybe broken");
     }
 
     /**
-     * 非 LZW 理論展開関数 (メインループ)
-     * int サイズの配列に格納された符号化コードをデコードします。
+     * Non-LZW theory expansion function (main loop)
+     * Decodes an encoding code stored in an int sized array.
      */
     private void decodeLzw(byte[] vram, int[] lzw, GifContext gif, int times, int offset) {
-        // 単にループを回して展開関数を呼んでるだけ。
-//Debug.println(" times: " + times + ", offset: " + offset);
+        // It just runs a loop and calls the expansion function.
+//logger.log(Level.TRACE, " times: " + times + ", offset: " + offset);
         for (int i = offset; i < times; i++) {
             getLzwBytes(vram, lzw, gif, i);
         }
     }
 
     /**
-     * 非 LZW 理論展開関数 (コア)
-     * 非 LZW 理論の核。
-     * 指定された符号化コードに対する展開データを返します。
+     * Non-LZW theory expansion functions (core)
+     * The core of non-LZW theory.
+     * Returns the decompressed data for the specified encoding.
      */
     private void getLzwBytes(byte[] vram, int[] lzw, GifContext gif, int offset) {
-        // 配列から符号化コードを一つ取り出します。
+        // Extracts one encoding code from the array.
         int code = lzw[offset];
 
         if (code < gif.clearCode) {
-            // 符号化コードが "色数" より小さい場合
-            // 符号化コードをそのまま RGB に書き込む。
+            // If the encoding code is smaller than the "number of colors",
+            // the encoding code is written to RGB as is.
             writeRgb(vram, gif, code);
 
         } else if (code > gif.endCode + offset--) {
-            // 符号化コードが未知のものである場合
+            // If the encoding code is unknown
 
-            // 一つ前の展開データ
+            // Previous expansion data
             getLzwBytes(vram, lzw, gif, offset);
 
-            // 一つ前の展開データの先頭一個
+            // The first piece of the previous expanded data
             getLzwByte(vram, lzw, gif, offset);
 
         } else {
-            // 符号化コードが "色数 + 1" より大きい場合
-            // ちなみに、この関数に入ってくるコードにエンドコードやクリアコードは
-            // 絶対に現れませんので、その場合の処理は考慮されていません。
+            // If the encoding code is greater than "number of colors + 1"
+            // By the way, end codes and clear codes will never appear in the code entering this function,
+            // so processing in those cases is not taken into consideration.
 
-            // (符号化コード - 色数 + 1) の展開データ
+            // (Encoding code - number of colors + 1)
             getLzwBytes(vram, lzw, gif, code - gif.endCode - 1);
 
-            // (符号化コード - 色数 + 2) の展開データの先頭一個
+            // The first piece of (encoding code - number of colors + 2) expanded data
             getLzwByte(vram, lzw, gif, code - gif.endCode);
         }
     }
 
     /**
-     * 非 LZW 理論展開関数 (サブ)
-     * 非 LZW 理論の核。
-     * 指定された符号化コードに対する展開データの先頭１つを返します。
+     * Non-LZW theory expansion functions (sub)
+     * The core of non-LZW theory.
+     * Returns the first piece of decompressed data for the specified encoding.
      */
-    private void getLzwByte(byte[] vram, int[] lzw, GifContext gif, int offset) {
+    private static void getLzwByte(byte[] vram, int[] lzw, GifContext gif, int offset) {
         int code;
 
-        // 配列から符号化コードを一つ取り出し、"色数" より小さかどうか確認。
+        // Take one encoding code from the array and check if it is smaller than "number of colors".
         while ((code = lzw[offset]) >= gif.clearCode) {
-            // 符号化コードが未知のものである場合
+            // If the encoding code is unknown
             if (code > gif.endCode + offset) {
-                // 一つ前の展開データの先頭一個
+                // The first piece of the previous expanded data
                 offset--;
 
-                // 符号化コードが "色数 + 1" より大きい場合
+                // If the encoding code is greater than "number of colors + 1"
             } else {
-                // (符号化コード - 色数 + 1) の展開データの先頭一個
+                // The first piece of (encoding code - number of colors + 1) expanded data
                 offset = code - gif.endCode - 1;
             }
         }
 
-        // 得られた展開データをDIBに書き込む。
+        // The resulting expanded data is written to the DIB.
         writeRgb(vram, gif, code);
     }
 
     /**
-     * RGB 画像データ書き込み関数。
-     * 展開された画像データを RGB として書き込みます。
+     * RGB image data writing function.
+     * Write the extracted image data as RGB.
      */
-    private void writeRgb(byte[] rgb, GifContext gif, int code) {
-        // RGB に画像データを書き込みます。
-        // モノクロや 16 色の場合はビット単位での書き込みになる為、マスキング処理を行います。
+    private static void writeRgb(byte[] rgb, GifContext gif, int code) {
+        // Write image data to RGB.
+        // In the case of monochrome or 16 colors, writing is done in bit units, so masking processing is performed.
         int i;
 
-        // RGB に画像データを書き込みます。
-        // モノクロや 16 色の場合はビット単位での書き込みになる為、マスキング処理を行います。
+        // Write image data to RGB.
+        // In the case of monochrome or 16 colors, writing is done in bit units, so masking processing is performed.
         int j;
-//Debug.println("gif.rgb.color: " + gif.rgb.colors);
-//Debug.println("rgb.offset: " + gif.rgb.offset + ", rgb.rgb.point: " + gif.rgb.xPoint + ", code: " + code);
-//System.out.printf("%d\n", code);
+//logger.log(Level.TRACE, "gif.rgb.color: " + gif.rgb.colors);
+//logger.log(Level.TRACE, "rgb.offset: " + gif.rgb.offset + ", rgb.rgb.point: " + gif.rgb.xPoint + ", code: " + code);
+//logger.log(Level.TRACE, String.format("%d", code));
         switch (gif.rgb.colorDepth) {
-        case 1: // モノクロ画像の場合
-            i = gif.rgb.offset + (gif.rgb.xPoint / 8);
-            j = 7 - (gif.rgb.xPoint & 0x07);
-            rgb[i] = (byte) ((rgb[i] & ~(1 << j)) | (code << j));
-//Debug.println("x: " + gif.rgb.xPoint + ", y: " + (gif.rgb.offset / gif.rgb.bytesPerLine) + " / w: " + gif.rgb.width + ", h: " + gif.rgb.height + ": " + StringUtil.toHex2(rgb[i]));
-            break;
-        case 4: // 16色画像の場合
-            i = gif.rgb.offset + (gif.rgb.xPoint >> 1);
-            j = (gif.rgb.xPoint & 0x01) << 2;
-            rgb[i] = (byte) ((rgb[i] & (0x0f << j)) | (code << (4 - j)));
-            break;
-        default: // 256色の場合
-            rgb[gif.rgb.offset + gif.rgb.xPoint] = (byte) code;
-            break;
+            case 1: // For monochrome images
+                i = gif.rgb.offset + (gif.rgb.xPoint / 8);
+                j = 7 - (gif.rgb.xPoint & 0x07);
+                rgb[i] = (byte) ((rgb[i] & ~(1 << j)) | (code << j));
+//logger.log(Level.TRACE, String.format("x: %d, y: %d / w: %d, h: %d: %02x", gif.rgb.xPoint, (gif.rgb.offset / gif.rgb.bytesPerLine), gif.rgb.width, gif.rgb.height, rgb[i]));
+                break;
+            case 4: // For a 16-color image
+                i = gif.rgb.offset + (gif.rgb.xPoint >> 1);
+                j = (gif.rgb.xPoint & 0x01) << 2;
+                rgb[i] = (byte) ((rgb[i] & (0x0f << j)) | (code << (4 - j)));
+                break;
+            default: // 256 colors
+                rgb[gif.rgb.offset + gif.rgb.xPoint] = (byte) code;
+                break;
         }
 
-        // 書き込み位置をインクリメント
+        // Increment write position
         gif.rgb.xPoint++;
 
-        // 書き込み位置がラインの終端に達した場合
+        // If the write position reaches the end of the line
         if (gif.rgb.xPoint == gif.rgb.width) {
-//Debug.println("y: " + (gif.rgb.offset / gif.rgb.bytesPerLine));
-            if (gif.rgb.interlaced) { // インタレース GIF の場合
+//logger.log(Level.TRACE, "y: " + (gif.rgb.offset / gif.rgb.bytesPerLine));
+            if (gif.rgb.interlaced) { // For interlaced GIF
 
-                // インタレースラインが画面下端に達した場合
+                // When the interlace lines reach the bottom of the screen
                 if ((gif.rgb.currentLine + gif.rgb.interlaceOffset) >= gif.rgb.height) {
                     if ((gif.rgb.currentLine & 0x07) == 0) {
                         gif.rgb.offset = (gif.rgb.height - 5) * gif.rgb.bytesPerLine;
@@ -325,12 +334,10 @@ Debug.println("maybe broken");
                     gif.rgb.offset -= gif.rgb.bytesPerLine * gif.rgb.interlaceOffset;
                     gif.rgb.currentLine += gif.rgb.interlaceOffset;
                 }
-            } else { // リニア GIF の場合
+            } else { // For Linear GIF
                 gif.rgb.offset -= gif.rgb.bytesPerLine;
             }
             gif.rgb.xPoint = 0;
         }
     }
 }
-
-/* */

@@ -37,7 +37,7 @@ import vavi.imageio.WrappedImageInputStream;
  */
 public class PpmImageReader extends ImageReader {
 
-    private IIOMetadata metadata;
+    private final IIOMetadata metadata;
     private Ppm ppm;
 
     /** */
@@ -52,7 +52,7 @@ public class PpmImageReader extends ImageReader {
     }
 
     /** */
-    private void checkIndex(int imageIndex) {
+    private static void checkIndex(int imageIndex) {
         if (imageIndex != 0) {
             throw new IndexOutOfBoundsException("bad index");
         }
@@ -267,5 +267,3 @@ public class PpmImageReader extends ImageReader {
         return l.iterator();
     }
 }
-
-/* */

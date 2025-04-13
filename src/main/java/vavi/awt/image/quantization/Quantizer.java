@@ -41,5 +41,3 @@ public interface Quantizer {
      */
     int getIndexForColor(int rgb);
 }
-
-/* */

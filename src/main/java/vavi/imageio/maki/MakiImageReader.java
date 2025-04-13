@@ -9,9 +9,10 @@ package vavi.imageio.maki;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -23,7 +24,8 @@ import javax.imageio.stream.ImageInputStream;
 
 import vavi.awt.image.maki.RetroMaki;
 import vavi.imageio.WrappedImageInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -33,6 +35,8 @@ import vavi.util.Debug;
  * @version 0.00 230323 nsano initial version <br>
  */
 public class MakiImageReader extends ImageReader {
+
+    private static final Logger logger = getLogger(MakiImageReader.class.getName());
 
     /** */
     private IIOMetadata metadata;
@@ -94,12 +98,10 @@ public class MakiImageReader extends ImageReader {
 
     @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IIOException {
-Debug.println(Level.FINE, "here");
+logger.log(Level.TRACE, "here");
         ImageTypeSpecifier specifier = null;
         java.util.List<ImageTypeSpecifier> l = new ArrayList<>();
         l.add(specifier);
         return l.iterator();
     }
 }
-
-/* */

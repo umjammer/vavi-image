@@ -22,7 +22,7 @@ import vavi.awt.image.bmp.WindowsBitmapImageSource;
 
 
 /**
- * アイコンのイメージを作成します．
+ * Creates an image for the icon.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
@@ -35,10 +35,10 @@ public class WindowsIconImageSource implements ImageProducer {
     /** */
     private WindowsBitmapImageSource bitmap;
 
-    /** アイコンファイルには複数の大きさのアイコンが入っている */
-    private WindowsIcon[] icons;
+    /** The icon file contains icons of multiple sizes. */
+    private final WindowsIcon[] icons;
 
-    /** それぞれの大きさをデバイスと呼びそれを管理する数値 */
+    /** Each size is called a device and is managed by a number. */
     private int deviceId = 0;
 
     /** */
@@ -60,10 +60,10 @@ public class WindowsIconImageSource implements ImageProducer {
                 ic.setDimensions(width, height);
                 ic.setProperties(new Hashtable<>());
                 ic.setColorModel(cm);
-//Debug.println(image.getType() + ", " + cm);
+//logger.log(Level.TRACE, image.getType() + ", " + cm);
                 ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT | ImageConsumer.COMPLETESCANLINES | ImageConsumer.SINGLEPASS | ImageConsumer.SINGLEFRAME);
                 int[] buf = image.getRGB(0, 0, width, height, null, 0, width);
-//Debug.println(buf.length + ", " + width * height);
+//logger.log(Level.TRACE, buf.length + ", " + width * height);
                 ic.setPixels(0, 0, width, height, ColorModel.getRGBdefault(), buf, 0, width); // colorModel ???
                 ic.imageComplete(ImageConsumer.STATICIMAGEDONE);
             }
@@ -104,20 +104,20 @@ public class WindowsIconImageSource implements ImageProducer {
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 
-    /** 現在のデバイス ID を返します． */
+    /** Returns the current device ID. */
     public int getDeviceId() {
         return deviceId;
     }
 
-    /** 何個デバイスがあるかを返します． */
+    /** Returns how many devices are available. */
     public int getDeviceCount() {
         return icons.length;
     }
 
     /**
-     * デバイスを指定した形式に変更します．
+     * Changes the device to the specified format.
      *
-     * @throws NoSuchElementException 指定したデバイスがなかった場合
+     * @throws NoSuchElementException If the specified device does not exist
      */
     public void changeDevice(WindowsIconDevice device) {
 
@@ -133,15 +133,15 @@ public class WindowsIconImageSource implements ImageProducer {
     }
 
     /** */
-    private Map<String, WindowsBitmapImageSource> bitmapCache = new HashMap<>();
+    private final Map<String, WindowsBitmapImageSource> bitmapCache = new HashMap<>();
 
-    /** デバイスを ID で指定します． */
+    /** Selects the device by its ID. */
     public void changeDevice(int id) {
         if (id >= 0 && id < icons.length) {
             deviceId = id;
             if (bitmapCache.containsKey(String.valueOf(id))) {
                 bitmap = bitmapCache.get(String.valueOf(id));
-//Debug.println("cache hit: " + id);
+//logger.log(Level.TRACE, "cache hit: " + id);
             } else {
                 if (icons[id].getBitmap() == null) {
                     image = icons[id].getImage();
@@ -149,14 +149,14 @@ public class WindowsIconImageSource implements ImageProducer {
                     bitmap = new WindowsBitmapImageSource(icons[id].getBitmap());
                     bitmapCache.put(String.valueOf(id), bitmap);
                 }
-//Debug.println("new: " + id);
+//logger.log(Level.TRACE, "new: " + id);
             }
         } else {
             throw new IndexOutOfBoundsException(String.valueOf(id));
         }
     }
 
-    /** ストリームからアイコンのイメージを作成します． */
+    /** Creates an icon image from a stream. */
     public WindowsIconImageSource(InputStream in) throws IOException {
 
         icons = WindowsIcon.readFrom(in);
@@ -169,5 +169,3 @@ public class WindowsIconImageSource implements ImageProducer {
         return bitmap.getWindowsBitmap();
     }
 }
-
-/* */

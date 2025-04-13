@@ -48,6 +48,7 @@ System.err.println(args[0]);
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
+            @Override
             public void paintComponent(Graphics g) {
                 g.drawImage(image, 0, 0, this);
             }
@@ -56,5 +57,3 @@ System.err.println(args[0]);
         frame.setVisible(true);
     }
 }
-
-/* */

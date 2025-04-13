@@ -20,7 +20,7 @@ import javax.imageio.stream.ImageInputStream;
 public class WrappedImageInputStream extends InputStream {
 
     /** */
-    private ImageInputStream is;
+    private final ImageInputStream is;
 
     /** */
     public WrappedImageInputStream(ImageInputStream is) {
@@ -73,5 +73,3 @@ public class WrappedImageInputStream extends InputStream {
         return is.skipBytes(n);
     }
 }
-
-/* */

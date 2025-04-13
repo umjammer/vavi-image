@@ -7,7 +7,6 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -43,6 +42,7 @@ public class GifUnderDirectory {
      */
     public static void main(String[] args) throws Exception {
         JPanel panel = new JPanel() {
+            @Override
             public void paint(Graphics g) {
                 g.drawImage(image, 0, 0, this);
             }
@@ -55,13 +55,14 @@ public class GifUnderDirectory {
         frame.pack();
         frame.setVisible(true);
 
-        Files.walkFileTree(Path.of(args[0]), new SimpleFileVisitor<Path>() {
-            Pattern p = Pattern.compile(".+\\.(gif|GIF)");
+        Files.walkFileTree(Path.of(args[0]), new SimpleFileVisitor<>() {
+            final Pattern p = Pattern.compile(".+\\.(gif|GIF)");
+
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 try {
                     if (p.matcher(file.getFileName().toString()).find()) {
-System.err.println("--- " + file + " ---");
+                        System.err.println("--- " + file + " ---");
                         image = ImageIO.read(file.toFile());
                         panel.repaint();
                     }
@@ -73,5 +74,3 @@ System.err.println("--- " + file + " ---");
         });
     }
 }
-
-/* */

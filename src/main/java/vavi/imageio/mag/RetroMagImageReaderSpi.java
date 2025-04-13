@@ -8,14 +8,16 @@ package vavi.imageio.mag;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.logging.Level;
+import java.util.Properties;
 import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
-import vavi.util.Debug;
+import static java.lang.System.getLogger;
 
 
 /**
@@ -26,8 +28,26 @@ import vavi.util.Debug;
  */
 public class RetroMagImageReaderSpi extends ImageReaderSpi {
 
+    private static final Logger logger = getLogger(RetroMagImageReaderSpi.class.getName());
+
+    static {
+        try {
+            try (InputStream is = RetroMagImageReaderSpi.class.getResourceAsStream("/META-INF/maven/vavi/vavi-image/pom.properties")) {
+                if (is != null) {
+                    Properties props = new Properties();
+                    props.load(is);
+                    Version = props.getProperty("version", "undefined in pom.properties");
+                } else {
+                    Version = System.getProperty("vavi.test.version", "undefined");
+                }
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     private static final String VendorName = "http://www.vavi.com";
-    private static final String Version = "1.0.11";
+    private static final String Version;
     private static final String ReaderClassName =
         "vavi.imageio.mag.RetroMagImageReader";
     private static final String[] Names = {
@@ -40,7 +60,7 @@ public class RetroMagImageReaderSpi extends ImageReaderSpi {
         "image/x-mag"
     };
     static final String[] WriterSpiNames = {
-        /*"vavi.imageio.mag.RetroMagImageWriterSpi"*/
+        /* "vavi.imageio.mag.RetroMagImageWriterSpi" */
     };
     private static final boolean SupportsStandardStreamMetadataFormat = false;
     private static final String NativeStreamMetadataFormatName = null;
@@ -50,7 +70,7 @@ public class RetroMagImageReaderSpi extends ImageReaderSpi {
     private static final boolean SupportsStandardImageMetadataFormat = false;
     private static final String NativeImageMetadataFormatName = "mag";
     private static final String NativeImageMetadataFormatClassName =
-        /*"vavi.imageio.mag.RetroMagImageMetaData"*/ null;
+        /* "vavi.imageio.mag.RetroMagImageMetaData" */ null;
     private static final String[] ExtraImageMetadataFormatNames = null;
     private static final String[] ExtraImageMetadataFormatClassNames = null;
 
@@ -87,21 +107,20 @@ public class RetroMagImageReaderSpi extends ImageReaderSpi {
 
         byte[] header = "MAKI02  ".getBytes();
 
-        if (obj instanceof ImageInputStream) {
-            ImageInputStream is = (ImageInputStream) obj;
+        if (obj instanceof ImageInputStream is) {
             byte[] bytes = new byte[header.length];
             try {
                 is.mark();
                 is.readFully(bytes);
                 is.reset();
             } catch (IOException e) {
-Debug.println(e);
+logger.log(Level.ERROR, e.getMessage(), e);
                 return false;
             }
-//Debug.dump(bytes);
+//logger.log(Level.TRACE, StringUtil.getDump(bytes));
             return Arrays.equals(header, bytes);
         } else {
-Debug.println(Level.FINE, obj);
+logger.log(Level.DEBUG, obj);
             return false;
         }
     }
@@ -111,5 +130,3 @@ Debug.println(Level.FINE, obj);
         return new RetroMagImageReader(this);
     }
 }
-
-/* */

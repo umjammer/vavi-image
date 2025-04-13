@@ -27,7 +27,7 @@ import java.util.Hashtable;
 public class ArtMasterImageSource implements ImageProducer {
 
     /** */
-    private ArtMasterImage image;
+    private final ArtMasterImage image;
 
     /** */
     private ImageConsumer ic;
@@ -84,5 +84,3 @@ public class ArtMasterImageSource implements ImageProducer {
         ic.imageComplete(ImageConsumer.STATICIMAGEDONE);
     }
 }
-
-/* */

@@ -11,16 +11,18 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import javax.imageio.ImageIO;
 
 import vavi.awt.image.bmp.WindowsBitmap;
 import vavi.io.LittleEndianDataInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
- * Windows の Icon 形式です．
+ * Windows Icon format.．
  *
  * <pre><code>
  *
@@ -46,92 +48,94 @@ import vavi.util.Debug;
  */
 public class WindowsIcon {
 
-    /** アイコンデバイス */
-    private WindowsIconDevice device;
+    private static final Logger logger = getLogger(WindowsIcon.class.getName());
 
-    /** アイコンのビットマップ */
+    /** the device for the icon */
+    private final WindowsIconDevice device;
+
+    /** the bitmap for the icon */
     private WindowsBitmap bitmap;
 
-    /** アイコンのビットマップ */
+    /** the image for the icon */
     private BufferedImage image;
 
-    /** マスク */
+    /** the mask */
     private byte[] mask;
 
-    /** アイコンを作成します． */
+    /** Creates an icon. */
     public WindowsIcon(WindowsIconDevice device, WindowsBitmap bitmap) {
         this.device = device;
         this.bitmap = bitmap;
         createMask();
     }
 
-    /** アイコンを作成します． */
+    /** Creates an icon. */
     public WindowsIcon(WindowsIconDevice device, BufferedImage image) {
         this.device = device;
         this.image = image;
     }
 
-    /** アイコンデバイスを取得します． */
+    /** Creates an icon device. */
     public WindowsIconDevice getDevice() {
         return device;
     }
 
-    /** アイコンのビットマップを取得します． */
+    /** Gets the icon image. */
     public BufferedImage getImage() {
         return image;
     }
 
-    /** アイコンのビットマップを取得します． */
+    /** Gets the icon bitmap. */
     public WindowsBitmap getBitmap() {
         return bitmap;
     }
 
-    /** アイコンのマスクを取得します． */
+    /** Gets the icon mask. */
     public byte[] getMask() {
         return mask;
     }
 
     /**
-     * マスクを作成します． マスクのデータの幅は 4 の倍数になるようにパディングされている． Y 軸は逆転して入ってる．
+     * Creates a mask. The width of the mask data is padded to a multiple of 4. The Y axis is inverted.
      */
     private void createMask() {
         int off = bitmap.getImageSize() + bitmap.getOffset();
         int size = bitmap.getSize() - off;
-//Debug.println("mask: " + size);
-//Debug.println(bitmap.getWidth() + ", " + bitmap.getHeight());
+//logger.log(Level.TRACE, "mask: " + size);
+//logger.log(Level.TRACE, bitmap.getWidth() + ", " + bitmap.getHeight());
 
-        byte[] buf = new byte[size]; // データののマスクサイズ
+        byte[] buf = new byte[size]; // Mask size of the data
         for (int i = 0; i < size; i++) {
             buf[i] = bitmap.getBitmap()[bitmap.getImageSize() + i];
         }
 
-//Debug.dump(buf);
+//logger.log(Level.TRACE, StringUtil.getDump(buf));
 
-        // パディングを取り除いたマスク
+        // Mask with padding removed
         mask = new byte[(bitmap.getWidth() / 8) * bitmap.getHeight()];
-//Debug.println("real: " + (bitmap.getWidth() / 8) * bitmap.getHeight());
+//logger.log(Level.TRACE, "real: " + (bitmap.getWidth() / 8) * bitmap.getHeight());
 
-        int m = (((bitmap.getWidth() / 8) + 3) / 4) * 4; // パディング入りの幅
-//Debug.println("x: " + m);
+        int m = (((bitmap.getWidth() / 8) + 3) / 4) * 4; // Width with padding
+//logger.log(Level.TRACE, "x: " + m);
         int i = 0;
-top:    for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y 軸を逆転
+top:    for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Invert Y-Axis
             for (int x = 0; x < m; x++) {
                 if (x < bitmap.getWidth() / 8) {
-//Debug.println(y * m + x);
+//logger.log(Level.TRACE, y * m + x);
                     if (i < size) {
                         mask[i++] = buf[y * m + x];
-//System.err.print(Debug.toBits(mask[i-1]));
+//logger.log(Level.TRACE, Debug.toBits(mask[i-1]));
                     } else {
                         break top;
                     }
                 }
             }
-// System.err.println();
+//logger.log(Level.TRACE, "");
         }
     }
 
     /**
-     * アイコンファイルのヘッダを表すクラスです．
+     * This class represents the header of an icon file.
      *
      * <pre>
      *
@@ -142,14 +146,15 @@ top:    for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y 軸を逆転
      * </pre>
      */
     private static final class Header {
-        /** タイプ */
+
+        /** type */
         int type;
 
-        /** アイコンデバイスの数 */
+        /** Number of icon devices */
         int number;
 
         /**
-         * ストリームからファイルヘッダのインスタンスを作成します．
+         * Creates a file header instance from a stream.
          */
         static Header readFrom(LittleEndianDataInputStream lin) throws IOException {
 
@@ -175,7 +180,7 @@ top:    for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y 軸を逆転
     }
 
     /**
-     * 指定したデバイスのアイコンをストリームから読み込みます．
+     * Reads the icon for the specified device from the stream.
      */
     private static WindowsIcon readIcon(LittleEndianDataInputStream lin, WindowsIconDevice iconDevice) throws IOException {
 
@@ -186,10 +191,10 @@ top:    for (int y = bitmap.getHeight() - 1; y >= 0; y--) { // Y 軸を逆転
             byte[] buf = new byte[size];
             DataInputStream dis = new DataInputStream(lin);
             dis.readFully(buf);
-//System.err.println(StringUtil.getDump(buf, 128));
+//logger.log(Level.TRACE, StringUtil.getDump(buf, 128));
             ByteArrayInputStream bais = new ByteArrayInputStream(buf);
             BufferedImage image = ImageIO.read(bais);
-Debug.println(image);
+logger.log(Level.DEBUG, image);
 
             return new WindowsIcon(iconDevice, image);
         } else {
@@ -198,7 +203,7 @@ Debug.println(image);
     }
 
     /**
-     * ストリームからアイコンのインスタンスを作成します．
+     * Creates an instance of an icon from a stream.
      */
     public static WindowsIcon[] readFrom(InputStream in) throws IOException {
 
@@ -208,7 +213,7 @@ Debug.println(image);
         WindowsIconDevice[] iconDevices;
 
         Header h = Header.readFrom(lin);
-Debug.println(h);
+logger.log(Level.DEBUG, h);
         icons = new WindowsIcon[h.number];
         iconDevices = WindowsIconDevice.readFrom(lin, h.number);
 
@@ -223,5 +228,3 @@ Debug.println(h);
         return icons;
     }
 }
-
-/* */

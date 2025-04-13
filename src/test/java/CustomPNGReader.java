@@ -43,6 +43,7 @@ public class CustomPNGReader {
         frame.setSize(image.getWidth(), image.getHeight());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
+            @Override
             public void paint(Graphics g) {
                 g.drawImage(image, 0, 0, this);
             }
@@ -71,5 +72,3 @@ public class CustomPNGReader {
         iioRegistry.deregisterServiceProvider(sp, pt);
     }
 }
-
-/* */

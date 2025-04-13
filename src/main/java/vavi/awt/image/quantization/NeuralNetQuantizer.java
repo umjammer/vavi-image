@@ -107,7 +107,7 @@ public class NeuralNetQuantizer {
 
     protected int[] pixels = null;
 
-    private int sampleFac;
+    private final int sampleFac;
 
     /** */
     public NeuralNetQuantizer(Image image, int w, int h, int netSize) throws IOException {
@@ -616,5 +616,3 @@ public class NeuralNetQuantizer {
         return best;
     }
 }
-
-/* */

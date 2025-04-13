@@ -68,7 +68,7 @@ class MagImageReaderTest {
     }
 
     /** using cdl cause junit stops awt thread suddenly */
-    void show(BufferedImage image) throws Exception {
+    static void show(BufferedImage image) throws Exception {
         CountDownLatch cdl = new CountDownLatch(1);
         JFrame frame = new JFrame("MAG");
         frame.addWindowListener(new WindowAdapter() {

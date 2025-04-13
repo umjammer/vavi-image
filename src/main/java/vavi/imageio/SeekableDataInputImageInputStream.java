@@ -8,12 +8,14 @@ package vavi.imageio;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.ByteOrder;
-import java.util.logging.Level;
 import javax.imageio.stream.ImageInputStream;
 
 import vavi.io.SeekableDataInput;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -24,7 +26,9 @@ import vavi.util.Debug;
  */
 public class SeekableDataInputImageInputStream implements SeekableDataInput<ImageInputStream> {
 
-    private ImageInputStream iis;
+    private static final Logger logger = getLogger(SeekableDataInputImageInputStream.class.getName());
+
+    private final ImageInputStream iis;
 
     public SeekableDataInputImageInputStream(ImageInputStream iis, ByteOrder byteOrder) {
         this.iis = iis;
@@ -119,7 +123,7 @@ public class SeekableDataInputImageInputStream implements SeekableDataInput<Imag
     public void position(long l) throws IOException {
         iis.reset();
         iis.seek(l);
-Debug.printf(Level.FINER, "%d, %d", l, position());
+logger.log(Level.TRACE, String.format("%d, %d", l, position()));
     }
 
     @Override

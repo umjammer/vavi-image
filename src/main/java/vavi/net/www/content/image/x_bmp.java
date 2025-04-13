@@ -29,5 +29,3 @@ public class x_bmp extends ContentHandler {
         return new WindowsBitmapImageSource(in);
     }
 }
-
-/* */

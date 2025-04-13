@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.imageio.IIOException;
@@ -22,7 +24,8 @@ import javax.imageio.stream.ImageInputStream;
 
 import vavi.awt.image.am88.ArtMasterImage;
 import vavi.imageio.WrappedImageInputStream;
-import vavi.util.Debug;
+
+import static java.lang.System.getLogger;
 
 
 /**
@@ -32,6 +35,8 @@ import vavi.util.Debug;
  * @version 0.00 021116 nsano initial version <br>
  */
 public class ArtMasterImageReader extends ImageReader {
+
+    private static final Logger logger = getLogger(ArtMasterImageReader.class.getName());
 
     /** */
     private IIOMetadata metadata;
@@ -76,7 +81,7 @@ public class ArtMasterImageReader extends ImageReader {
         } else if (input instanceof InputStream) {
             is = (InputStream) input;
         } else {
-Debug.println(input);
+logger.log(Level.WARNING, "unsupported input: " + input);
         }
 
         try {
@@ -114,5 +119,3 @@ Debug.println(input);
         return l.iterator();
     }
 }
-
-/* */

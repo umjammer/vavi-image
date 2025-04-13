@@ -46,5 +46,3 @@ public class IIOUtilTest {
         assertTrue(p1pos < p2pos);
     }
 }
-
-/* */

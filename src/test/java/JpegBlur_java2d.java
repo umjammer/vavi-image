@@ -119,5 +119,3 @@ System.err.println("right: " + (System.currentTimeMillis() - t) + "ms");
         frame.setVisible(true);
     }
 }
-
-/* */

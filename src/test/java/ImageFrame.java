@@ -125,6 +125,7 @@ public class ImageFrame extends JFrame {
     /**
      * Overridden for double buffering.
      */
+    @Override
     public void update(Graphics g) {
         paint(g);
     }
@@ -132,6 +133,7 @@ public class ImageFrame extends JFrame {
     /**
      * Paint the image.
      */
+    @Override
     public void paint(Graphics g) {
         // the first time through, figure out where to draw the image
         if (left == -1) {

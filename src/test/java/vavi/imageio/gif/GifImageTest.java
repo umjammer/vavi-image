@@ -61,6 +61,7 @@ System.err.println(args[0]);
         JFrame frame = new JFrame();
         frame.addMouseListener(new MouseAdapter() {
             int count = 1;
+            @Override
             public void mouseClicked(MouseEvent event) {
                 try {
 System.err.println(args[count]);
@@ -87,5 +88,3 @@ System.err.println(args[count]);
         frame.pack();
     }
 }
-
-/* */
