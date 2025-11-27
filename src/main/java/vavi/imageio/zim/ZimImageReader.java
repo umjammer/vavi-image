@@ -77,7 +77,7 @@ public class ZimImageReader extends ImageReader {
             } else if (input instanceof InputStream) {
                 iis = ImageIO.createImageInputStream(input);
             } else {
-                throw new UnsupportedOperationException(input.getClass().getName());
+                throw new IllegalArgumentException(input.getClass().getName());
             }
 
             image = Zim.decode((new SeekableDataInputImageInputStream(iis, ByteOrder.LITTLE_ENDIAN)));

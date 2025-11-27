@@ -9,9 +9,13 @@ package vavi.imageio.am88;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
@@ -22,9 +26,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+
+import vavi.imageio.IIOUtil;
 import vavi.util.Debug;
 import vavi.util.properties.annotation.Property;
 import vavi.util.properties.annotation.PropsEntity;
@@ -41,11 +48,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @PropsEntity(url = "file:local.properties")
 class ArtMasterImageReaderTest {
 
-    static {
-        System.setProperty("vavi.util.logging.VaviFormatter.extraClassMethod",
-                           "sun\\.util\\.logging\\.[\\w\\$]+#\\w+");
-    }
-
     static boolean localPropertiesExists() {
         return Files.exists(Paths.get("local.properties"));
     }
@@ -61,24 +63,19 @@ class ArtMasterImageReaderTest {
     }
 
     @Test
+    @DisplayName("via spi, manual selection")
     void test() throws Exception {
-        ImageReader ir = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("AM88");
-        while (irs.hasNext()) {
-            ImageReader tmpIr = irs.next();
-            if (tmpIr.getClass().getName().equals(ArtMasterImageReader.class.getName())) {
-                ir = tmpIr;
-                break;
-            }
-        }
+        ImageReader ir = IIOUtil.getImageReader("AM88", ArtMasterImageReader.class.getName());
         ir.setInput(Files.newInputStream(Paths.get("src/test/resources/test.am88")));
         Image image = ir.read(0);
         assertNotNull(image);
     }
 
     @Test
+    @DisplayName("via spi, auto selection")
     void test1() throws Exception {
         URL url = ArtMasterImageReaderTest.class.getResource("/test.am88");
+        assert url != null;
         Image image = ImageIO.read(url);
         assertNotNull(image);
     }
@@ -86,33 +83,17 @@ class ArtMasterImageReaderTest {
     @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test0() throws Exception {
-        // using cdl cause junit stops awt thread suddenly
-        CountDownLatch cdl = new CountDownLatch(1);
-        main(new String[] { art88Image });
-        cdl.await(); // depends on main frame's exit on close
+        show(ImageIO.read(Path.of(art88Image).toFile()));
     }
 
-    //----
-
-    /** */
-    public static void main(String[] args) throws IOException {
-Debug.println(args[0]);
-        ImageReader ir = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("AM88");
-        while (irs.hasNext()) {
-            ImageReader tmpIr = irs.next();
-Debug.println("ImageReader: " + tmpIr.getClass().getName());
-            if (tmpIr.getClass().getName().equals(ArtMasterImageReader.class.getName())) {
-                ir = tmpIr;
-Debug.println("found ImageReader: " + ir.getClass().getName());
-                break;
-            }
-        }
-        ir.setInput(Files.newInputStream(Paths.get(args[0])));
-        Image image = ir.read(0);
+    /** gui */
+    static void show(BufferedImage image) throws Exception {
+        CountDownLatch cdl = new CountDownLatch(1);
 
         JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) { cdl.countDown(); }
+        });
         JPanel panel = new JPanel() {
             @Override
             public void paint(Graphics g) {
@@ -123,5 +104,18 @@ Debug.println("found ImageReader: " + ir.getClass().getName());
         frame.getContentPane().add(panel);
         frame.pack();
         frame.setVisible(true);
+
+        cdl.await();
+    }
+
+    //----
+
+    /** */
+    public static void main(String[] args) throws Exception {
+Debug.println(args[0]);
+        ImageReader ir = IIOUtil.getImageReader("AM88", ArtMasterImageReader.class.getName());
+        ir.setInput(Files.newInputStream(Paths.get(args[0])));
+        BufferedImage image = ir.read(0);
+        show(image);
     }
 }

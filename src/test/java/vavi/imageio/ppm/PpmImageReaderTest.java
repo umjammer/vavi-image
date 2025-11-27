@@ -8,16 +8,26 @@ package vavi.imageio.ppm;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import vavi.imageio.IIOUtil;
+import vavi.imageio.pic.PicImageReader;
+import vavi.util.Debug;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
@@ -33,39 +43,28 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class PpmImageReaderTest {
 
     @Test
+    @DisplayName("via spi, manual selection")
     public void test() throws Exception {
-        Image image = ImageIO.read(Files.newInputStream(Paths.get("src/test/resources/test.ppm")));
+        Image image = ImageIO.read(Path.of("src/test/resources/test.ppm").toFile());
         assertNotNull(image);
     }
 
     @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     public void test0() throws Exception {
-        main(new String[] { "src/test/resources/test.ppm" });
+        BufferedImage image = ImageIO.read(Path.of("src/test/resources/test.ppm").toFile());
+        show(image);
     }
 
-    //----
-
     /** */
-    public static void main(String[] args) throws IOException {
-System.err.println(args[0]);
-        ImageReader ir;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("PPM");
-        while (irs.hasNext()) {
-            ImageReader tmpIr = irs.next();
-            if (tmpIr.getClass().getName().equals(PpmImageReader.class.getName())) {
-                ir = tmpIr;
-System.err.println("found ImageReader: " + ir.getClass().getName());
-                break;
-            }
-        }
-//        ir.setInput(new FileInputStream(args[0]));
-//        final Image image = ir.read(0);
-        Image image = ImageIO.read(Files.newInputStream(Paths.get(args[0])));
+    static void show(BufferedImage image) throws Exception {
+        CountDownLatch cdl = new CountDownLatch(1);
 
         JFrame frame = new JFrame();
+        frame.addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) { cdl.countDown(); }
+        });
         frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
             @Override
             public void paint(Graphics g) {
@@ -74,5 +73,19 @@ System.err.println("found ImageReader: " + ir.getClass().getName());
         };
         frame.getContentPane().add(panel);
         frame.setVisible(true);
+
+        cdl.await();
+    }
+
+    //----
+
+    /** */
+    public static void main(String[] args) throws Exception {
+Debug.println(args[0]);
+        ImageReader ir = IIOUtil.getImageReader("PPM", PpmImageReader.class.getName());
+//        ir.setInput(new FileInputStream(args[0]));
+//        final Image image = ir.read(0);
+        BufferedImage image = ImageIO.read(Path.of(args[0]).toFile());
+        show(image);
     }
 }

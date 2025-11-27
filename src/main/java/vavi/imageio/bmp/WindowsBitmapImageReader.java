@@ -141,7 +141,7 @@ logger.log(Level.DEBUG, image.getType() + ", " + image.getColorModel());
         } else if (input instanceof InputStream) {
             is = (InputStream) input;
         } else {
-logger.log(Level.WARNING, "unsupported input: " + input);
+            throw new IllegalArgumentException("unsupported input: " + input);
         }
 
         try {

@@ -81,7 +81,7 @@ public class ArtMasterImageReader extends ImageReader {
         } else if (input instanceof InputStream) {
             is = (InputStream) input;
         } else {
-logger.log(Level.WARNING, "unsupported input: " + input);
+            throw new IllegalArgumentException("unsupported input: " + input);
         }
 
         try {

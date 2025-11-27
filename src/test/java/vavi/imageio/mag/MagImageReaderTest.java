@@ -14,15 +14,17 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.JFrame;
 
+import vavi.imageio.IIOUtil;
+import vavi.swing.JImageComponent;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import vavi.swing.JImageComponent;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -36,25 +38,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class MagImageReaderTest {
 
     @Test
+    @DisplayName("via spi, manual selection")
     void test0() throws Exception {
-        ImageReader ir = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("MAG");
-        while (irs.hasNext()) {
-            ImageReader tmpIr = irs.next();
-            if (tmpIr.getClass().getName().equals(MagImageReader.class.getName())) {
-                ir = tmpIr;
-                break;
-            }
-        }
-        assert ir != null : "no suitable spi";
+        ImageReader ir = IIOUtil.getImageReader("MAG", MagImageReader.class.getName());
         ir.setInput(Files.newInputStream(Paths.get("src/test/resources/test.mag")));
         Image image = ir.read(0);
         assertNotNull(image);
     }
 
     @Test
+    @DisplayName("via spi, auto selection")
     void test1() throws Exception {
         URL url = MagImageReaderTest.class.getResource("/test.mag");
+        assert url != null;
         BufferedImage image = ImageIO.read(url);
         assertNotNull(image);
     }
@@ -63,6 +59,7 @@ class MagImageReaderTest {
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test2() throws Exception {
         URL url = MagImageReaderTest.class.getResource("/test2.mag");
+        assert url != null;
         BufferedImage image = ImageIO.read(url);
         show(image);
     }
@@ -70,6 +67,7 @@ class MagImageReaderTest {
     /** using cdl cause junit stops awt thread suddenly */
     static void show(BufferedImage image) throws Exception {
         CountDownLatch cdl = new CountDownLatch(1);
+
         JFrame frame = new JFrame("MAG");
         frame.addWindowListener(new WindowAdapter() {
             @Override public void windowClosing(WindowEvent e) { cdl.countDown(); }
@@ -80,6 +78,7 @@ class MagImageReaderTest {
         frame.getContentPane().add(panel);
         frame.pack();
         frame.setVisible(true);
+
         cdl.await();
     }
 }

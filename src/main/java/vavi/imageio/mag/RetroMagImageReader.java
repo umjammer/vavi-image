@@ -76,7 +76,7 @@ public class RetroMagImageReader extends ImageReader {
             } else if (input instanceof InputStream) {
                 iis = ImageIO.createImageInputStream(input);
             } else {
-                throw new UnsupportedOperationException(input.getClass().getName());
+                throw new IllegalArgumentException(input.getClass().getName());
             }
 
             image = new RetroMag().mainProcess(new WrappedImageInputStream(iis));

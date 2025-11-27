@@ -60,7 +60,7 @@ public class ArtMasterImageReaderSpi extends ImageReaderSpi {
         "image/x-am88"
     };
     static final String[] WriterSpiNames = {
-        /*"vavi.imageio.ico.ArtMasterWriterSpi"*/
+        /*"vavi.imageio.am88.ArtMasterWriterSpi"*/
     };
     private static final boolean SupportsStandardStreamMetadataFormat = false;
     private static final String NativeStreamMetadataFormatName = null;
