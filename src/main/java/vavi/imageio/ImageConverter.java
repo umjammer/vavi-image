@@ -16,7 +16,7 @@ import static java.lang.System.getLogger;
 
 
 /**
- * Image を BufferedImage に変換するユーティリティです。
+ * A utility to convert an Image to a BufferedImage.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 021124 nsano initial version <br>
@@ -39,12 +39,12 @@ public class ImageConverter {
     /** */
     private int cmType = BufferedImage.TYPE_4BYTE_ABGR;
 
-    /** TODO 自動化 */
+    /** TODO automation */
     public void setColorModelType(int cmType) {
         this.cmType = cmType;
     }
 
-    /** TODO BufferedImage のカラーモデルを自動設定する */
+    /** TODO Automatically set the color model of a BufferedImage */
     public BufferedImage toBufferedImage(Image image) {
         int w = image.getWidth(imageObserver);
         int h = image.getHeight(imageObserver);

@@ -15,7 +15,7 @@ import java.util.Hashtable;
 
 
 /**
- * Windows ビットマップを作成します．
+ * Creates a Windows bitmap.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
@@ -61,12 +61,12 @@ public class WindowsBitmapImageSource implements ImageProducer {
     public void requestTopDownLeftRightResend(ImageConsumer ic) {
     }
 
-    /** WindowsIconSource 用 */
+    /** for WindowsIconSource */
     public WindowsBitmapImageSource(WindowsBitmap bitmap) {
         this.bitmap = bitmap;
     }
 
-    /** ビットマップを作成します． */
+    /** Creates a bitmap. */
     public WindowsBitmapImageSource(InputStream in) throws IOException {
         bitmap = WindowsBitmap.readFrom(in);
     }
@@ -76,7 +76,7 @@ public class WindowsBitmapImageSource implements ImageProducer {
         return bitmap;
     }
 
-    /** ビットマップを作成します． */
+    /** Creates a bitmap. */
     private void loadPixel() {
 
         ColorModel cm = bitmap.getColorModel();
@@ -92,9 +92,9 @@ public class WindowsBitmapImageSource implements ImageProducer {
 
         ic.setHints(ImageConsumer.TOPDOWNLEFTRIGHT | ImageConsumer.COMPLETESCANLINES | ImageConsumer.SINGLEPASS | ImageConsumer.SINGLEFRAME);
 
-        // インデックスカラー用イメージバッファ
+        // Indexed color image buffer
         byte[] vram = null;
-        // フルカラー用イメージ用バッファ
+        // Full color image buffer
         int[] ivram = null;
 
         switch (bits) {

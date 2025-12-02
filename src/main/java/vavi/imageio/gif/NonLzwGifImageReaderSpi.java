@@ -112,7 +112,7 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
 logger.log(Level.ERROR, e.getMessage(), e);
                 return false;
             }
-            return bytes[0] == 'G' && // 識別子 = "GIF8" + ("7a" or "9a")
+            return bytes[0] == 'G' && // identifier = "GIF8" + ("7a" or "9a")
                    bytes[1] == 'I' &&
                    bytes[2] == 'F' &&
                    bytes[3] == '8';

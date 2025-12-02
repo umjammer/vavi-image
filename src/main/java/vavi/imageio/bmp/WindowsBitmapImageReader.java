@@ -72,9 +72,9 @@ public class WindowsBitmapImageReader extends ImageReader {
     public static BufferedImage readImage(InputStream is) throws IOException {
         WindowsBitmap windowsBitmap = WindowsBitmap.readFrom(is);
 
-        // インデックスカラー用イメージバッファ
+        // Indexed color image buffer
         byte[] vram = null;
-        // フルカラー用イメージ用バッファ
+        // Full color image buffer
         int[] ivram = null;
 
         int bits = windowsBitmap.getBits();
