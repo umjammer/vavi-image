@@ -5,6 +5,8 @@
 
 # vavi-image
 
+<img alt="logo" src="src/test/resources/duke_paint2.png" width="200" />
+
 🎨 Imaging the world!
 
 ### Formats
@@ -126,3 +128,7 @@
 * n88basic image format (wip, branch:n88basic)
 * yet another pic image format (wip, branch:pic)
 * ffmpeg op jna-ize
+
+---
+
+<sub>image designed by @umjammer, drawn by nano banana</sub>
