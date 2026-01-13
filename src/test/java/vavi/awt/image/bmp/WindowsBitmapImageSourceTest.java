@@ -9,10 +9,13 @@ package vavi.awt.image.bmp;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -37,16 +40,14 @@ class WindowsBitmapImageSourceTest {
         assertNotNull(image);
     }
 
-    //----
-
-    /** */
-    public static void main(String[] args) throws IOException {
-System.err.println(args[0]);
-        Image image = Toolkit.getDefaultToolkit().createImage(new WindowsBitmapImageSource(Files.newInputStream(Paths.get(args[0]))));
+    static void show(Image image) throws Exception {
+        CountDownLatch cdl = new CountDownLatch(1);
 
         JFrame frame = new JFrame();
         frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) { cdl.countDown(); }
+        });
         JPanel panel = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
@@ -55,5 +56,16 @@ System.err.println(args[0]);
         };
         frame.getContentPane().add(panel);
         frame.setVisible(true);
+
+        cdl.await();
+    }
+
+    //----
+
+    /** */
+    public static void main(String[] args) throws Exception {
+System.err.println(args[0]);
+        Image image = Toolkit.getDefaultToolkit().createImage(new WindowsBitmapImageSource(Files.newInputStream(Paths.get(args[0]))));
+        show(image);
     }
 }
