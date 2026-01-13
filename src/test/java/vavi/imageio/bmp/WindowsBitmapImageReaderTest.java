@@ -8,16 +8,21 @@ package vavi.imageio.bmp;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.IOException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
-
+import java.util.concurrent.CountDownLatch;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import vavi.imageio.IIOUtil;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
@@ -33,18 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class WindowsBitmapImageReaderTest {
 
     @Test
+    @DisplayName("via spi, manual selection")
     public void test() throws Exception {
-        ImageReader ir = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("BMP");
-        while (irs.hasNext()) {
-            ImageReader tmpIr = irs.next();
-            System.err.println("ImageReader: " + tmpIr.getClass().getName());
-            if (tmpIr.getClass().getName().equals(WindowsBitmapImageReader.class.getName())) {
-                ir = tmpIr;
-                System.err.println("found ImageReader: " + ir.getClass().getName());
-                break;
-            }
-        }
+        ImageReader ir = IIOUtil.getImageReader("BMP", WindowsBitmapImageReader.class.getName());
         ir.setInput(Files.newInputStream(Paths.get("src/test/resources/test.bmp")));
         Image image = ir.read(0);
         assertNotNull(image);
@@ -53,31 +49,19 @@ public class WindowsBitmapImageReaderTest {
     @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     public void test0() throws Exception {
-        main(new String[] { "src/test/resources/test.bmp" });
+        BufferedImage image = ImageIO.read(Path.of("src/test/resources/test.bmp").toFile());
+        show(image);
     }
 
-    //----
-
-    /** */
-    public static void main(String[] args) throws IOException {
-System.err.println(args[0]);
-        ImageReader ir = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("BMP");
-        while (irs.hasNext()) {
-            ImageReader tmpIr = irs.next();
-System.err.println("ImageReader: " + tmpIr.getClass().getName());
-            if (tmpIr.getClass().getName().equals(WindowsBitmapImageReader.class.getName())) {
-                ir = tmpIr;
-System.err.println("found ImageReader: " + ir.getClass().getName());
-                break;
-            }
-        }
-        ir.setInput(Files.newInputStream(Paths.get(args[0])));
-        Image image = ir.read(0);
+    /** gui */
+    static void show(Image image) throws Exception {
+        CountDownLatch cdl = new CountDownLatch(1);
 
         JFrame frame = new JFrame();
+        frame.addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) { cdl.countDown(); }
+        });
         frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel() {
             @Override
             public void paint(Graphics g) {
@@ -86,5 +70,18 @@ System.err.println("found ImageReader: " + ir.getClass().getName());
         };
         frame.getContentPane().add(panel);
         frame.setVisible(true);
+
+        cdl.await();
+    }
+
+    //----
+
+    /** */
+    public static void main(String[] args) throws Exception {
+        System.err.println(args[0]);
+        ImageReader ir = IIOUtil.getImageReader("BMP", WindowsBitmapImageReader.class.getName());
+        ir.setInput(Files.newInputStream(Paths.get(args[0])));
+        BufferedImage image = ir.read(0);
+        show(image);
     }
 }

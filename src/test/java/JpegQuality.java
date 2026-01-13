@@ -100,7 +100,7 @@ System.err.println(w + ", " + h);
             final ImageWriter iwL;
             final ImageWriter iwR;
             {
-                // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
+                // BUG? I think JPEG ImageWriter is not thread safe.
                 iwL = IIOUtil.getImageWriter("JPEG", classNameL);
                 iwR = IIOUtil.getImageWriter("JPEG", classNameR);
 

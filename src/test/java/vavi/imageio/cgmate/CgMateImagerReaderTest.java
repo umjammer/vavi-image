@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2019 by Naohide Sano, All rights reserved.
+ * Copyright (c) 2025 by Naohide Sano, All rights reserved.
  *
  * Programmed by Naohide Sano
  */
 
-package vavi.imageio.am88;
+package vavi.imageio.cgmate;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -17,43 +17,41 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import vavi.imageio.IIOUtil;
 import vavi.util.Debug;
 import vavi.util.properties.annotation.Property;
 import vavi.util.properties.annotation.PropsEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
- * ArtMasterImageReaderTest.
+ * CgMateImagerReaderTest.
  *
- * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (umjammer)
- * @version 0.00 2019/04/11 umjammer initial version <br>
+ * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
+ * @version 0.00 2025-11-27 nsano initial version <br>
  */
 @PropsEntity(url = "file:local.properties")
-class ArtMasterImageReaderTest {
+class CgMateImagerReaderTest {
 
     static boolean localPropertiesExists() {
         return Files.exists(Paths.get("local.properties"));
     }
 
     @Property
-    String art88Image = "src/test/resources/test.am88";
+    String cgmate = "src/test/resources/cgmate.pic";
 
     @BeforeEach
     void setup() throws IOException {
@@ -64,26 +62,34 @@ class ArtMasterImageReaderTest {
 
     @Test
     @DisplayName("via spi, manual selection")
+    @Disabled("not registered to service yet")
     void test() throws Exception {
-        ImageReader ir = IIOUtil.getImageReader("AM88", ArtMasterImageReader.class.getName());
-        ir.setInput(Files.newInputStream(Paths.get("src/test/resources/test.am88")));
+        ImageReader ir = IIOUtil.getImageReader("CGMATE", CgMateImagerReaderTest.class.getName());
+        ir.setInput(Files.newInputStream(Path.of(cgmate)));
         Image image = ir.read(0);
         assertNotNull(image);
     }
 
     @Test
     @DisplayName("via spi, auto selection")
+    @Disabled("not registered to service yet")
     void test1() throws Exception {
-        URL url = ArtMasterImageReaderTest.class.getResource("/test.am88");
+        URL url = CgMateImagerReaderTest.class.getResource("/cgmate.pic");
         assert url != null;
         Image image = ImageIO.read(url);
         assertNotNull(image);
     }
 
     @Test
+    @DisplayName("raw api")
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     void test0() throws Exception {
-        show(ImageIO.read(Path.of(art88Image).toFile()));
+        Path path = Path.of(cgmate);
+Debug.println(path + ", " + Files.exists(path));
+        ImageReader ir = new vavi.imageio.cgmate.CgMateImagerReader(new CgMateImageReaderSpi());
+        ir.setInput(Files.newInputStream(Path.of(cgmate)));
+        BufferedImage image = ir.read(0);
+        show(image);
     }
 
     /** gui */
@@ -106,16 +112,5 @@ class ArtMasterImageReaderTest {
         frame.setVisible(true);
 
         cdl.await();
-    }
-
-    //----
-
-    /** */
-    public static void main(String[] args) throws Exception {
-Debug.println(args[0]);
-        ImageReader ir = IIOUtil.getImageReader("AM88", ArtMasterImageReader.class.getName());
-        ir.setInput(Files.newInputStream(Paths.get(args[0])));
-        BufferedImage image = ir.read(0);
-        show(image);
     }
 }

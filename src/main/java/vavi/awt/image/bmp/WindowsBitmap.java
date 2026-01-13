@@ -35,7 +35,7 @@ import static java.lang.System.getLogger;
  *
  * </code></pre>
  *
- * @see "Windows TM 3.1 グラフィックプログラミング ISBN4-8443-4628-8 p.187"
+ * @see "Windows TM 3.1 Graphics Programming ISBN4-8443-4628-8 p.187"
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
  * @version 0.00 970713 nsano initial version <br>
  *          1.00 010731 nsano move readFrom here <br>

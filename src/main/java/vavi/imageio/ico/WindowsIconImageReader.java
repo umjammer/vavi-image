@@ -77,7 +77,7 @@ public class WindowsIconImageReader extends ImageReader {
         } else if (input instanceof InputStream) {
             is = (InputStream) input;
         } else {
-logger.log(Level.WARNING, input);
+            throw new IllegalArgumentException("unsupported input: " + input);
         }
 
         return new WindowsIconImageSource(is);

@@ -8,3 +8,4 @@ vavi.imageio.zim.ZimImageReaderSpi
 vavi.imageio.maki.MakiImageReaderSpi
 vavi.imageio.pic.PicImageReaderSpi
 vavi.imageio.pi.PiImageReaderSpi
+#vavi.imageio.cgmate.CgMateImageReaderSpi

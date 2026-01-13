@@ -77,7 +77,7 @@ public class MagImageReader extends ImageReader {
             } else if (input instanceof InputStream) {
                 iis = ImageIO.createImageInputStream(input);
             } else {
-                throw new UnsupportedOperationException(input.getClass().getName());
+                throw new IllegalArgumentException(input.getClass().getName());
             }
 
             image = Mag.load(new SeekableDataInputImageInputStream(iis, ByteOrder.LITTLE_ENDIAN));

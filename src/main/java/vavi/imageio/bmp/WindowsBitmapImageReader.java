@@ -72,9 +72,9 @@ public class WindowsBitmapImageReader extends ImageReader {
     public static BufferedImage readImage(InputStream is) throws IOException {
         WindowsBitmap windowsBitmap = WindowsBitmap.readFrom(is);
 
-        // インデックスカラー用イメージバッファ
+        // Indexed color image buffer
         byte[] vram = null;
-        // フルカラー用イメージ用バッファ
+        // Full color image buffer
         int[] ivram = null;
 
         int bits = windowsBitmap.getBits();
@@ -141,7 +141,7 @@ logger.log(Level.DEBUG, image.getType() + ", " + image.getColorModel());
         } else if (input instanceof InputStream) {
             is = (InputStream) input;
         } else {
-logger.log(Level.WARNING, "unsupported input: " + input);
+            throw new IllegalArgumentException("unsupported input: " + input);
         }
 
         try {

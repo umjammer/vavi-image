@@ -11,7 +11,11 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.CountDownLatch;
 
@@ -22,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import vavi.awt.ImageComponent;
 import vavi.awt.image.gif.NonLzwGifImageSource;
+import vavi.util.Debug;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -36,17 +41,16 @@ public class GifImageTest {
 
     @Test
     public void test() throws Exception {
-        Image image = Toolkit.getDefaultToolkit().createImage(new NonLzwGifImageSource(Files.newInputStream(Paths.get("src/test/resources/test.gif"))));
+        Image image = Toolkit.getDefaultToolkit().createImage(new NonLzwGifImageSource(Files.newInputStream(Path.of("src/test/resources/test.gif"))));
         assertNotNull(image);
     }
 
     @Test
     @EnabledIfSystemProperty(named = "vavi.test", matches = "ide")
     public void test0() throws Exception {
-        // using cdl cause junit stops awt thread suddenly
-        CountDownLatch cdl = new CountDownLatch(1);
         main(new String[] { "src/test/resources/test.gif" });
-        cdl.await(); // depends on main frame's exit on close
+
+        // using cdl cause junit stops awt thread suddenly
     }
 
     //----
@@ -55,10 +59,15 @@ public class GifImageTest {
      * @param args 0...: gif
      */
     public static void main(String[] args) throws Exception {
-System.err.println(args[0]);
+Debug.println(args[0]);
+        CountDownLatch cdl = new CountDownLatch(1);
+
         Image image = Toolkit.getDefaultToolkit().createImage(new NonLzwGifImageSource(Files.newInputStream(Paths.get(args[0]))));
-        ImageComponent component = new ImageComponent();
         JFrame frame = new JFrame();
+        frame.addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) { cdl.countDown(); }
+        });
+        ImageComponent component = new ImageComponent();
         frame.addMouseListener(new MouseAdapter() {
             int count = 1;
             @Override
@@ -78,13 +87,14 @@ System.err.println(args[count]);
                 }
             }
         });
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("NonLzwGif");
-        frame.setVisible(true);
         frame.setLocation(300, 300);
         component.setImage(image);
         component.setPreferredSize(new Dimension(image.getWidth(component), image.getHeight(component)));
         frame.getContentPane().add(component);
         frame.pack();
+        frame.setVisible(true);
+
+        cdl.await();
     }
 }

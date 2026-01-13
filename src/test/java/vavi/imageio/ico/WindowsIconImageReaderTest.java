@@ -10,17 +10,16 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import vavi.imageio.IIOUtil;
+import vavi.util.Debug;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
@@ -38,21 +37,12 @@ public class WindowsIconImageReaderTest {
 
     @Test
     public void test1() throws Exception {
-        ImageReader ir = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("ICO");
-        while (irs.hasNext()) {
-            ImageReader tmpIr = irs.next();
-            if (tmpIr.getClass().getName().equals(WindowsIconImageReader.class.getName())) {
-                ir = tmpIr;
-                break;
-            }
-        }
+        ImageReader ir = IIOUtil.getImageReader("ICO", WindowsIconImageReader.class.getName());
         ir.setInput(Files.newInputStream(Paths.get("src/test/resources/test.ico")));
         List<BufferedImage> images = new ArrayList<>();
         BufferedImage image = ir.read(0);
         images.add(image);
         int count = ir.getNumImages(false);
-        LoopCounter counter = new LoopCounter(count);
         for (int i = 1; i < count; i++) {
             image = ir.read(i);
             images.add(image);
@@ -84,18 +74,9 @@ public class WindowsIconImageReaderTest {
     }
 
     /** */
-    public static void main(String[] args) throws IOException {
-System.err.println(args[0]);
-        ImageReader ir = null;
-        Iterator<ImageReader> irs = ImageIO.getImageReadersByFormatName("ICO");
-        while (irs.hasNext()) {
-            ImageReader tmpIr = irs.next();
-            if (tmpIr.getClass().getName().equals(WindowsIconImageReader.class.getName())) {
-                ir = tmpIr;
-System.err.println("found ImageReader: " + ir.getClass().getName());
-                break;
-            }
-        }
+    public static void main(String[] args) throws Exception {
+Debug.println(args[0]);
+        ImageReader ir = IIOUtil.getImageReader("ICO", WindowsIconImageReader.class.getName());
         ir.setInput(Files.newInputStream(Paths.get(args[0])));
         List<BufferedImage> images = new ArrayList<>();
         BufferedImage image = ir.read(0);
@@ -117,8 +98,7 @@ System.err.println("found ImageReader: " + ir.getClass().getName());
             }
         };
         panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent ev) {
+            @Override public void mouseClicked(MouseEvent ev) {
                 counter.increment();
                 panel.repaint();
             }

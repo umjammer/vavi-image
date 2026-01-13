@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2004  by Naohide Sano, All rights reserved.
+ * Copyright (c) 2002 by Naohide Sano, All rights reserved.
  *
  * Programmed by Naohide Sano
  */
 
-package vavi.imageio.gif;
+package vavi.imageio.cgmate;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,22 +16,26 @@ import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 
+import vavi.imageio.am88.ArtMasterImageReader;
+
 import static java.lang.System.getLogger;
 
 
 /**
- * NonLzwGifDecoderSPI.
+ * CgMateImageReaderSpi.
+ *
+ * TODO we cannot make a good detector for cgmate images, so this has not registered as a spi yet.
  *
  * @author <a href="mailto:umjammer@gmail.com">Naohide Sano</a> (nsano)
- * @version 1.10
+ * @version 0.00 251127 nsano initial version <br>
  */
-public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
+public class CgMateImageReaderSpi extends ImageReaderSpi {
 
-    private static final Logger logger = getLogger(NonLzwGifImageReaderSpi.class.getName());
+    private static final Logger logger = getLogger(CgMateImageReaderSpi.class.getName());
 
     static {
         try {
-            try (InputStream is = NonLzwGifImageReaderSpi.class.getResourceAsStream("/META-INF/maven/vavi/vavi-image/pom.properties")) {
+            try (InputStream is = CgMateImageReaderSpi.class.getResourceAsStream("/META-INF/maven/vavi/vavi-image/pom.properties")) {
                 if (is != null) {
                     Properties props = new Properties();
                     props.load(is);
@@ -45,21 +49,21 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
         }
     }
 
-    private static final String VendorName = "http://www.vavisoft.com";
+    private static final String VendorName = "http://www.vavi.com";
     private static final String Version;
     private static final String ReaderClassName =
-        "vavi.imageio.gif.NonLzwGifImageReader";
+        "vavi.imageio.cgmate.CgMateImageReader";
     private static final String[] Names = {
-        "GIF"
+        "CGMATE"
     };
     private static final String[] Suffixes = {
-        "gif", "GIF"
+        "pic", "PIC"
     };
     private static final String[] mimeTypes = {
-        "image/gif"
+        "image/x-cgmate"
     };
     static final String[] WriterSpiNames = {
-        /* "vavi.imageio.NonLzwGifImageWriterSpi" */
+        /*"vavi.imageio.cgmate.CgMateWriterSpi"*/
     };
     private static final boolean SupportsStandardStreamMetadataFormat = false;
     private static final String NativeStreamMetadataFormatName = null;
@@ -67,14 +71,14 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
     private static final String[] ExtraStreamMetadataFormatNames = null;
     private static final String[] ExtraStreamMetadataFormatClassNames = null;
     private static final boolean SupportsStandardImageMetadataFormat = false;
-    static final String NativeImageMetadataFormatName = "javax_imageio_gif_image_1.0";
+    private static final String NativeImageMetadataFormatName = "cgmate";
     private static final String NativeImageMetadataFormatClassName =
-        /* "vavi.imageio.NonLzwGifMetaData" */ null;
+        /*"vavi.imageio.cgmate.CgMateMetaData"*/ null;
     private static final String[] ExtraImageMetadataFormatNames = null;
     private static final String[] ExtraImageMetadataFormatClassNames = null;
 
     /** */
-    public NonLzwGifImageReaderSpi() {
+    public CgMateImageReaderSpi() {
         super(VendorName,
               Version,
               Names,
@@ -97,33 +101,24 @@ public class NonLzwGifImageReaderSpi extends ImageReaderSpi {
 
     @Override
     public String getDescription(Locale locale) {
-        return "Non LZW GIF Decoder";
+        return "CGMATE Image";
     }
 
+    /* TODO InputStream */
     @Override
-    public boolean canDecodeInput(Object source) throws IOException {
-        if (source instanceof ImageInputStream is) {
-            byte[] bytes = new byte[4];
-            try {
-                is.mark();
-                is.readFully(bytes);
-                is.reset();
-            } catch (IOException e) {
-logger.log(Level.ERROR, e.getMessage(), e);
-                return false;
-            }
-            return bytes[0] == 'G' && // identifier = "GIF8" + ("7a" or "9a")
-                   bytes[1] == 'I' &&
-                   bytes[2] == 'F' &&
-                   bytes[3] == '8';
+    public boolean canDecodeInput(Object obj) throws IOException {
+
+        if (obj instanceof ImageInputStream is) {
+            // TODO is there some good detection?
+            return true;
         } else {
-logger.log(Level.WARNING, "unsupported input: " + source);
+logger.log(Level.DEBUG, obj);
             return false;
         }
     }
 
     @Override
-    public ImageReader createReaderInstance(Object extension) throws IOException {
-        return new NonLzwGifImageReader(this);
+    public ImageReader createReaderInstance(Object obj) {
+        return new ArtMasterImageReader(this);
     }
 }

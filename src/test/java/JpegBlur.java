@@ -203,7 +203,7 @@ System.err.println("quality: " + quality + ", size: " + size + ", blur: " + blur
         {
             try {
                 PropsEntity.Util.bind(this);
-                // BUG? JPEG の ImageWriter が Thread Safe じゃない気がする
+                // BUG? I think JPEG ImageWriter is not thread safe.
                 iw = IIOUtil.getImageWriter("JPEG", className);
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
